@@ -4,7 +4,7 @@
   "description": "מערכת למעקב אחרי פידי RSS ושליחת עדכונים במייל",
   "main": "app.js",
   "scripts": {
-    "test": "node test.js",
+    "test": "nodemon test.js",
     "start": "node app.js"
   },
   "author": "ShlomoCode",
