@@ -33,14 +33,14 @@ module.exports = {
         url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, "$1")
 
         if (!url) {
-            return res.status(500).json({
+            return res.status(400).json({
                 message: "Error: url A parameter required!"
             })
         }
 
         const feeds = await Feed.find({ url })
         if (feeds.length > 0) {
-            return res.status(500).json({
+            return res.status(409).json({
                 message: "Feed exists"
             })
         }
