@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const config = require('./config.json')
 
 // התחברות לדאטה בייס
-mongoose.connect(`mongodb+srv://${config.MONGO.USERNAME}:${config.MONGO.PASSWORD}@${config.MONGO.URL}`,{
+mongoose.connect(config.MONGO_URI,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
