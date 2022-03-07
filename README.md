@@ -3,14 +3,18 @@
 כולל הרשמה, התחברות ואימות מייל.
 מיועד לעלות בסוף על הרקו, מתאים גם להפעלה רגילה במחשב.
 
-#API
+# API
 `/api/users` - post
 * login
 * signup
+
 `/api/feeds`:
+
 get: 
 * get all feeds
 * get feed
+
+post:
 * create feed (for registers only)
 
 # ספריות בשימוש:
