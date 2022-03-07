@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
 const config = require('../../../config.json')
 
-const checkAuth = function (req, res, next) {
+const checkLogin = function (req, res, next) {
     try {
         const token = req.headers.authorization.replace("Bearer ", "")
-        jwt.verify(token, config.JWT_KEY),
+        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
+        const { email, id } = infoLogin.payload
         next()
     } catch (error) {
         return res.status(401).json({
@@ -13,4 +14,4 @@ const checkAuth = function (req, res, next) {
     }
 }
 
-module.exports = checkAuth;
+module.exports = checkLogin;

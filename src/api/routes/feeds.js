@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const checkAuth = require('../middelwares/checkAuth');
+const checkLogin = require('../middelwares/checkLogin');
 
 const {
     getAllFeeds,
@@ -8,13 +8,13 @@ const {
     createFeed,
     updateFeed,
     deleteFeed
-} = require('../controllers/feeds')
+} = require('../controllers/feeds');
 
 router.get("/", getAllFeeds);
 router.get("/:FeedID", getFeed)
 // for registers only:
-router.post("/", checkAuth, createFeed);
-// router.patch("/:FeedID", checkAuth, updateFeed);
-// router.delete("/:FeedID", checkAuth, deleteFeed);
+router.post("/", checkLogin, createFeed);
+// router.patch("/:FeedID", checkLogin, updateFeed);
+// router.delete("/:FeedID", checkLogin, deleteFeed);
 
 module.exports = router;
