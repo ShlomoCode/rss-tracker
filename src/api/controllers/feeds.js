@@ -28,7 +28,9 @@ module.exports = {
         }
     },
     createFeed: async (req, res) => {
-        const { url } = req.body;
+        let { url } = req.body;
+        // הסרת לוכסן מיותר בסוף
+        url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, "$1")
 
         if (!url) {
             return res.status(500).json({
