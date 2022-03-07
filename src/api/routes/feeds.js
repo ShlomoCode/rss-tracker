@@ -12,9 +12,9 @@ const {
 
 router.get("/", getAllFeeds);
 router.get("/:FeedID", getFeed)
-
+// for registers only:
 router.post("/", checkAuth, createFeed);
-router.patch("/:FeedID", checkAuth, updateFeed);
-router.delete("/:FeedID", checkAuth, deleteFeed);
+// router.patch("/:FeedID", checkAuth, updateFeed);
+// router.delete("/:FeedID", checkAuth, deleteFeed);
 
 module.exports = router;
