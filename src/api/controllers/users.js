@@ -74,7 +74,7 @@ module.exports = {
                 const token = jwt.sign(
                     { id: user._id, email: user.email },
                     config.JWT_KEY,
-                    { expiresIn: "1H" })
+                    { expiresIn: "2H" })
 
                 return res.status(200).json({
                     message: "Auth succeful",
