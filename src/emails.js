@@ -19,7 +19,7 @@ const sendMail = {
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             bcc: addresses,
-            subject: 'RSS חדש!🎉 - ' + title + ` | ${titleSite}`,
+            subject: 'RSS חדש!🎉 - ' + title.replaceAll(/ ?&#[0-9]+;/g, '').replace(/([א-ת] )(צפו)/, '$1• $2') + ` | ${titleSite}`,
             html: body + "<br>" + link
         };
         return transporter.sendMail(mailOptions)
