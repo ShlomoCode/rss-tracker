@@ -17,9 +17,9 @@ module.exports = {
     getFeed: async (req, res) => {
         const FeedID = req.params.FeedID
         try {
-            const Feed = await Feed.findById(FeedID)
+            const feed = await Feed.findById(FeedID)
             res.status(200).json({
-                Feed
+                feed
             })
         } catch (error) {
             res.status(500).json({
@@ -30,9 +30,16 @@ module.exports = {
     createFeed: async (req, res) => {
         const { url } = req.body;
 
-        if (!url){
+        if (!url) {
             return res.status(500).json({
                 message: "Error: url A parameter required!"
+            })
+        }
+
+        const feeds = await Feed.find({ url })
+        if (feeds.length > 0) {
+            return res.status(500).json({
+                message: "Feed exists"
             })
         }
 
@@ -46,15 +53,10 @@ module.exports = {
             })
         }
 
-        // if (typeof title !== 'string') {
-        //     return res.status(500).json({
-        //         message: `${url} Not Normal feed`
-        //     })
-        // }
-
         const feed = new Feed({
             _id: new mongoose.Types.ObjectId(),
-            title
+            title,
+            url
         })
         try {
             await feed.save()
