@@ -4,9 +4,9 @@
 מיועד לעלות בסוף על הרקו, מתאים גם להפעלה רגילה במחשב.
 
 # ספריות בשימוש:
-morgan - loger
-express - שרת HTTP
-mongoose - התממשקות עם הדאטה בייס
-rss-to-json - קבלת הפידים כjson
-nodemailer - שליחת המיילים
+* morgan - loger
+* express - שרת HTTP
+* mongoose - התממשקות עם הדאטה בייס
+* rss-to-json - קבלת הפידים כjson
+* nodemailer - שליחת המיילים
 
