@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
-const configProject = require('../config.json');
+const config = require('../config.json');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: configProject.nodemailer.user,
-        pass: configProject.nodemailer.password
+        user: config.nodemailer.user,
+        pass: config.nodemailer.password
     }
 });
 
@@ -36,7 +36,7 @@ const sendMail = {
             from: 'pushing.rss@gmail.com',
             to: address,
             subject: `קוד האימות שלך עבור Rss To Mail הוא: ${verifiCode}`,
-            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <code>${verifiCode}</code><br>יש להכניס את הכתובת בתיבת האימות באתר.<br>בהצלחה!`
+            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <code>${verifiCode}</code><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
         };
         return transporter.sendMail(mailOptions)
             .then((info) => {
