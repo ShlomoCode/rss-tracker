@@ -1,0 +1,19 @@
+{
+  "name": "rss-pushing-node",
+  "version": "1.0.0",
+  "description": "מערכת למעקב אחרי פידי RSS ושליחת עדכונים במייל",
+  "main": "app.js",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node app.js"
+  },
+  "author": "ShlomoCode",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.2.4",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.7.2",
+    "rss-to-json": "^2.0.2"
+  }
+}
