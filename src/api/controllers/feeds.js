@@ -25,6 +25,11 @@ module.exports = {
         const feedID = req.params.feedID
         try {
             let feed = await Feed.findById(feedID)
+            if (!feed) {
+                return res.status(404).json({
+                    message: 'Feed Not Found'
+                })
+            }
             feed.Subscribers = feed.Subscribers.length;
             res.status(200).json({
                 feed
