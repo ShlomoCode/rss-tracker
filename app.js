@@ -36,9 +36,11 @@ app.use((req, res, next) => {
 // Routes
 const usersRoutes = require('./src/api/routes/users')
 const feedsRoutes = require('./src/api/routes/feeds')
+const getStatus = require('./src/api/routes/status')
 
 app.use("/api/users", usersRoutes)
 app.use("/api/feeds", feedsRoutes)
+app.use("/api/status", getStatus)
 
 
 app.use((req, res, next) => {
