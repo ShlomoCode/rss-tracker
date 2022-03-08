@@ -18,14 +18,14 @@ get:
 post:
 * create feed (for registered only)
 
-patch (feed id farameter requied):
+patch (feed id parameter requied):
 * update feed - Subscribe only
 
-delete (feed id farameter requied):
+delete (feed id parameter requied):
 * delete feed - for admin only
 
 `/api/status` - get:
-* get status server
+* get server status
 # ספריות בשימוש:
 * morgan - loger
 * nodemon - לרענון אוטומטי של הרשת בכל שינוי
