@@ -54,6 +54,18 @@ module.exports = {
     login: async (req, res) => {
         const { email, password } = req.body;
 
+        if (!email) {
+            return res.status(400).json({
+                message: 'Email parameter required'
+            })
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                message: 'Password parameter required'
+            })
+        }
+
         const users = await User.find({ email })
         if (users.length === 0) {
             return res.status(401).json({
