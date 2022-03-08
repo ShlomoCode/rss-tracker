@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const config = require('../config.json');
+const { decode } = require('html-entities');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -15,11 +16,12 @@ const sendMail = {
      * @param {Object} info מידע על המייל שצריך להישלח
      */
     rss(infoMail) {
-        const { title, addresses, body, link, titleSite } = infoMail;
+        let { title, addresses, body, link, titleSite } = infoMail;
+        title = decode(title)
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             bcc: addresses,
-            subject: 'RSS חדש!🎉 - ' + title.replaceAll(/ ?&#[0-9]+;/g, '').replace(/([א-ת] )(צפו)/, '$1• $2') + ` | ${titleSite}`,
+            subject: 'RSS חדש!🎉 - ' + title.replace(/([א-ת] )(צפו)/, '$1• $2') + ` | ${titleSite}`,
             html: body + "<br>" + link
         };
         return transporter.sendMail(mailOptions)
