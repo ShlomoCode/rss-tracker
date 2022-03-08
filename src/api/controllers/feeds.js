@@ -91,11 +91,11 @@ module.exports = {
         const feed = await Feed.findById(feedID)
         if (!feed) {
             return res.status(404).json({
-                message: "Not Found Feed"
+                message: "Feed Not Found"
             })
         }
         try {
-            await Feed.findByIdAndUpdate(feedID, { $addToSet: {Subscribers: userID} })
+            await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } })
             res.status(200).json({
                 message: "Subscribe to feed done!",
             })
