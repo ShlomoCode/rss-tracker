@@ -132,14 +132,14 @@ module.exports = {
                 message: "Error: verifiCode A parameter required"
             })
         }
-
-        verifiCode = parseInt(verifiCode);
-
-        if (verifiCode.toString().length !== 6 || /[0-9]{6}/.test(verifiCode) === false) {
+        
+        if (verifiCode.length !== 6 || /[0-9]{6}/.test(verifiCode) === false) {
             return res.status(400).json({
                 message: `${verifiCode} is not verification code valid`
             })
         }
+        
+        verifiCode = parseInt(verifiCode);
 
         let user;
         try {
