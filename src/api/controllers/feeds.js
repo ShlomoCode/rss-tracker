@@ -23,6 +23,13 @@ module.exports = {
     },
     getFeed: async (req, res) => {
         const feedID = req.params.feedID
+
+        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+            return res.status(400).json({
+                message: `${feedID} no ObjectId Valid!`
+            })
+        }
+
         try {
             let feed = await Feed.findById(feedID)
             if (!feed) {
@@ -93,13 +100,19 @@ module.exports = {
         const feedID = req.params.feedID;
         const { userID } = res.locals.user;
 
+        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+            return res.status(400).json({
+                message: `${feedID} no ObjectId Valid!`
+            })
+        }
+
         const feed = await Feed.findById(feedID)
         if (!feed) {
             return res.status(404).json({
                 message: "Feed Not Found"
             })
         }
-        
+
         try {
             await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } })
             res.status(200).json({
@@ -113,6 +126,13 @@ module.exports = {
     },
     deleteFeed: async (req, res) => {
         const feedID = req.params.feedID
+
+        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+            return res.status(400).json({
+                message: `${feedID} no ObjectId Valid!`
+            })
+        }
+
         const feed = await Feed.findById(feedID)
 
         if (!feed) {
