@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const config = require('../../../config.json');
 const sendMail = require('../../emails');
+const normalizeEmail = require('normalize-email');
 
 function randomNumber() {
     const numberRandom = Math.floor((Math.random() * 5000), 0)
@@ -14,6 +15,7 @@ function randomNumber() {
 module.exports = {
     signup: (req, res) => {
         const { email, password, name } = req.body;
+        const emailProcessed = normalizeEmail(email);
 
         const weakness = zxcvbn(password)
 
@@ -31,10 +33,7 @@ module.exports = {
                 })
             }
 
-            const emailParts = email.split('@');
-            const processedEmail = emailParts[0].replace(/.*\+/, "").replaceAll('.', '') + '@' + emailParts[1];
-
-            const users = await User.find({ email: processedEmail })
+            const users = await User.find({ emailProcessed })
             if (users.length > 0) {
                 return res.status(409).json({
                     message: "Email exists"
@@ -46,7 +45,8 @@ module.exports = {
             const user = new User({
                 _id: new mongoose.Types.ObjectId,
                 password: hesh,
-                email: processedEmail,
+                emailProcessed,
+                emailFront: email,
                 name,
                 verifiEmailCode
             });
@@ -60,7 +60,7 @@ module.exports = {
             }
 
             try {
-                await sendMail.verifi(verifiEmailCode, email);
+                await sendMail.verifi(verifiEmailCode, emailFront);
                 return res.status(200).json({
                     user: "User created",
                     verifiEmail: "sent verification email"
@@ -75,6 +75,7 @@ module.exports = {
     },
     login: async (req, res) => {
         const { email, password } = req.body;
+        const emailProcessed = normalizeEmail(email);
 
         if (!email) {
             return res.status(400).json({
@@ -88,7 +89,7 @@ module.exports = {
             })
         }
 
-        const users = await User.find({ email })
+        const users = await User.find({ emailProcessed })
         if (users.length === 0) {
             return res.status(401).json({
                 message: "Auth faild"
@@ -142,9 +143,7 @@ module.exports = {
             })
         }
 
-        console.log(user);
-
-        if (user.verifiEmailStatus === true){
+        if (user.verifiEmailStatus === true) {
             return res.status(409).json({
                 message: 'User has already been verified'
             })
