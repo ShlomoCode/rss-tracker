@@ -141,7 +141,7 @@ module.exports = {
         }
 
         try {
-            await Feed.remove({ _id: feedID })
+            await Feed.deleteOne({ _id: feedID })
             res.status(200).json({
                 message: `Feed id: ${feedID} deleted.`
             })
