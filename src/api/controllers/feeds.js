@@ -115,9 +115,6 @@ module.exports = {
     deleteFeed: async (req, res) => {
         const feedID = req.params.feedID
         const feed = await Feed.findById(feedID)
-        const token = req.headers.authorization.replace("Bearer ", "")
-        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
-        const { id: userID } = infoLogin.payload;
 
         if (!feed) {
             return res.status(404).json({
@@ -125,16 +122,7 @@ module.exports = {
             })
         }
 
-        let user;
-        try {
-            user = await User.findById(userID);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            })
-        }
-
-        if (user.Permissions !== 'admin') {
+        if (res.locals.user.Permissions !== 'admin') {
             return res.status(403).json({
                 message: 'No permission'
             })
