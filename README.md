@@ -23,6 +23,8 @@ patch (feed id farameter requied):
 delete (feed id farameter requied):
 * delete feed - for admin only
 
+`/api/status` - get:
+* get status server
 # ספריות בשימוש:
 * morgan - loger
 * nodemon - לרענון אוטומטי של הרשת בכל שינוי
