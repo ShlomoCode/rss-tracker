@@ -111,23 +111,43 @@ module.exports = {
             })
         }
     },
-    // deleteFeed: async (req, res) => {
-    //     const feedID = req.params.feedID
-    //     const Feed = await Feed.findById(feedID)
-    //     if (!Feed) {
-    //         return res.status(404).json({
-    //             message: "Not Found Feed"
-    //         })
-    //     }
-    //     try {
-    //         await Feed.remove({ _id: feedID })
-    //         res.status(200).json({
-    //             message: `Feed id: ${feedID} deleted.`
-    //         })
-    //     } catch (error) {
-    //         res.status(500).json({
-    //             error
-    //         })
-    //     }
-    // }
+    deleteFeed: async (req, res) => {
+        const feedID = req.params.feedID
+        const feed = await Feed.findById(feedID)
+        const token = req.headers.authorization.replace("Bearer ", "")
+        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
+        const { id: userID } = infoLogin.payload;
+
+        if (!feed) {
+            return res.status(404).json({
+                message: "Not Found Feed"
+            })
+        }
+
+        let user;
+        try {
+            user = await User.findById(userID);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            })
+        }
+
+        if (user.Permissions !== 'admin') {
+            return res.status(403).json({
+                message: 'No permission'
+            })
+        }
+
+        try {
+            await Feed.remove({ _id: feedID })
+            res.status(200).json({
+                message: `Feed id: ${feedID} deleted.`
+            })
+        } catch (error) {
+            res.status(500).json({
+                error
+            })
+        }
+    }
 }
