@@ -2,8 +2,14 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const zxcvbn = require('zxcvbn')
-const config = require('../../../config.json')
+const zxcvbn = require('zxcvbn');
+const config = require('../../../config.json');
+const sendMail = require('../../emails');
+
+function randomNumber() {
+    const numberRandom = Math.floor((Math.random() * 5000), 0)
+    return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1))
+}
 
 module.exports = {
     signup: (req, res) => {
@@ -25,28 +31,44 @@ module.exports = {
                 })
             }
 
-            const users = await User.find({ email })
+            const emailParts = email.split('@');
+            const processedEmail = emailParts[0].replace(/.*\+/, "").replaceAll('.', '') + '@' + emailParts[1];
+
+            const users = await User.find({ email: processedEmail })
             if (users.length > 0) {
                 return res.status(409).json({
                     message: "Email exists"
                 })
             }
 
+            const verifiEmailCode = randomNumber();
+
             const user = new User({
                 _id: new mongoose.Types.ObjectId,
                 password: hesh,
-                email,
+                email: processedEmail,
                 name,
-            })
+                verifiEmailCode
+            });
+
             try {
                 await user.save();
+            } catch (error) {
+                return res.status(500).json({
+                    error
+                })
+            }
 
-                res.status(200).json({
-                    message: "User Created"
+            try {
+                await sendMail.verifi(verifiEmailCode, email);
+                return res.status(200).json({
+                    user: "User created",
+                    verifiEmail: "sent verification email"
                 })
             } catch (error) {
-                res.status(500).json({
-                    error
+                return res.status(500).json({
+                    user: "User created",
+                    verifiEmail: `Error sending verification email: ${error}`
                 })
             }
         })

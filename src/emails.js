@@ -32,8 +32,12 @@ const sendMail = {
                 console.error
             )
     },
-    verifi(infoMail) {
-        const { verifiCode, address } = infoMail;
+    /** 
+    * @param {Number} verifiCode 
+    * @param {String} address 
+    * @returns Promise 
+    */
+    verifi(verifiCode, address) {
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             to: address,
