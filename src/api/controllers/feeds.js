@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
 const Feed = require('../models/feed');
-const jwt = require('jsonwebtoken');
-const config = require('../../../config.json');
-const User = require('../models/user');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
@@ -48,9 +45,7 @@ module.exports = {
         }
     },
     createFeed: async (req, res) => {
-        const token = req.headers.authorization.replace("Bearer ", "")
-        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
-        const { id: userID } = infoLogin.payload;
+        const { userID } = res.locals.user.userID;
         let { url } = req.body;
 
         if (!url) {
