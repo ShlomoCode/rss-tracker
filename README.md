@@ -7,6 +7,7 @@
 `/api/users` - post
 * login
 * signup
+* verifi
 
 `/api/feeds`:
 
