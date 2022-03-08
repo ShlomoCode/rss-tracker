@@ -16,7 +16,7 @@ get:
 * get feed
 
 post:
-* create feed (for registers only)
+* create feed (for registered only)
 
 patch (feed id farameter requied):
 * update feed - Subscribe only
