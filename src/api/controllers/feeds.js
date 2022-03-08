@@ -43,8 +43,9 @@ module.exports = {
     createFeed: async (req, res) => {
         const token = req.headers.authorization.replace("Bearer ", "")
         const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
-        const { email, id } = infoLogin.payload
+        const { id: userID } = infoLogin.payload
         let { url } = req.body;
+
         // הסרת לוכסן מיותר בסוף
         url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, "$1")
 
@@ -75,7 +76,7 @@ module.exports = {
             _id: new mongoose.Types.ObjectId(),
             title,
             url,
-            Subscribers: [email]
+            Subscribers: [userID]
         })
         try {
             await feed.save()
