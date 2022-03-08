@@ -120,5 +120,53 @@ module.exports = {
                 })
             }
         })
+    },
+    verifiEmail: async (req, res) => {
+        const { userID } = res.locals.user;
+        let { verifiCode } = req.body;
+
+        if (!verifiCode) {
+            return res.status(400).json({
+                message: "Error: verifiCode A parameter required!"
+            })
+        }
+
+        verifiCode = parseInt(verifiCode);
+
+        let user;
+        try {
+            user = await User.findById(userID);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            })
+        }
+
+        console.log(user);
+
+        if (user.verifiEmailStatus === true){
+            return res.status(409).json({
+                message: 'User has already been verified'
+            })
+        }
+
+        if (verifiCode !== user.verifiEmailCode) {
+            return res.status(401).json({
+                message: "Verifi faild - Wrong verification code"
+            })
+        }
+
+        if (verifiCode === user.verifiEmailCode) {
+            try {
+                await User.findByIdAndUpdate(userID, { verifiEmailStatus: true })
+                res.status(200).json({
+                    message: 'Email verification completed'
+                })
+            } catch (error) {
+                res.status(500).json({
+                    error
+                })
+            }
+        }
     }
 }
