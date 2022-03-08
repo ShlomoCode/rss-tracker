@@ -91,9 +91,7 @@ module.exports = {
     },
     updateFeed: async (req, res) => {
         const feedID = req.params.feedID;
-        const token = req.headers.authorization.replace("Bearer ", "")
-        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
-        const { id: userID } = infoLogin.payload
+        const { userID } = res.locals.user;
 
         const feed = await Feed.findById(feedID)
         if (!feed) {
@@ -101,6 +99,7 @@ module.exports = {
                 message: "Feed Not Found"
             })
         }
+        
         try {
             await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } })
             res.status(200).json({
