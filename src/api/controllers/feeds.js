@@ -43,17 +43,17 @@ module.exports = {
     createFeed: async (req, res) => {
         const token = req.headers.authorization.replace("Bearer ", "")
         const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
-        const { id: userID } = infoLogin.payload
+        const { id: userID } = infoLogin.payload;
         let { url } = req.body;
-
-        // הסרת לוכסן מיותר בסוף
-        url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, "$1")
 
         if (!url) {
             return res.status(400).json({
                 message: "Error: url A parameter required!"
             })
         }
+
+        // הסרת לוכסן מיותר בסוף
+        url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, "$1")
 
         const feeds = await Feed.find({ url })
         if (feeds.length > 0) {
