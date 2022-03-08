@@ -17,6 +17,12 @@ get:
 post:
 * create feed (for registers only)
 
+patch (feed id farameter requied):
+* update feed - Subscribe only
+
+delete (feed id farameter requied):
+* delete feed - for admin only
+
 # ספריות בשימוש:
 * morgan - loger
 * nodemon - לרענון אוטומטי של הרשת בכל שינוי
