@@ -16,6 +16,7 @@ router.get("/:feedID", getFeed)
 // for registers only:
 router.post("/", checkLogin, createFeed);
 router.patch("/:feedID", checkLogin, updateFeed);
+// for admin only:
 router.delete("/:feedID", checkPermissions, deleteFeed);
 
 module.exports = router;
