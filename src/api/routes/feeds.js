@@ -11,7 +11,7 @@ const {
 } = require('../controllers/feeds');
 
 router.get("/", getAllFeeds);
-router.get("/:FeedID", getFeed)
+router.get("/:feedID", getFeed)
 // for registers only:
 router.post("/", checkLogin, createFeed);
 // router.patch("/:FeedID", checkLogin, updateFeed);

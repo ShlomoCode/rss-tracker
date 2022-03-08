@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
 const Feed = require('../models/feed');
+const jwt = require('jsonwebtoken');
+const config = require('../../../config.json');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
         try {
-            let Feeds = await Feed.find()
+            let feedsRew = await Feed.find()
+            const feeds = feedsRew.map((feed) => {
+                feed.Subscribers = feed.Subscribers.length;
+                return feed;
+            })
             res.status(200).json({
-                Feeds
+                feeds
             })
         } catch (error) {
             res.status(500).json({
@@ -15,9 +21,10 @@ module.exports = {
         }
     },
     getFeed: async (req, res) => {
-        const FeedID = req.params.FeedID
+        const feedID = req.params.feedID
         try {
-            const feed = await Feed.findById(FeedID)
+            let feed = await Feed.findById(feedID)
+            feed.Subscribers = feed.Subscribers.length;
             res.status(200).json({
                 feed
             })
@@ -28,6 +35,9 @@ module.exports = {
         }
     },
     createFeed: async (req, res) => {
+        const token = req.headers.authorization.replace("Bearer ", "")
+        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
+        const { email, id } = infoLogin.payload
         let { url } = req.body;
         // הסרת לוכסן מיותר בסוף
         url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, "$1")
@@ -58,7 +68,8 @@ module.exports = {
         const feed = new Feed({
             _id: new mongoose.Types.ObjectId(),
             title,
-            url
+            url,
+            Subscribers: [email]
         })
         try {
             await feed.save()
@@ -71,49 +82,42 @@ module.exports = {
             })
         }
     },
-    // updateFeed: async (req, res) => {
-    //     const FeedID = req.params.FeedID
-    //     const { categoryID } = req.body;
+    updateFeed: async (req, res) => {
+        const feedID = req.params.feedID;
+        const token = req.headers.authorization.replace("Bearer ", "")
+        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
+        const { email, id: userID } = infoLogin.payload
 
-    //     const Feed = await Feed.findById(FeedID)
-    //     if (!Feed) {
-    //         return res.status(404).json({
-    //             message: "Not Found Feed"
-    //         })
-    //     }
+        const Feed = await Feed.findById(feedID)
+        if (!Feed) {
+            return res.status(404).json({
+                message: "Not Found Feed"
+            })
+        }
 
-    //     if (categoryID) {
-    //         const category = await Category.findById(categoryID)
-
-    //         if (!category) {
-    //             return res.status(404).json({
-    //                 message: "Not Found Category"
-    //             })
-    //         }
-    //     }
-    //     try {
-    //         await Feed.updateOne({ _id: FeedID }, req.body)
-    //         res.status(200).json({
-    //             message: "Feed updated"
-    //         })
-    //     } catch (error) {
-    //         res.status(500).json({
-    //             error
-    //         })
-    //     }
-    // },
+        try {
+            await Feed.findOneAndUpdate({ _id: req.params.id }, { $addToSet: userID })
+            res.status(200).json({
+                message: "Subscribe to feed done!"
+            })
+        } catch (error) {
+            res.status(500).json({
+                error
+            })
+        }
+    },
     // deleteFeed: async (req, res) => {
-    //     const FeedID = req.params.FeedID
-    //     const Feed = await Feed.findById(FeedID)
+    //     const feedID = req.params.feedID
+    //     const Feed = await Feed.findById(feedID)
     //     if (!Feed) {
     //         return res.status(404).json({
     //             message: "Not Found Feed"
     //         })
     //     }
     //     try {
-    //         await Feed.remove({ _id: FeedID })
+    //         await Feed.remove({ _id: feedID })
     //         res.status(200).json({
-    //             message: `Feed id: ${FeedID} deleted.`
+    //             message: `Feed id: ${feedID} deleted.`
     //         })
     //     } catch (error) {
     //         res.status(500).json({
