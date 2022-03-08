@@ -128,11 +128,17 @@ module.exports = {
 
         if (!verifiCode) {
             return res.status(400).json({
-                message: "Error: verifiCode A parameter required!"
+                message: "Error: verifiCode A parameter required"
             })
         }
 
         verifiCode = parseInt(verifiCode);
+
+        if (verifiCode.toString().length !== 6 || /[0-9]{6}/.test(verifiCode) === false) {
+            return res.status(400).json({
+                message: `${verifiCode} is not verification code valid`
+            })
+        }
 
         let user;
         try {
@@ -143,15 +149,15 @@ module.exports = {
             })
         }
 
-        if (user.verifiEmailStatus === true) {
-            return res.status(409).json({
-                message: 'User has already been verified'
-            })
-        }
-
         if (verifiCode !== user.verifiEmailCode) {
             return res.status(401).json({
                 message: "Verifi faild - Wrong verification code"
+            })
+        }
+
+        if (user.verifiEmailStatus === true) {
+            return res.status(409).json({
+                message: 'User has already been verified'
             })
         }
 
