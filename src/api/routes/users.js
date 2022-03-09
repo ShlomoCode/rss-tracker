@@ -8,6 +8,7 @@ const {
     login,
     verifiEmail,
     deleteUser,
+    unsubscribe,
     getUsers
 } = require('../controllers/users');
 
@@ -15,6 +16,7 @@ router.get("/", checkPermissions, getUsers)
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/delete/:userID", checkPermissions, deleteUser);
+router.patch("/Unsubscribe/:userID", unsubscribe);
 router.post("/verifi", checkLogin, verifiEmail);
 
 module.exports = router;
