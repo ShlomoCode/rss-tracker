@@ -110,7 +110,7 @@ module.exports = {
                 const token = jwt.sign(
                     { id: user._id, email: user.email },
                     config.JWT_KEY,
-                    { expiresIn: "2H" })
+                    { expiresIn: '3 days' })
 
                 return res.status(200).json({
                     message: "Auth successful",
@@ -281,7 +281,7 @@ module.exports = {
             })
         }
 
-        if (userUnsubscribe.verifyEmailStatus === false){
+        if (userUnsubscribe.verifyEmailStatus === false) {
             return res.status(409).json({
                 message: `The subscription of ${userUnsubscribe.emailFront} has already been canceled!`
             })
