@@ -5,11 +5,11 @@
 
 # API
 `/api/users`
-* login - post
-* signup - post
-* verifi - post
-* unsubscribe - patch
-* delete - for admin only
+* login - `post`
+* signup - `post`
+* verifi - `post`
+* unsubscribe - `patch`
+* delete - `post` (for admin only)
 
 `/api/feeds`:
 
