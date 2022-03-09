@@ -11,9 +11,9 @@ const {
     deleteFeed
 } = require('../controllers/feeds');
 
-router.get("/", getAllFeeds);
-router.get("/:feedID", getFeed)
-// for registers only:
+// for registerd login only:
+router.get("/", checkLogin, getAllFeeds);
+router.get("/:feedID", checkLogin, getFeed)
 router.post("/", checkLogin, createFeed);
 router.patch("/:feedID", checkLogin, updateFeed);
 // for admin only:
