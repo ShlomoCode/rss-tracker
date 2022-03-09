@@ -8,6 +8,7 @@ const {
     login,
     verifiEmail,
     deleteUser,
+    getUsers
 } = require('../controllers/users');
 
 router.get("/", checkPermissions, getUsers)
