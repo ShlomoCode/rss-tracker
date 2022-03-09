@@ -94,7 +94,7 @@ module.exports = {
         try {
             await parse(url)
         } catch (error) {
-            return res.status(500).json({
+            return res.status(400).json({
                 message: `${url} Not Normal feed`
             })
         }
@@ -103,12 +103,11 @@ module.exports = {
             _id: new mongoose.Types.ObjectId(),
             title,
             url,
-            Subscribers: [userID]
         })
         try {
             await feed.save()
             res.status(200).json({
-                message: "Crated Feed"
+                message: "Feed Crated"
             })
         } catch (error) {
             res.status(500).json({
