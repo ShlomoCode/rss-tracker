@@ -45,12 +45,6 @@ const sendMail = {
             html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <b>${verifiCode}</b><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
         };
         return transporter.sendMail(mailOptions)
-            .then((info) => {
-                console.log('Email sent: ' + info.response)
-            })
-            .catch(
-                console.error
-            );
     }
 }
 module.exports = sendMail;

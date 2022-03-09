@@ -9,7 +9,7 @@ const normalizeEmail = require('normalize-email');
 
 function randomNumber() {
     const numberRandom = Math.floor((Math.random() * 5000), 0)
-    return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1))
+    return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString()
 }
 
 module.exports = {
@@ -62,15 +62,15 @@ module.exports = {
         }
 
         try {
-            await sendMail.verifi(verifiEmailCode, emailFront);
+            const infoSend = await sendMail.verifi(verifiEmailCode, email);
+            console.log('Email sent: ' + infoSend.response)
             return res.status(200).json({
-                user: "User created",
-                verifiEmail: "sent verification email"
+                message: 'User created and verification email sent'
             })
         } catch (error) {
+            await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
-                user: "User created",
-                verifiEmail: `Error sending verification email: ${error}`
+                "User removed - An error sending the email Verification": error
             })
         }
     },
@@ -125,21 +125,19 @@ module.exports = {
     },
     verifiEmail: async (req, res) => {
         const { userID } = res.locals.user;
-        let { verifiCode } = req.body;
+        const { verifiCode } = req.body;
 
         if (!verifiCode) {
             return res.status(400).json({
                 message: "Error: verifiCode A parameter required"
             })
         }
-        
-        if (verifiCode.length !== 6 || /[0-9]{6}/.test(verifiCode) === false) {
+
+        if (verifiCode.length > 6 || /[0-9]{5,6}/.test(verifiCode) === false) {
             return res.status(400).json({
                 message: `${verifiCode} is not verification code valid`
             })
         }
-        
-        verifiCode = parseInt(verifiCode);
 
         let user;
         try {
@@ -147,6 +145,12 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({
                 error
+            })
+        }
+
+        if (!user) {
+            return res.status(406).json({
+                message: 'Please login again'
             })
         }
 
