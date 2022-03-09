@@ -26,7 +26,7 @@
 `delete` (feed id parameter requied):
 * delete feed - for admin only
 
-`/api/status` - get:
+`/api/status` - `get`:
 * get server status
 # ספריות בשימוש:
 * morgan - loger
