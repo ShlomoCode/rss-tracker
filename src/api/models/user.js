@@ -14,8 +14,8 @@ const userSchema = mongoose.Schema({
     },
     password: { type: String, required: true },
     name: { type: String, match: /[0-9-\ א-תA-z]{3,15}/, maxLength: 15, required: true },
-    verifiEmailStatus: { type: Boolean, default: false },
-    verifiEmailCode: { type: String, required: true },
+    verifyEmailStatus: { type: Boolean, default: false },
+    verifyEmailCode: { type: String, required: true },
     registrationDate: { type: Date, default: Date.now },
     Permissions: { type: String, default: 'user' }
 });

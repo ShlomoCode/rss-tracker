@@ -6,7 +6,7 @@ const checkPermissions = require('../middelwares/checkPermissions');
 const {
     signup,
     login,
-    verifiEmail,
+    verifyEmail,
     deleteUser,
     unsubscribe,
     getUsers
@@ -17,6 +17,6 @@ router.post("/signup", signup);
 router.post("/login", login);
 router.post("/delete/:userID", checkPermissions, deleteUser);
 router.patch("/Unsubscribe/:userID", unsubscribe);
-router.post("/verifi", checkLogin, verifiEmail);
+router.post("/verify", checkLogin, verifyEmail);
 
 module.exports = router;

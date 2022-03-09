@@ -42,7 +42,7 @@ module.exports = {
             })
         }
 
-        const verifiEmailCode = randomNumber();
+        const verifyEmailCode = randomNumber();
 
         const user = new User({
             _id: new mongoose.Types.ObjectId,
@@ -50,7 +50,7 @@ module.exports = {
             emailProcessed,
             emailFront: email,
             name,
-            verifiEmailCode
+            verifyEmailCode
         });
 
         try {
@@ -62,15 +62,15 @@ module.exports = {
         }
 
         try {
-            const infoSend = await sendMail.verifi(verifiEmailCode, email);
+            const infoSend = await sendMail.verify(verifyEmailCode, email);
             console.log('Email sent: ' + infoSend.response)
             return res.status(200).json({
-                message: 'User created and verification email sent'
+                message: 'User created and verifycation email sent'
             })
         } catch (error) {
             await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
-                "User removed - An error sending the email Verification": error
+                "User removed - An error sending the email verifycation": error
             })
         }
     },
@@ -123,20 +123,20 @@ module.exports = {
             }
         })
     },
-    verifiEmail: async (req, res) => {
+    verifyEmail: async (req, res) => {
         const { userID } = res.locals.user;
-        let { verifiCode } = req.body;
-        verifiCode = verifiCode.toString()
+        let { verifyCode } = req.body;
+        verifyCode = verifyCode.toString()
 
-        if (!verifiCode) {
+        if (!verifyCode) {
             return res.status(400).json({
-                message: "Error: verifiCode A parameter required"
+                message: "Error: verifyCode A parameter required"
             })
         }
 
-        if (verifiCode.length > 6 || /[0-9]{5,6}/.test(verifiCode) === false) {
+        if (verifyCode.length > 6 || /[0-9]{5,6}/.test(verifyCode) === false) {
             return res.status(400).json({
-                message: `${verifiCode} is not verification code valid`
+                message: `${verifyCode} is not verifycation code valid`
             })
         }
 
@@ -155,23 +155,23 @@ module.exports = {
             })
         }
 
-        if (verifiCode !== user.verifiEmailCode) {
+        if (verifyCode !== user.verifyEmailCode) {
             return res.status(401).json({
-                message: "Verifi faild - Wrong verification code"
+                message: "verify faild - Wrong verifycation code"
             })
         }
 
-        if (user.verifiEmailStatus === true) {
+        if (user.verifyEmailStatus === true) {
             return res.status(409).json({
-                message: 'User has already been verified'
+                message: 'User has already been verifyed'
             })
         }
 
-        if (verifiCode === user.verifiEmailCode) {
+        if (verifyCode === user.verifyEmailCode) {
             try {
-                await User.findByIdAndUpdate(userID, { verifiEmailStatus: true })
+                await User.findByIdAndUpdate(userID, { verifyEmailStatus: true })
                 res.status(200).json({
-                    message: 'Email verification completed'
+                    message: 'Email verifycation completed'
                 })
             } catch (error) {
                 res.status(500).json({
@@ -268,7 +268,7 @@ module.exports = {
 
         let userUnsubscribe;
         try {
-            userUnsubscribe = await User.findByIdAndUpdate(userID, { verifiEmailStatus: false })
+            userUnsubscribe = await User.findByIdAndUpdate(userID, { verifyEmailStatus: false })
         } catch (error) {
             return res.status(500).json({
                 error
@@ -281,7 +281,7 @@ module.exports = {
             })
         }
 
-        if (userUnsubscribe.verifiEmailStatus === false){
+        if (userUnsubscribe.verifyEmailStatus === false){
             return res.status(409).json({
                 message: `The subscription of ${userUnsubscribe.emailFront} has already been canceled!`
             })

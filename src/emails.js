@@ -33,16 +33,16 @@ const sendMail = {
             )
     },
     /** 
-    * @param {Number} verifiCode 
+    * @param {Number} verifyCode 
     * @param {String} address 
     * @returns Promise 
     */
-    verifi(verifiCode, address) {
+    verify(verifyCode, address) {
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             to: address,
-            subject: `קוד האימות שלך עבור Rss To Mail הוא: ${verifiCode}`,
-            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <b>${verifiCode}</b><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
+            subject: `קוד האימות שלך עבור Rss To Mail הוא: ${verifyCode}`,
+            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <b>${verifyCode}</b><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
         };
         return transporter.sendMail(mailOptions)
     }
