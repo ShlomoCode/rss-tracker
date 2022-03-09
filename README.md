@@ -4,16 +4,18 @@
 מיועד לעלות בסוף על הרקו, מתאים גם להפעלה רגילה במחשב.
 
 # API
-`/api/users` - post
-* login
-* signup
-* verifi
+`/api/users`
+* login - post
+* signup - post
+* verifi - post
+* unsubscribe - patch
+* delete - for admin only
 
 `/api/feeds`:
 
 get: 
-* get all feeds
-* get feed
+* get all feeds (for registered only)
+* get feed (for registered only)
 
 post:
 * create feed (for registered only)
