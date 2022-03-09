@@ -42,7 +42,7 @@ const sendMail = {
             from: 'pushing.rss@gmail.com',
             to: address,
             subject: `קוד האימות שלך עבור Rss To Mail הוא: ${verifiCode}`,
-            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <code>${verifiCode}</code><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
+            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <b>${verifiCode}</b><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
         };
         return transporter.sendMail(mailOptions)
             .then((info) => {
