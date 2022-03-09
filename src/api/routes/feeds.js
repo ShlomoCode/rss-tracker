@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const checkLogin = require('../middelwares/checkLogin');
-const checkPermissions = require('../middelwares/checkPermissions');
+const checkLogin = require('../middlewares/checkLogin');
+const checkPermissions = require('../middlewares/checkPermissions');
 
 const {
     getAllFeeds,
