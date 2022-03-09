@@ -125,7 +125,8 @@ module.exports = {
     },
     verifiEmail: async (req, res) => {
         const { userID } = res.locals.user;
-        const { verifiCode } = req.body;
+        let { verifiCode } = req.body;
+        verifiCode = verifiCode.toString()
 
         if (!verifiCode) {
             return res.status(400).json({
