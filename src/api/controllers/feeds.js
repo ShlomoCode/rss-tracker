@@ -91,7 +91,7 @@ module.exports = {
             })
         }
     },
-    updateFeed: async (req, res) => {
+    SubscribeFeed: async (req, res) => {
         const feedID = req.params.feedID;
         const { userID } = res.locals.user;
 
@@ -101,23 +101,65 @@ module.exports = {
             })
         }
 
-        const feed = await Feed.findById(feedID)
-        if (!feed) {
-            return res.status(404).json({
-                message: "Feed Not Found"
-            })
-        }
-
+        let feedSubscribe;
         try {
-            await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } })
-            res.status(200).json({
-                message: "Subscribe to feed done!",
-            })
+            feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } })
         } catch (error) {
             res.status(500).json({
                 error
             })
         }
+
+        if (!feedSubscribe) {
+            return res.status(404).json({
+                message: "Feed Not Found"
+            })
+        }
+
+        if (feedSubscribe.Subscribers.includes(userID) === true) {
+            return res.status(409).json({
+                message: "You are already a subscriber"
+            })
+        }
+
+        res.status(200).json({
+            message: "Subscribe to feed done!",
+        })
+    },
+    UnSubscribeFeed: async (req, res) => {
+        const feedID = req.params.feedID;
+        const { userID } = res.locals.user;
+
+        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+            return res.status(400).json({
+                message: `${feedID} no ObjectId Valid!`
+            })
+        }
+
+        let feedUnSubscribe;
+        try {
+            feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { Subscribers: userID } })
+        } catch (error) {
+            res.status(500).json({
+                error
+            })
+        }
+
+        if (!feedUnSubscribe) {
+            return res.status(404).json({
+                message: "Feed Not Found"
+            })
+        }
+
+        if (feedUnSubscribe.Subscribers.includes(userID) === false) {
+            return res.status(409).json({
+                message: "No subscription found"
+            })
+        }
+
+        res.status(200).json({
+            message: "UnSubscribe to feed done!",
+        })
     },
     deleteFeed: async (req, res) => {
         const feedID = req.params.feedID

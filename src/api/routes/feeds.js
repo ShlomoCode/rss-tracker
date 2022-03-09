@@ -7,7 +7,8 @@ const {
     getAllFeeds,
     getFeed,
     createFeed,
-    updateFeed,
+    UnSubscribeFeed,
+    SubscribeFeed,
     deleteFeed
 } = require('../controllers/feeds');
 
@@ -15,7 +16,8 @@ const {
 router.get("/", checkLogin, getAllFeeds);
 router.get("/:feedID", checkLogin, getFeed)
 router.post("/", checkLogin, createFeed);
-router.patch("/:feedID", checkLogin, updateFeed);
+router.post("/Subscribe/:feedID", checkLogin, SubscribeFeed);
+router.delete("/Subscribe/:feedID", checkLogin, UnSubscribeFeed);
 // for admin only:
 router.delete("/:feedID", checkPermissions, deleteFeed);
 
