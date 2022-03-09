@@ -178,5 +178,57 @@ module.exports = {
                 })
             }
         }
+    },
+    deleteUser: async (req, res) => {
+        const userID = req.params.userID
+
+        if (!userID) {
+            return res.status(400).json({
+                message: "userID A required parameter"
+            })
+        }
+
+
+        if (mongoose.Types.ObjectId.isValid(userID) !== true) {
+            return res.status(400).json({
+                message: `${userID} no ObjectId Valid!`
+            })
+        }
+
+        if (res.locals.user.Permissions !== 'admin') {
+            return res.status(403).json({
+                message: 'No permission'
+            })
+        }
+
+        let userDeleted;
+
+        try {
+            userDeleted = await User.findByIdAndDelete(userID);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            })
+        }
+
+        if (!userDeleted) {
+            return res.status(404).json({
+                message: `User ${userID} Not Found`
+            })
+        }
+
+        // הסרת הסיסמה (ההאש שלה) מהפלט
+        userDeleted.password = undefined;
+
+        res.status(200).json({
+            message: `userId ${userID} Deleted`,
+            info: userDeleted
+        })
+    },
+    getUsers: async (req, res) => {
+        if (res.locals.user.Permissions !== 'admin') {
+
+        }
+    },
     }
 }
