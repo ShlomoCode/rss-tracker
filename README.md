@@ -20,11 +20,12 @@
 `post`:
 * create feed (for registered only)
 
-`patch` (feed id parameter requied):
-* update feed - Subscribe only
-
 `delete` (feed id parameter requied):
 * delete feed - for admin only
+
+`/api/feeds/Subscribe` (feed id parameter requied):
+* `post` - Subscribe
+* `delete` - UnSubscribe
 
 `/api/status` - `get`:
 * get server status
