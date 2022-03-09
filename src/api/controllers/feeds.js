@@ -3,23 +3,39 @@ const Feed = require('../models/feed');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
+        const { userID } = res.locals.user;
+
+        let feedsRew;
+
         try {
-            let feedsRew = await Feed.find()
-            const feeds = feedsRew.map((feed) => {
-                feed.Subscribers = feed.Subscribers.length;
-                return feed;
-            })
-            res.status(200).json({
-                feeds
-            })
+            feedsRew = await Feed.find()
         } catch (error) {
             res.status(500).json({
                 error
             })
         }
+
+        if (!feedsRew) {
+            return res.status(406).json({
+                message: "No feeds found"
+            })
+        }
+
+        const feeds = feedsRew.map((feed) => {
+            const feedObject = feed.toObject();
+            feedObject.subscriberSelf = feed.Subscribers.includes(userID)
+            feedObject.Subscribers = feed.Subscribers.length;
+            return feedObject;
+        })
+
+        res.status(200).json({
+            feeds
+        })
     },
     getFeed: async (req, res) => {
-        const feedID = req.params.feedID
+        const feedID = req.params.feedID;
+        const { userID } = res.locals.user;
+
 
         if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
             return res.status(400).json({
@@ -27,22 +43,31 @@ module.exports = {
             })
         }
 
+        let feedRew;
+
         try {
-            let feed = await Feed.findById(feedID)
-            if (!feed) {
-                return res.status(404).json({
-                    message: 'Feed Not Found'
-                })
-            }
-            feed.Subscribers = feed.Subscribers.length;
-            res.status(200).json({
-                feed
-            })
+            feedRew = await Feed.findById(feedID)
         } catch (error) {
             res.status(500).json({
                 error
             })
         }
+
+        if (!feedRew) {
+            return res.status(404).json({
+                message: 'Feed Not Found'
+            })
+        }
+
+        const feed = feedRew.toObject()
+        // האם המשתמש המחובר מנוי לפיד
+        feed.subscriberSelf = feed.Subscribers.includes(userID)
+        // המרה בפלט של רשימת המנויים לפיד למספר המנויים לפיד
+        feed.Subscribers = feed.Subscribers.length;
+
+        res.status(200).json({
+            feed
+        })
     },
     createFeed: async (req, res) => {
         const { userID } = res.locals.user.userID;
