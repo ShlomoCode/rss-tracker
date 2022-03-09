@@ -13,17 +13,17 @@
 
 `/api/feeds`:
 
-get: 
+`get`: 
 * get all feeds (for registered only)
 * get feed (for registered only)
 
-post:
+`post`:
 * create feed (for registered only)
 
-patch (feed id parameter requied):
+`patch` (feed id parameter requied):
 * update feed - Subscribe only
 
-delete (feed id parameter requied):
+`delete` (feed id parameter requied):
 * delete feed - for admin only
 
 `/api/status` - get:
