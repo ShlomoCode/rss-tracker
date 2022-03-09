@@ -39,7 +39,7 @@ module.exports = {
 
         if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
             return res.status(400).json({
-                message: `${feedID} no ObjectId Valid!`
+                message: `${feedID} no feedID Valid!`
             })
         }
 
