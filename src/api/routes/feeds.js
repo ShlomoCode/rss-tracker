@@ -12,7 +12,7 @@ const {
     deleteFeed
 } = require('../controllers/feeds');
 
-// for registerd login only:
+// for registers and login only:
 router.get("/", checkLogin, getAllFeeds);
 router.get("/:feedID", checkLogin, getFeed)
 router.post("/", checkLogin, createFeed);

@@ -93,7 +93,7 @@ module.exports = {
         const users = await User.find({ emailProcessed })
         if (users.length === 0) {
             return res.status(401).json({
-                message: "Auth faild"
+                message: "Auth failed"
             })
         }
 
@@ -102,7 +102,7 @@ module.exports = {
         bcrypt.compare(password, user.password, (error, result) => {
             if (error) {
                 return res.status(401).json({
-                    message: "Auth faild"
+                    message: "Auth failed"
                 })
             }
 
@@ -113,12 +113,12 @@ module.exports = {
                     { expiresIn: "2H" })
 
                 return res.status(200).json({
-                    message: "Auth succeful",
+                    message: "Auth successful",
                     token
                 })
             } else {
                 return res.status(401).json({
-                    message: "Auth faild"
+                    message: "Auth failed"
                 })
             }
         })
@@ -157,13 +157,13 @@ module.exports = {
 
         if (verifyCode !== user.verifyEmailCode) {
             return res.status(401).json({
-                message: "verify faild - Wrong verification  code"
+                message: "verify failed - Wrong verification  code"
             })
         }
 
         if (user.verifyEmailStatus === true) {
             return res.status(409).json({
-                message: 'User has already been verifyed'
+                message: 'User has already been verified'
             })
         }
 
@@ -192,7 +192,7 @@ module.exports = {
 
         if (mongoose.Types.ObjectId.isValid(userID) !== true) {
             return res.status(400).json({
-                message: `${userID} no ObjectId Valid!`
+                message: `${userID} no userID Valid!`
             })
         }
 

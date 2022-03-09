@@ -25,7 +25,7 @@ const checkPermissions = async (req, res, next) => {
         next()
     } catch (error) {
         return res.status(401).json({
-            message: "Auth faild"
+            message: "Auth failed"
         })
     }
 }
