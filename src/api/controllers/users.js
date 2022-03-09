@@ -227,8 +227,28 @@ module.exports = {
     },
     getUsers: async (req, res) => {
         if (res.locals.user.Permissions !== 'admin') {
-
+            return res.status(403).json({
+                message: 'No permission'
+            })
         }
+
+        let usersRew;
+        try {
+            usersRew = await User.find()
+        } catch (error) {
+            return res.status(500).json({
+                error
+            })
+        }
+
+        const users = usersRew.map((user) => {
+            user.password = undefined;
+            return user;
+        })
+
+        res.status(200).json({
+            users
+        })
     },
     }
 }
