@@ -70,7 +70,6 @@ module.exports = {
         })
     },
     createFeed: async (req, res) => {
-        const { userID } = res.locals.user.userID;
         let { url } = req.body;
 
         if (!url) {
