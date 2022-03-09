@@ -65,12 +65,12 @@ module.exports = {
             const infoSend = await sendMail.verify(verifyEmailCode, email);
             console.log('Email sent: ' + infoSend.response)
             return res.status(200).json({
-                message: 'User created and verifycation email sent'
+                message: 'User created and verification  email sent'
             })
         } catch (error) {
             await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
-                "User removed - An error sending the email verifycation": error
+                "User removed - An error sending the email verification ": error
             })
         }
     },
@@ -136,7 +136,7 @@ module.exports = {
 
         if (verifyCode.length > 6 || /[0-9]{5,6}/.test(verifyCode) === false) {
             return res.status(400).json({
-                message: `${verifyCode} is not verifycation code valid`
+                message: `${verifyCode} is not verification  code valid`
             })
         }
 
@@ -157,7 +157,7 @@ module.exports = {
 
         if (verifyCode !== user.verifyEmailCode) {
             return res.status(401).json({
-                message: "verify faild - Wrong verifycation code"
+                message: "verify faild - Wrong verification  code"
             })
         }
 
@@ -171,7 +171,7 @@ module.exports = {
             try {
                 await User.findByIdAndUpdate(userID, { verifyEmailStatus: true })
                 res.status(200).json({
-                    message: 'Email verifycation completed'
+                    message: 'Email verification  completed'
                 })
             } catch (error) {
                 res.status(500).json({
