@@ -126,13 +126,14 @@ module.exports = {
     verifyEmail: async (req, res) => {
         const { userID } = res.locals.user;
         let { verifyCode } = req.body;
-        verifyCode = verifyCode.toString();
 
         if (!verifyCode) {
             return res.status(400).json({
                 message: 'Error: verifyCode A parameter required'
             });
         }
+
+        verifyCode = verifyCode.toString();
 
         if (verifyCode.length > 6 || /[0-9]{5,6}/.test(verifyCode) === false) {
             return res.status(400).json({
@@ -171,7 +172,7 @@ module.exports = {
             try {
                 await User.findByIdAndUpdate(userID, { verifyEmailStatus: true });
                 res.status(200).json({
-                    message: 'Email verification  completed'
+                    message: 'Email verification completed'
                 });
             } catch (error) {
                 res.status(500).json({
@@ -179,6 +180,46 @@ module.exports = {
                 });
             }
         }
+    },
+    unsubscribe: async (req, res) => {
+        const userID = req.params.userID;
+
+        if (!userID) {
+            return res.status(400).json({
+                message: 'userID A required parameter'
+            });
+        }
+
+        if (mongoose.Types.ObjectId.isValid(userID) !== true) {
+            return res.status(400).json({
+                message: `${userID} is not userID valid`
+            });
+        }
+
+        let userUnsubscribe;
+        try {
+            userUnsubscribe = await User.findByIdAndUpdate(userID, { verifyEmailStatus: false });
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
+        if (!userUnsubscribe) {
+            return res.status(404).json({
+                message: `User ${userID} Not Found`
+            });
+        }
+
+        if (userUnsubscribe.verifyEmailStatus === false) {
+            return res.status(409).json({
+                message: `The subscription of ${userUnsubscribe.emailFront} has already been canceled!`
+            });
+        }
+
+        res.status(200).json({
+            message: `Unsubscribe from ${userUnsubscribe.emailFront} has been successfully completed`
+        });
     },
     deleteUser: async (req, res) => {
         const userID = req.params.userID;
@@ -248,46 +289,6 @@ module.exports = {
 
         res.status(200).json({
             users
-        });
-    },
-    unsubscribe: async (req, res) => {
-        const userID = req.params.userID;
-
-        if (!userID) {
-            return res.status(400).json({
-                message: 'userID A required parameter'
-            });
-        }
-
-        if (mongoose.Types.ObjectId.isValid(userID) !== true) {
-            return res.status(400).json({
-                message: `${userID} is not userID valid`
-            });
-        }
-
-        let userUnsubscribe;
-        try {
-            userUnsubscribe = await User.findByIdAndUpdate(userID, { verifyEmailStatus: false });
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
-        if (!userUnsubscribe) {
-            return res.status(404).json({
-                message: `User ${userID} Not Found`
-            });
-        }
-
-        if (userUnsubscribe.verifyEmailStatus === false) {
-            return res.status(409).json({
-                message: `The subscription of ${userUnsubscribe.emailFront} has already been canceled!`
-            });
-        }
-
-        res.status(200).json({
-            message: `Unsubscribe from ${userUnsubscribe.emailFront} has been successfully completed`
         });
     }
 };
