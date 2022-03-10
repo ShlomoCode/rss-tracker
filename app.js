@@ -42,6 +42,8 @@ app.use("/api/users", usersRoutes)
 app.use("/api/feeds", feedsRoutes)
 app.use("/api/status", getStatus)
 
+const processingFeeds = require('./src/server/main');
+processingFeeds()
 
 app.use((req, res, next) => {
     const error = new Error("Not Found")

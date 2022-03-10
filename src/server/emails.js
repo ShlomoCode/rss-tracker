@@ -15,14 +15,14 @@ const sendMail = {
      *
      * @param {Object} info מידע על המייל שצריך להישלח
      */
-    rss (infoMail) {
-        let { title, addresses, body, link, titleSite } = infoMail;
+    rss (item, feedTitle, addresses) {
+        let { description, link, title } = item;
         title = decode(title);
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             bcc: addresses,
-            subject: 'RSS חדש!🎉 - ' + title.replace(/([א-ת] )(צפו)/, '$1• $2') + ` | ${titleSite}`,
-            html: body + '<br>' + link
+            subject: 'RSS חדש! 🎉 ⟫ ' + title.replace(/([א-ת] )(צפו)/, '$1• $2') + ` | ${feedTitle}`,
+            html: description + '<br>' + link
         };
         return transporter.sendMail(mailOptions)
             .then((info) => {
