@@ -1,11 +1,11 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const config = require('../../../config.json');
 const User = require('../models/user');
 
 const checkPermissions = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.replace("Bearer ", "")
-        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true })
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const infoLogin = jwt.verify(token, config.JWT_KEY, { complete: true });
         const { id: userID } = infoLogin.payload;
 
         let user;
@@ -14,20 +14,20 @@ const checkPermissions = async (req, res, next) => {
         } catch (error) {
             return res.status(500).json({
                 error
-            })
+            });
         }
 
         res.locals.user = {
             userID,
             Permissions: user.Permissions
-        }
+        };
 
-        next()
+        next();
     } catch (error) {
         return res.status(401).json({
-            message: "Auth failed"
-        })
+            message: 'Auth failed'
+        });
     }
-}
+};
 
 module.exports = checkPermissions;
