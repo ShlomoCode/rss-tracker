@@ -42,12 +42,6 @@ app.use("/api/users", usersRoutes)
 app.use("/api/feeds", feedsRoutes)
 app.use("/api/status", getStatus)
 
-const processingFeeds = require('./src/server/main');
-const timingRun = (1000 * 60 * 4);
-// הפעלה ראשונה מיד באתחול האפליקציה
-processingFeeds()
-// כל 4 דקות שוב
-setInterval(processingFeeds, timingRun)
 
 
 app.use((req, res, next) => {
@@ -65,7 +59,19 @@ app.use((error, req, res, next) => {
     })
 })
 
-// server
+/**
+ * Back And base
+ */
+const processingFeeds = require('./src/server/main');
+const timingRun = (1000 * 60 * 4);
+// הפעלה ראשונה מיד באתחול האפליקציה
+processingFeeds()
+// כל 4 דקות שוב
+setInterval(processingFeeds, timingRun)
+
+/**
+ * Listening server
+ */
 const http = require("http")
 const port = 8080
 
