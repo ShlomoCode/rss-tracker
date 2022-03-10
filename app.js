@@ -43,7 +43,12 @@ app.use("/api/feeds", feedsRoutes)
 app.use("/api/status", getStatus)
 
 const processingFeeds = require('./src/server/main');
+const timingRun = (1000 * 60 * 4);
+// הפעלה ראשונה מיד באתחול האפליקציה
 processingFeeds()
+// כל 4 דקות שוב
+setInterval(processingFeeds, timingRun)
+
 
 app.use((req, res, next) => {
     const error = new Error("Not Found")
