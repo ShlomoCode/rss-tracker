@@ -4,6 +4,7 @@ const parse = require('./rss2json');
 const sendMail = require('./emails');
 
 async function main() {
+    console.log('processingFeeds started...');
     const feedsRew = await Feed.find()
 
     if (feedsRew.length === 0) {
