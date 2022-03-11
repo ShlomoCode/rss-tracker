@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const config = require('../../../config.json');
 const sendMail = require('../../server/emails');
-const normalizeEmail = require('normalize-email');
 
 function randomNumber() {
     const numberRandom = Math.floor((Math.random() * 5000), 0);
@@ -15,7 +14,20 @@ function randomNumber() {
 module.exports = {
     signup: async (req, res) => {
         const { email, password, name } = req.body;
-        const emailProcessed = normalizeEmail(email);
+
+        /**
+         * normalize-email by regex
+         */
+        let emailProcessed = email;
+        if (/g(oogle)?mail\.com|hotmail\.com|outlook\.com/.test(email)) {
+            const emailRew = email.replace('googlemail', 'gmail');
+            const emailParts = emailRew.split('@');
+            let part1 = emailParts[0].replace(/.*\+/, "")
+            if (/gmail\.com/.test(part1)) {
+                part1 = part1.replaceAll('.', '')
+            }
+            emailProcessed = part1 + '@' + emailParts[1];
+        }
 
         const weakness = zxcvbn(password);
 
@@ -76,13 +88,14 @@ module.exports = {
     },
     login: async (req, res) => {
         const { email, password } = req.body;
-        const emailProcessed = normalizeEmail(email);
 
         if (!email) {
             return res.status(400).json({
                 message: 'Email parameter required'
             });
         }
+
+        const emailProcessed = normalizeEmail(email);
 
         if (!password) {
             return res.status(400).json({
