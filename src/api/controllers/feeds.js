@@ -87,11 +87,11 @@ module.exports = {
             });
         }
 
-        const parse = require('../../server/rss2json');
+        const parseRss = require('../../server/rss2json');
 
         let feedContent;
         try {
-            feedContent = await parse(url);
+            feedContent = await parseRss(url);
         } catch (error) {
             return res.status(400).json({
                 message: `${url} Not Normal feed`
