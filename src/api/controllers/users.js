@@ -91,7 +91,7 @@ module.exports = {
 
         if (!email) {
             return res.status(400).json({
-                message: 'Email parameter required'
+                message: 'email parameter required'
             });
         }
 
@@ -99,7 +99,7 @@ module.exports = {
 
         if (!password) {
             return res.status(400).json({
-                message: 'Password parameter required'
+                message: 'password parameter required'
             });
         }
 
