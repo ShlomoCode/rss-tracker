@@ -1,7 +1,8 @@
 const Feed = require('../api/models/feed');
 const User = require('../api/models/user');
-const parse = require('./rss2json');
+const parseRss = require('./rss2json');
 const sendMail = require('./emails');
+const { parser: parseHtml } = require('html-metadata-parser');
 
 async function main() {
     console.log('processingFeeds started...');
@@ -36,7 +37,7 @@ async function main() {
         let feedContent;
         let dateOfProcessing;
         try {
-            feedContent = await parse(feed.url);
+            feedContent = await parseRss(feed.url);
             dateOfProcessing = new Date();
         } catch (error) {
             console.log(`error: ${error}`);
@@ -52,7 +53,11 @@ async function main() {
             const pubDate = new Date(item.published);
             const checkDate = new Date(LastCheckedOn);
 
-            if (pubDate > checkDate) {
+            if (pubDate < checkDate) {
+                if (!item.thumbnail) {
+                    const htmlFeedLink = await parseHtml(item.link);
+                    item.thumbnail = htmlFeedLink.og.image
+                }
                 await sendMail.rss(item, feedTitle, AddressesToSend)
             } else {
                 console.log(`Outdated item: ${item}`);
