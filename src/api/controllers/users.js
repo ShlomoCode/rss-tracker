@@ -11,6 +11,26 @@ function randomNumber() {
     return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString();
 }
 
+/**
+ * נרמול כתובת מייל - הסרת נקודות מיותרות, מה שאחרי הפלוס, וכדומה
+ * לצורך וידוא שהמייל לא רשום כבר
+ * @param {String} email כתובת המייל שהתקבלה מהמשתמש
+ * @returns 
+ */
+function normalizeEmail(email) {
+    if (/g(oogle)?mail\.com|hotmail\.com|outlook\.com/.test(email)) {
+        const emailRew = email.replace('googlemail', 'gmail');
+        const emailParts = emailRew.split('@');
+        let part1 = emailParts[0].replace(/.*\+/, "")
+        if (/gmail\.com/.test(part1)) {
+            part1 = part1.replaceAll('.', '')
+        }
+        return part1 + '@' + emailParts[1];
+    } else {
+        return email;
+    }
+}
+
 module.exports = {
     signup: async (req, res) => {
         const { email, password, name } = req.body;
@@ -36,16 +56,7 @@ module.exports = {
         /**
          * normalize-email by regex
          */
-        let emailProcessed = email;
-        if (/g(oogle)?mail\.com|hotmail\.com|outlook\.com/.test(email)) {
-            const emailRew = email.replace('googlemail', 'gmail');
-            const emailParts = emailRew.split('@');
-            let part1 = emailParts[0].replace(/.*\+/, "")
-            if (/gmail\.com/.test(part1)) {
-                part1 = part1.replaceAll('.', '')
-            }
-            emailProcessed = part1 + '@' + emailParts[1];
-        }
+        let emailProcessed = normalizeEmail(email);
 
         const weakness = zxcvbn(password);
 
