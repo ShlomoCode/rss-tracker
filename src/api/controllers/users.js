@@ -15,6 +15,24 @@ module.exports = {
     signup: async (req, res) => {
         const { email, password, name } = req.body;
 
+        if (!email) {
+            return res.status(400).json({
+                message: 'email parameter required'
+            });
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                message: 'password parameter required'
+            });
+        }
+
+        if (!name) {
+            return res.status(400).json({
+                message: 'name parameter required'
+            });
+        }
+
         /**
          * normalize-email by regex
          */
