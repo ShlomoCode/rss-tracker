@@ -53,7 +53,7 @@ async function main() {
             const pubDate = new Date(item.published);
             const checkDate = new Date(LastCheckedOn);
 
-            if (pubDate < checkDate) {
+            if (pubDate > checkDate) {
                 if (!item.thumbnail) {
                     const htmlFeedLink = await parseHtml(item.link);
                     item.thumbnail = htmlFeedLink.og.image
