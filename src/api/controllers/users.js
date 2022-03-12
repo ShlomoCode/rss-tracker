@@ -3,7 +3,6 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
-const config = require('../../../config.json');
 const sendMail = require('../../server/emails');
 
 function randomNumber() {
@@ -151,7 +150,7 @@ module.exports = {
             if (result === true) {
                 const token = jwt.sign(
                     { id: user._id, email: user.email },
-                    config.JWT_KEY,
+                    process.env.JWT_KEY,
                     { expiresIn: '3 days' });
 
                 return res.status(200).json({

@@ -1,13 +1,12 @@
 const nodemailer = require('nodemailer');
-const config = require('../../config.json');
 const { decode } = require('html-entities');
 const imageToBase64 = require('image-to-base64');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: config.nodemailer.user,
-        pass: config.nodemailer.password
+        user: process.env.gmail_user,
+        pass: process.env. gmail_password
     }
 });
 

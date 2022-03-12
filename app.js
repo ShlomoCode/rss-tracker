@@ -2,10 +2,10 @@ const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
 const morgan = require("morgan");
-const config = require('./config.json')
+require('dotenv').config({path: 'config.env'});
 
 // התחברות לדאטה בייס
-mongoose.connect(config.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
