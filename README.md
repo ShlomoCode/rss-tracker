@@ -42,3 +42,4 @@
 * html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 * html-metadata-parser - לקבלת תמונת הכתבה עבור אתרים שלא מחזירים תמונה בפיד, כגון JDN
 * image-to-base64 - להורדת התמונה והמרתה לbase64
+* dotenv - קונפיג
