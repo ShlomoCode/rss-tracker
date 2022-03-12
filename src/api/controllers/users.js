@@ -60,7 +60,7 @@ module.exports = {
 
         const weakness = zxcvbn(password);
 
-        if (weakness.score <= 2) {
+        if (weakness.score <= 1) {
             return res.status(400).json({
                 message: 'Weak password',
                 weakness: weakness.feedback
