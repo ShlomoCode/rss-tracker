@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const { decode } = require('html-entities');
 const imageToBase64 = require('image-to-base64');
+const bodyVerifyEmail = require('./email-Verification');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -50,12 +51,12 @@ const sendMail = {
     * @param {String} address
     * @returns Promise
     */
-    verify (verifyCode, address) {
+    verify (verifyCode, address, name) {
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             to: address,
             subject: `קוד האימות שלך עבור Rss To Mail הוא: ${verifyCode}`,
-            html: `קוד אימות הדוא"ל עבור הכתובת ${address} הוא: <b>${verifyCode}</b><br>יש להכניס את הקוד בתיבת האימות באתר.<br>בהצלחה!`
+            html: bodyVerifyEmail(name, address, verifyCode)
         };
         return transporter.sendMail(mailOptions);
     }
