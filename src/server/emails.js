@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: process.env.gmail_user,
-        pass: process.env. gmail_password
+        pass: process.env.gmail_password
     }
 });
 
@@ -15,16 +15,16 @@ const sendMail = {
      *
      * @param {Object} info מידע על המייל שצריך להישלח
      */
-    async rss(item, feedTitle, addresses) {
+    async rss (item, feedTitle, addresses) {
         let { description, link, title, thumbnail } = item;
 
         title = decode(title);
 
-        title = title.replace(/([א-ת] )(צפו)/, '$1• $2')
+        title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
-        thumbnail = await imageToBase64(thumbnail)
+        thumbnail = await imageToBase64(thumbnail);
 
-        const cidImage = Math.random().toString(36).substring(2,7);
+        const cidImage = Math.random().toString(36).substring(2, 7);
 
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
