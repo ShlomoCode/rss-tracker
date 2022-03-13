@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 require('dotenv').config({ path: 'config.env' });
+const cookieParser = require('cookie-parser');
 
 // התחברות לדאטה בייס
 mongoose.connect(process.env.MONGO_URI, {
