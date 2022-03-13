@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const sendMail = require('../../server/emails');
 
-function randomNumber() {
+function randomNumber () {
     const numberRandom = Math.floor((Math.random() * 5000), 0);
     return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString();
 }
@@ -14,15 +14,15 @@ function randomNumber() {
  * נרמול כתובת מייל - הסרת נקודות מיותרות, מה שאחרי הפלוס, וכדומה
  * לצורך וידוא שהמייל לא רשום כבר
  * @param {String} email כתובת המייל שהתקבלה מהמשתמש
- * @returns 
+ * @returns
  */
-function normalizeEmail(email) {
+function normalizeEmail (email) {
     if (/g(oogle)?mail\.com|hotmail\.com|outlook\.com/.test(email)) {
         const emailRew = email.replace('googlemail', 'gmail');
         const emailParts = emailRew.split('@');
-        let part1 = emailParts[0].replace(/.*\+/, "")
+        let part1 = emailParts[0].replace(/.*\+/, '');
         if (/gmail\.com/.test(part1)) {
-            part1 = part1.replaceAll('.', '')
+            part1 = part1.replaceAll('.', '');
         }
         return part1 + '@' + emailParts[1];
     } else {
@@ -105,7 +105,7 @@ module.exports = {
             const infoSend = await sendMail.verify(verifyEmailCode, email);
             console.log('Email sent: ' + infoSend.response);
             return res.status(200).json({
-                message: 'User created and verification  email sent'
+                message: 'User created and verification email sent'
             });
         } catch (error) {
             await User.findOneAndDelete({ emailProcessed });

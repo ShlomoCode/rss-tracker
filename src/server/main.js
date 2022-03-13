@@ -12,21 +12,20 @@ async function main () {
         return console.log('feeds not found!');
     }
 
-    let feeds = feedsRew.filter((feed) => {
+    const feeds = feedsRew.filter((feed) => {
         if (feed.Subscribers.length < 1) {
             return false;
         } else {
-            return true
+            return true;
         }
-    })
+    });
 
     for (const feed of feeds) {
-
         const AddressesToSend = [];
         for (let i = 0; i < feed.Subscribers.length; i++) {
             const user = await User.findById(feed.Subscribers[i]);
             if (user.verifyEmailStatus === true) {
-                AddressesToSend.push(user.emailFront)
+                AddressesToSend.push(user.emailFront);
             }
         }
 
@@ -47,7 +46,6 @@ async function main () {
         const { title: feedTitle, items } = feedContent;
 
         for (const item of items) {
-
             const { LastCheckedOn } = feed;
 
             const pubDate = new Date(item.published);
@@ -56,9 +54,9 @@ async function main () {
             if (pubDate > checkDate) {
                 if (!item.thumbnail) {
                     const htmlFeedLink = await parseHtml(item.link);
-                    item.thumbnail = htmlFeedLink.og.image
+                    item.thumbnail = htmlFeedLink.og.image;
                 }
-                await sendMail.rss(item, feedTitle, AddressesToSend)
+                await sendMail.rss(item, feedTitle, AddressesToSend);
             } else {
                 console.log(`Outdated item: ${item}`);
             }
