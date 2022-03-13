@@ -77,8 +77,8 @@ setInterval(processingFeeds, timingRun);
 /**
  * Listening server
  */
-const http = require("http")
-const port = 8080
+const http = require('http');
+const port = process.env.PORT || 80;
 
 const server = http.createServer(app);
 
