@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rss To Mail</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="message signup">
+            <div class="btn-wrapper">
+                <button class="button" id="signup">Sign Up</button>
+                <button class="button" id="login"> Login</button>
+            </div>
+        </div>
+        <div class="form form--signup">
+            <div class="form--heading">Welcome! Sign Up</div>
+            <form autocomplete="off" action="#" id="form-signup">
+                <input type="text" placeholder="Name" id="signup-name">
+                <input type="email" placeholder="Email" id="signup-email">
+                <input type="password" placeholder="Password" id="signup-password">
+                <button class="button" id="sign-up-btn">Sign Up</button>
+            </form>
+        </div>
+        <div class="form form--login">
+            <div class="form--heading">Welcome back!</div>
+            <form autocomplete="off" action="#" id="form-login">
+                <input type="email" placeholder="Email" id="login-email">
+                <input type="password" placeholder="Password" id="login-password">
+                <button class="button" id="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"
+    integrity="sha256-0H3Nuz3aug3afVbUlsu12Puxva3CP4EhJtPExqs54Vg=" crossorigin="anonymous"></script>
+    <script src="events.js" type="module"></script>
+<script>
+    const token = Cookies.get('token')
+    axios.defaults.headers.common['Authorization'] = token;
+    axios.defaults.baseURL = 'http://localhost:8080/api';
+</script>
+</html>

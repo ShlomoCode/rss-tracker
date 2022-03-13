@@ -42,32 +42,36 @@ app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.use('/api/status', getStatus);
 
+app.use(cookieParser());
 
+const checkLoginClient = require('./src/client/middlewares/checkLogin');
+const UnsubscribeMiddleware = require('./src/client/middlewares/unsubscribe');
 
-app.use((req, res, next) => {
-    const error = new Error("Not Found")
-    error.status = 404
-    next(error)
-})
+app.use('/login', checkLoginClient, express.static('src/client/static/login'));
+app.use('/', checkLoginClient, express.static('src/client/static/main'));
+app.use('/unsubscribe', UnsubscribeMiddleware, express.static('src/client/static/unsubscribe'));
+
+// for 404 page
+app.use('*', express.static('src/client/static/404'));
 
 app.use((error, req, res, next) => {
-    res.status(error.status || 500)
+    res.status(500);
     res.json({
         error: {
             message: error.message
         }
-    })
-})
+    });
+});
 
 /**
- * Back And base
+ * Run Back And base
  */
 const processingFeeds = require('./src/server/main');
 const timingRun = (1000 * 60 * 4);
 // הפעלה ראשונה מיד באתחול האפליקציה
-processingFeeds()
+processingFeeds();
 // כל 4 דקות שוב
-setInterval(processingFeeds, timingRun)
+setInterval(processingFeeds, timingRun);
 
 /**
  * Listening server
@@ -75,6 +79,6 @@ setInterval(processingFeeds, timingRun)
 const http = require("http")
 const port = 8080
 
-const server = http.createServer(app)
+const server = http.createServer(app);
 
-server.listen(port)
+server.listen(port);
