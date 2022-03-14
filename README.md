@@ -62,7 +62,8 @@ WEB_SITE_ADDRESS # אם האתר פועל ברשת, לדוגמה על שרת VPS
 </div>
 
 # ספריות בשימוש:
-* morgan - loger
+## צד שרת
+* morgan - לוגר בקשות
 * nodemon - לרענון אוטומטי של הרשת בכל שינוי
 * express - שרת HTTP
 * mongoose - התממשקות עם הדאטה בייס
@@ -75,3 +76,9 @@ WEB_SITE_ADDRESS # אם האתר פועל ברשת, לדוגמה על שרת VPS
 * html-metadata-parser - לקבלת תמונת הכתבה עבור אתרים שלא מחזירים תמונה בפיד, כגון JDN
 * image-to-base64 - להורדת התמונה והמרתה לbase64
 * dotenv - קונפיג
+* cookie-parser - קבלת העוגיות בצד השרת
+## צד לקוח
+* [jQuery](https://jquery.com)
+* [axios](https://github.com/axios/axios)
+* [js-cookie](https://github.com/js-cookie/js-cookie)
+* [awesome-notifications](https://f3oall.github.io/awesome-notifications)
