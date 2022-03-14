@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
+const Feed = require('../models/feed');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
@@ -55,7 +56,7 @@ module.exports = {
         /**
          * normalize-email by regex
          */
-        let emailProcessed = normalizeEmail(email);
+        const emailProcessed = normalizeEmail(email);
 
         const weakness = zxcvbn(password);
 
@@ -165,8 +166,9 @@ module.exports = {
         });
     },
     verifyEmail: async (req, res) => {
-        const { userID } = res.locals.user;
-        let { verifyCode } = req.body;
+        console.log(req.body?.verifyCode);
+        let verifyCode = req.body?.verifyCode || req.query.verifyCode;
+        const userID = res.locals.user?.userID || req.params.userID;
 
         if (!verifyCode) {
             return res.status(400).json({
@@ -212,14 +214,19 @@ module.exports = {
         if (verifyCode === user.verifyEmailCode) {
             try {
                 await User.findByIdAndUpdate(userID, { verifyEmailStatus: true });
-                res.status(200).json({
-                    message: 'Email verification completed'
-                });
             } catch (error) {
                 res.status(500).json({
                     error
                 });
             }
+        }
+
+        if (!req.query.verifyCode) {
+            res.status(200).json({
+                message: 'Email verification completed'
+            });
+        } else {
+            return res.redirect('/');
         }
     },
     unsubscribe: async (req, res) => {
