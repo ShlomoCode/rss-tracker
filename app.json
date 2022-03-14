@@ -1,0 +1,29 @@
+{
+    "name": "rss to mail",
+    "description": "אפליקציית nodeJS למעקב אחרי פידי rss ושליחתם למייל.",
+    "repository": "https://github.com/ShlomoCode/test-heroku",
+    "addons": [{
+        "plan": "labs:enable runtime-dyno-metadata"
+    }],
+    "success_url": "/",
+    "website": "https://github.com/ShlomoCode/rss-to-mail",
+    "env": {
+        "MONGO_URI": {
+            "description": "כתובת URI של מסד נתונים mongoDB. ניתן לקבל כזה בתוכנית החינמית של https://www.clever-cloud.com או בmongoDB cloud - https://cloud.mongodb.com"
+        },
+        "gmail_user": {
+            "description": "כתובת אימייל של חשבון gmail שממנו ישלחו המיילים"
+        },
+        "gmail_password": {
+            "description": "סיסמת החשבון - יש להפעיל גישה ל\"אפליקציות לא מאובטחות\", או (מומלץ!) להפעיל אימות דו שלבי ולהשתמש ב\"סיסמה לאפליקציה\"."
+        },
+        "JWT_KEY": {
+            "description": "מפתח ההצפנה עבור jwt. ערך רנדומלי, ניתן לשנות אותו לאחר יצירת האפליקציה.",
+            "generator": "secret"
+        },
+        "countMaxFeedsForUser": {
+            "description": "ברירת מחדל - 10 .מספר הפידים המרבי פר משתמש",
+             "Required": "false"
+        }
+      }
+  }
