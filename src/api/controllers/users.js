@@ -102,7 +102,7 @@ module.exports = {
         }
 
         try {
-            const infoSend = await sendMail.verify(verifyEmailCode, email);
+            const infoSend = await sendMail.verify(verifyEmailCode, email, name);
             console.log('Email sent: ' + infoSend.response);
             return res.status(200).json({
                 message: 'User created and verification email sent'
