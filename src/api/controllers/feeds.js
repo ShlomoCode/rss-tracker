@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Feed = require('../models/feed');
 const { parser: parseHtml } = require('html-metadata-parser');
 const parseRss = require('../../server/rss2json');
+const { decode: decodeHtml } = require('html-entities');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
@@ -98,7 +99,7 @@ module.exports = {
             const feedMetadata = await parseHtml(feedContent.link);
             feedImage = feedMetadata.og.image;
             feedDescription = feedMetadata.og.description;
-            feedTitle = feedContent.title;
+            feedTitle = decodeHtml(feedContent.title);
         } catch (error) {
             return res.status(400).json({
                 message: `${url} Not Normal feed`
