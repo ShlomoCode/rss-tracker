@@ -51,7 +51,7 @@ const sendMail = {
     * @param {String} address
     * @returns Promise
     */
-    verify (verifyCode, address, name) {
+    verify (verifyCode, address, name, userID) {
         const mailOptions = {
             from: process.env.gmail_user,
             to: address,
