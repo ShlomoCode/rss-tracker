@@ -337,7 +337,7 @@ margin-bottom: 0;
                                     <p class="near_title last" style="margin-top: 10px;margin-bottom: 0;">
                                         שלום ${name}<br>כדי להשלים את ההרשמה ולקבל מיילים מהמערכת, אנא אמת את כתובת הדוא"ל שלך (${email}).
                                     </p>
-                                    <a href="${checkWebsiteAddress}/api/users/verify/${userID}?verifyCode=${code}" style="display: block;
+                                    <a href="${checkWebsiteAddress()}/api/users/verify/${userID}?verifyCode=${code}" style="display: block;
 width: 100%;
 max-width: 300px;
 background: #20da9c;
