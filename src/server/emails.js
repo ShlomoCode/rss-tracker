@@ -28,7 +28,7 @@ const sendMail = {
         const cidImage = Math.random().toString(36).substring(2, 7);
 
         const mailOptions = {
-            from: 'pushing.rss@gmail.com',
+            from: process.env.gmail_user,
             bcc: addresses,
             subject: 'RSS חדש! 🎉 ⟫ ' + title + ` | ${feedTitle}`,
             html: description + '<br>' + `<img src="cid:${cidImage}" height="240px">` + '<br>' + link,
@@ -53,7 +53,7 @@ const sendMail = {
     */
     verify (verifyCode, address, name) {
         const mailOptions = {
-            from: 'pushing.rss@gmail.com',
+            from: process.env.gmail_user,
             to: address,
             subject: `קוד האימות שלך הוא: ${verifyCode}`,
             html: bodyVerifyEmail(userID, name, address, verifyCode)
