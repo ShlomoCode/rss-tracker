@@ -4,8 +4,8 @@
  * @returns Website address
  */
 function checkWebsiteAddress () {
-    if (process.env.SITE_URL) {
-        return process.env.SITE_URL;
+    if (process.env.WEB_SITE_ADDRESS) {
+        return process.env.WEB_SITE_ADDRESS;
     }
 
     if (process.env.HEROKU_APP_NAME) {
