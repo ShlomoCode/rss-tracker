@@ -1,4 +1,21 @@
 /**
+ * פונקציה שמחזירה את הכתובת שבה האתר פעיל
+ * כדי שהקישור אימות יישלח באופן תקין ועדכני
+ * @returns Website address
+ */
+function checkWebsiteAddress () {
+    if (process.env.SITE_URL) {
+        return process.env.SITE_URL;
+    }
+
+    if (process.env.HEROKU_APP_NAME) {
+        return `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`;
+    } else {
+        return `http://localhost:${process.env.PORT || 80}`;
+    }
+}
+
+/**
  *
  * @param {String} name
  * @param {String} mail
@@ -320,7 +337,7 @@ margin-bottom: 0;
                                     <p class="near_title last" style="margin-top: 10px;margin-bottom: 0;">
                                         שלום ${name}<br>כדי להשלים את ההרשמה ולקבל מיילים מהמערכת, אנא אמת את כתובת הדוא"ל שלך (${email}).
                                     </p>
-                                    <a href="http://localhost/api/users/verify/${userID}?verifyCode=${code}" style="display: block;
+                                    <a href="${checkWebsiteAddress}/api/users/verify/${userID}?verifyCode=${code}" style="display: block;
 width: 100%;
 max-width: 300px;
 background: #20da9c;
@@ -366,9 +383,9 @@ vertical-align: top;
     border: none !important;
 padding: 20px;">
                                     <p class="marginless" style="margin: 0;">
-                                    אפשרות נוספת היא להכניס את קוד האימות בתיבת האימות שבאתר.
+                                    הקישור לא עובד? נסו לפתוח אותו בחלון גלישה בסתר, או להכניס את קוד האימות בתיבת האימות שבאתר.
                                     <br>
-                                    הקוד הוא: <b>${code}</b>
+                                    קוד האימות הוא: <b>${code}</b>
                                     </p>
                                 </td>
                             </tr>
