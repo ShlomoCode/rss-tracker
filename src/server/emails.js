@@ -55,8 +55,8 @@ const sendMail = {
         const mailOptions = {
             from: 'pushing.rss@gmail.com',
             to: address,
-            subject: `קוד האימות שלך עבור Rss To Mail הוא: ${verifyCode}`,
-            html: bodyVerifyEmail(name, address, verifyCode)
+            subject: `קוד האימות שלך הוא: ${verifyCode}`,
+            html: bodyVerifyEmail(userID, name, address, verifyCode)
         };
         return transporter.sendMail(mailOptions);
     }

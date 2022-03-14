@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const sendMail = require('../../server/emails');
+const path = require('path');
 
 function randomNumber () {
     const numberRandom = Math.floor((Math.random() * 5000), 0);
@@ -84,9 +85,10 @@ module.exports = {
         }
 
         const verifyEmailCode = randomNumber();
+        const userID = new mongoose.Types.ObjectId();
 
         const user = new User({
-            _id: new mongoose.Types.ObjectId(),
+            _id: userID,
             password: hash,
             emailProcessed,
             emailFront: email,
@@ -103,7 +105,7 @@ module.exports = {
         }
 
         try {
-            const infoSend = await sendMail.verify(verifyEmailCode, email, name);
+            const infoSend = await sendMail.verify(verifyEmailCode, email, name, userID);
             console.log('Email sent: ' + infoSend.response);
             return res.status(200).json({
                 message: 'User created and verification email sent'
@@ -222,11 +224,11 @@ module.exports = {
         }
 
         if (!req.query.verifyCode) {
-            res.status(200).json({
+            return res.status(200).json({
                 message: 'Email verification completed'
             });
         } else {
-            return res.redirect('/');
+            return res.sendFile(path.join(__dirname, '../../client/static/verify-email', 'index.html'));
         }
     },
     unsubscribe: async (req, res) => {

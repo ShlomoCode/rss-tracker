@@ -5,7 +5,7 @@
  * @param {Number} code
  * @returns body מעובד
  */
-function body (name, email, code) {
+function body (userID, name, email, code) {
     return `<head>
     <style type="text/css">
         body {
@@ -318,9 +318,9 @@ margin-top: 40px;
 margin-bottom: 0;
 ">כמעט סיימת!</h1>
                                     <p class="near_title last" style="margin-top: 10px;margin-bottom: 0;">
-                                        שלום ${name}<br>כדי להשלים את ההרשמה ולקבל מיילים מהמערכת, אנא אמת את כתובת הדוא"ל שלך ( ${email}).
+                                        שלום ${name}<br>כדי להשלים את ההרשמה ולקבל מיילים מהמערכת, אנא אמת את כתובת הדוא"ל שלך (${email}).
                                     </p>
-                                    <h3 href="#" style="display: block;
+                                    <a href="http://localhost/api/users/verify/${userID}?verifyCode=${code}" style="display: block;
 width: 100%;
 max-width: 300px;
 background: #20da9c;
@@ -330,7 +330,7 @@ font-size: 18px;
 padding: 12px 0;
 margin: 30px auto 0;
 text-decoration: none;
-">קוד אימות: ${code}</h3>
+">לאימות המייל</a>
                                     <small style="display: block;
 width: 100%;
 max-width: 330px;
@@ -365,7 +365,11 @@ background: #F4FBF9;">
 vertical-align: top;
     border: none !important;
 padding: 20px;">
-                                    <p class="marginless" style="margin: 0;">את הקוד יש להכניס בתיבת האימות שבאתר.</p>
+                                    <p class="marginless" style="margin: 0;">
+                                    אפשרות נוספת היא להכניס את קוד האימות בתיבת האימות שבאתר.
+                                    <br>
+                                    הקוד הוא: <b>${code}</b>
+                                    </p>
                                 </td>
                             </tr>
                         </tbody>
