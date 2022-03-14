@@ -24,7 +24,7 @@ async function main () {
         const AddressesToSend = [];
         for (let i = 0; i < feed.Subscribers.length; i++) {
             const user = await User.findById(feed.Subscribers[i]);
-            if (user.verifyEmailStatus === true) {
+            if (user?.verifyEmailStatus === true) {
                 AddressesToSend.push(user.emailFront);
             }
         }
