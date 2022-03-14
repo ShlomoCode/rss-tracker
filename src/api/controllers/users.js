@@ -168,7 +168,6 @@ module.exports = {
         });
     },
     verifyEmail: async (req, res) => {
-        console.log(req.body?.verifyCode);
         let verifyCode = req.body?.verifyCode || req.query.verifyCode;
         const userID = res.locals.user?.userID || req.params.userID;
 
@@ -196,8 +195,8 @@ module.exports = {
         }
 
         if (!user) {
-            return res.status(406).json({
-                message: 'Please login again'
+            return res.status(404).json({
+                message: `userID ${userID} Not Found`
             });
         }
 
