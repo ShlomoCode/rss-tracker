@@ -10,9 +10,6 @@ const checkLogin = function (req, res, next) {
         logadin = false;
     }
 
-    console.log(logadin);
-    console.log(req.originalUrl);
-
     if (req.originalUrl === '/login/' && logadin === true) {
         return res.redirect('/');
     }

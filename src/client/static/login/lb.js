@@ -1,23 +1,24 @@
+/* eslint-disable no-undef */
 import { showLoginForm } from './events.js';
 
-async function login(input) {
+async function login (input) {
     const { email, password } = input;
 
     let response;
     try {
         response = await axios.post('/users/login', {
-            "email": email,
-            "password": password
-        })
+            email: email,
+            password: password
+        });
     } catch (error) {
         return console.log(error);
     }
     const { token } = response.data;
-    Cookies.set('token', token, { expires: 7 })
-    open("/", "_self")
+    Cookies.set('token', token, { expires: 7 });
+    open('/', '_self');
 }
 
-async function signup(input) {
+async function signup (input) {
     const { name, email, password } = input;
 
     let response;
@@ -35,4 +36,4 @@ async function signup(input) {
 export {
     login,
     signup
-}
+};

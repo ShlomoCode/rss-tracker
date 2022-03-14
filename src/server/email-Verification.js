@@ -386,7 +386,7 @@ padding-top: 20px !important;"></td>
 vertical-align: top;
     border: none !important;
 ">
-<img src="https://carpool-email-assets.s3.amazonaws.com/shared/footer@2x.png" alt="" width="500" class="img_section" style="	display: block;
+<img src="https://carpool-email-assets.s3.amazonaws.com/shared/footer@2x.png" alt="" width="500" class="img_section" style="display: block;
 margin: 0 auto;
 width: 100%;
 max-width: 500px;
