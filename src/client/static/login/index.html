@@ -57,7 +57,7 @@
 <script>
     const token = Cookies.get('token')
     axios.defaults.headers.common['Authorization'] = token;
-    axios.defaults.baseURL = 'http://localhost/api';
+    axios.defaults.baseURL = `/api`;
 </script>
 
 </html>
