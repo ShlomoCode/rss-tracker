@@ -52,6 +52,11 @@ async function main () {
             const checkDate = new Date(LastCheckedOn);
 
             if (pubDate > checkDate) {
+                if (/\[מקודם\]/gm.test(item.description)) {
+                    console.log(`An advertisement has been removed: ${item.title}\n${item.description}`);
+                    continue;
+                }
+
                 if (!item.thumbnail) {
                     const htmlFeedLink = await parseHtml(item.link);
                     item.thumbnail = htmlFeedLink.og.image;
