@@ -284,9 +284,11 @@ module.exports = {
         }
 
         let userDeleted;
-
+        let removedFeedsCount;
         try {
             userDeleted = await User.findByIdAndDelete(userID);
+            // Number of feeds updated:
+            removedFeedsCount = await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } });
         } catch (error) {
             return res.status(500).json({
                 error
@@ -303,8 +305,7 @@ module.exports = {
         userDeleted.password = undefined;
 
         res.status(200).json({
-            message: `userId ${userID} Deleted`,
-            info: userDeleted
+            message: `userId ${userID} Deleted; Unsubscribed for ${removedFeedsCount} feeds.`
         });
     },
     getUsers: async (req, res) => {
