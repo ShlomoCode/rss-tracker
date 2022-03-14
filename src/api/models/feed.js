@@ -5,6 +5,8 @@ const feedSchema = mongoose.Schema({
     title: { type: String, required: true },
     url: { type: String, match: /^https?:\/\/[\w-]+\.\w{2,6}/ },
     LastCheckedOn: { type: Date, default: Date.now },
+    image: { type: String, required: true },
+    description: { type: String, required: true },
     Subscribers: { type: Array, default: [] }
 });
 

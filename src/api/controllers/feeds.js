@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Feed = require('../models/feed');
+const { parser: parseHtml } = require('html-metadata-parser');
+const parseRss = require('../../server/rss2json');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
@@ -81,28 +83,33 @@ module.exports = {
         url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, '$1');
 
         const feeds = await Feed.find({ url });
+
         if (feeds.length > 0) {
             return res.status(409).json({
                 message: 'Feed exists'
             });
         }
 
-        const parseRss = require('../../server/rss2json');
-
-        let feedContent;
+        let feedImage;
+        let feedDescription;
+        let feedTitle;
         try {
-            feedContent = await parseRss(url);
+            const feedContent = await parseRss(url);
+            const feedMetadata = await parseHtml(feedContent.link);
+            feedImage = feedMetadata.og.image;
+            feedDescription = feedMetadata.og.description;
+            feedTitle = feedContent.title;
         } catch (error) {
             return res.status(400).json({
                 message: `${url} Not Normal feed`
             });
         }
 
-        const { title } = feedContent;
-
         const feed = new Feed({
             _id: new mongoose.Types.ObjectId(),
-            title,
+            title: feedTitle,
+            image: feedImage,
+            description: feedDescription,
             url
         });
         try {
