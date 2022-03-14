@@ -313,7 +313,8 @@ module.exports = {
         userDeleted.password = undefined;
 
         res.status(200).json({
-            message: `userId ${userID} Deleted; Unsubscribed for ${removedFeedsCount} feeds.`
+            message: `userId ${userID} Deleted; Unsubscribed for ${removedFeedsCount.modifiedCount} feeds.`,
+            infoUserDeleted: userDeleted
         });
     },
     getUsers: async (req, res) => {
