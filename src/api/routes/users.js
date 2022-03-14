@@ -16,7 +16,7 @@ router.get('/', checkPermissions, getUsers);
 router.post('/signup', signup);
 router.post('/login', login);
 router.post('/delete/:userID', checkPermissions, deleteUser);
-router.patch('/Unsubscribe/:userID', unsubscribe);
+router.patch('/unsubscribe/:userID', unsubscribe);
 router.post('/verify', checkLogin, verifyEmail);
 router.get('/verify/:userID', verifyEmail);
 
