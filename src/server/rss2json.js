@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-return-assign */
 const { parse: rssToJson } = require('rss-to-json');
 /**
  * קבלת פיד בתור אובייקט תקין
@@ -10,5 +12,5 @@ module.exports = async (urlFeed) => {
         title,
         items,
         link
-    } = rssObject
-}
+    } = rssObject;
+};

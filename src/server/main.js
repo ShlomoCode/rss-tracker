@@ -34,14 +34,14 @@ async function main () {
         }
 
         let feedContent;
-        let dateOfProcessing;
         try {
             feedContent = await parseRss(feed.url);
-            dateOfProcessing = new Date();
         } catch (error) {
             console.log(`error: ${error}`);
             continue;
         }
+
+        const dateOfProcessing = new Date();
 
         const { title: feedTitle, items } = feedContent;
 
