@@ -2,9 +2,6 @@
     "name": "rss to mail",
     "description": "אפליקציית nodeJS למעקב אחרי פידי rss ושליחתם למייל.",
     "repository": "https://github.com/ShlomoCode/test-heroku",
-    "addons": [{
-        "plan": "labs:enable runtime-dyno-metadata"
-    }],
     "success_url": "/",
     "website": "https://github.com/ShlomoCode/rss-to-mail",
     "env": {
