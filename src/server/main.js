@@ -13,7 +13,7 @@ async function main () {
     }
 
     const feeds = feedsRew.filter((feed) => {
-        if (feed.Subscribers.length < 1) {
+        if (feed.Subscribers.length === 0) {
             return false;
         } else {
             return true;
