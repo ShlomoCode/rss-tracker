@@ -32,6 +32,8 @@ async function main () {
             const user = await User.findById(feed.Subscribers[i]);
             if (user?.verifyEmailStatus === true) {
                 AddressesToSend.push(user.emailFront);
+            } else {
+                console.log(`userID ${feed.Subscribers[i]} doesn't have a verified email. Removed from list.`);
             }
         }
 
