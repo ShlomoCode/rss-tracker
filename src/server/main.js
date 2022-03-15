@@ -20,6 +20,12 @@ async function main () {
         }
     });
 
+    if (feeds.length === 0) {
+        return console.log('Feeds with subscribers not found!');
+    } else {
+        console.log(`${feeds.length} feeds with subscribers were found`);
+    }
+
     for (const feed of feeds) {
         const AddressesToSend = [];
         for (let i = 0; i < feed.Subscribers.length; i++) {
