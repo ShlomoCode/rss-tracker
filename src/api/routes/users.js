@@ -9,7 +9,8 @@ const {
     verifyEmail,
     deleteUser,
     unsubscribe,
-    getUsers
+    getUsers,
+    getMyStatus
 } = require('../controllers/users');
 
 router.get('/', checkPermissions, getUsers);
@@ -19,5 +20,6 @@ router.post('/delete/:userID', checkPermissions, deleteUser);
 router.patch('/unsubscribe/:userID', unsubscribe);
 router.post('/verify', checkLogin, verifyEmail);
 router.get('/verify/:userID', verifyEmail);
+router.get('/My-status', checkLogin, getMyStatus);
 
 module.exports = router;

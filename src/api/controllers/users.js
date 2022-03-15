@@ -341,5 +341,46 @@ module.exports = {
         res.status(200).json({
             users
         });
+    },
+    getMyStatus: async (req, res) => {
+        const { userID } = res.locals.user;
+
+        let user;
+        let subscribersRew;
+        // get db
+        try {
+            user = await User.findById(userID);
+            subscribersRew = await Feed.find({ Subscribers: userID });
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
+        // mongoose Object to Regular Object
+        let subscribers = subscribersRew.map((feed) => {
+            return feed.toObject();
+        });
+
+        // for not found user
+        if (!user) {
+            return res.status(404).json({
+                message: `userID ${userID} Not Found`
+            });
+        }
+
+        // Filtered Secret Content
+        user.password = undefined;
+        user.verifyEmailCode = undefined;
+        subscribers = subscribers.map((feed) => {
+            feed.Subscribers = feed.Subscribers.length;
+            return feed;
+        });
+
+        // return
+        return res.status(200).json({
+            user,
+            subscribers
+        });
     }
 };
