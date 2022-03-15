@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const { decode } = require('html-entities');
 const imageToBase64 = require('image-to-base64');
-const bodyVerifyEmail = require('../temlate-verification');
+const bodyVerifyEmail = require('./email-Templates/verification');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',

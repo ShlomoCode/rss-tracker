@@ -4,7 +4,7 @@ const Feed = require('../models/feed');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
-const sendMail = require('../../server/emails/main');
+const sendMail = require('../../server/emails');
 const path = require('path');
 
 function randomNumber () {
