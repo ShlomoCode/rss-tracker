@@ -19,8 +19,8 @@
             "generator": "secret"
         },
         "countMaxFeedsForUser": {
-            "description": "ברירת מחדל - 10 .מספר הפידים המרבי פר משתמש",
-             "Required": "false"
+            "description": "ברירת מחדל - 10 .מספר הפידים המרבי פר משתמש. אופציונלי",
+             "Required": false
         }
       }
   }
