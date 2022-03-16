@@ -19,8 +19,9 @@ async function login (input) {
         }
         return console.log(error.response);
     }
+
     const { token } = response.data;
-    Cookies.set('token', token, { expires: 7 });
+    Cookies.set('token', token, { expires: 14 });
     open('/', '_self');
 }
 
