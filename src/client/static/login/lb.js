@@ -34,9 +34,7 @@ async function signup (input) {
 
     const notifierSignup = new AWN({
         position: 'bottom-left',
-        // labels: { async: 'מבצע הרשמה' },
         messages: {
-            // async: '...אנא המתן',
             'async-block': '...מבצע הרשמה'
         }
     });
