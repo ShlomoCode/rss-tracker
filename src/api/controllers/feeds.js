@@ -5,7 +5,7 @@ const parseRss = require('../../server/rss2json');
 const { decode: decodeHtml } = require('html-entities');
 
 module.exports = {
-    getAllFeeds: async (req, res) => {
+    getAllFeeds: async(req, res) => {
         const { userID } = res.locals.user;
 
         let feedsRew;
@@ -35,7 +35,7 @@ module.exports = {
             feeds
         });
     },
-    getFeed: async (req, res) => {
+    getFeed: async(req, res) => {
         const feedID = req.params.feedID;
         const { userID } = res.locals.user;
 
@@ -71,7 +71,7 @@ module.exports = {
             feed
         });
     },
-    createFeed: async (req, res) => {
+    createFeed: async(req, res) => {
         let { url } = req.body;
 
         if (!url) {
@@ -97,7 +97,7 @@ module.exports = {
         try {
             const feedContent = await parseRss(url);
             const feedMetadata = await parseHtml(feedContent.link);
-            feedImage = feedMetadata.og.image;
+            feedImage = feedMetadata.og.image || false;
             feedDescription = feedMetadata.og.description;
             feedTitle = decodeHtml(feedContent.title);
         } catch (error) {
@@ -113,18 +113,22 @@ module.exports = {
             description: feedDescription,
             url
         });
+
+        let feedCreated;
         try {
-            await feed.save();
-            res.status(200).json({
-                message: 'Feed Crated'
-            });
+            feedCreated = await feed.save();
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 error
             });
         }
+
+        res.status(200).json({
+            message: 'Feed Crated',
+            feed: feedCreated
+        });
     },
-    SubscribeFeed: async (req, res) => {
+    SubscribeFeed: async(req, res) => {
         const feedID = req.params.feedID;
         const { userID } = res.locals.user;
 
@@ -167,7 +171,7 @@ module.exports = {
             message: 'Subscribe to feed done!'
         });
     },
-    UnSubscribeFeed: async (req, res) => {
+    UnSubscribeFeed: async(req, res) => {
         const feedID = req.params.feedID;
         const { userID } = res.locals.user;
 
@@ -202,7 +206,7 @@ module.exports = {
             message: 'UnSubscribe to feed done!'
         });
     },
-    deleteFeed: async (req, res) => {
+    deleteFeed: async(req, res) => {
         const feedID = req.params.feedID;
 
         if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
