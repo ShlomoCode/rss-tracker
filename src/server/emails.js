@@ -12,14 +12,18 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendMail = {
-    /**
-     *
-     * @param {Object} info מידע על המייל שצריך להישלח
-     */
-    async rss (item, feedTitle, addresses) {
+/**
+ *
+ * @param {Objecj} item האייטם הספציפי שנשלח
+ * @param {String} feedTitle שם הפיד
+ * @param {Array} addresses כתובות מייל שצריכות לקבל את הפיד
+ * @returns
+ */
+    async rss(item, feedTitle, addresses) {
         let { description, link, title, thumbnail } = item;
 
         title = decode(title);
+        feedTitle = decode(feedTitle);
 
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
