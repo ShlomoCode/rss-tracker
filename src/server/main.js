@@ -4,7 +4,7 @@ const parseRss = require('./rss2json');
 const sendMail = require('./emails');
 const { parser: parseHtml } = require('html-metadata-parser');
 
-async function main () {
+async function main() {
     console.log('processingFeeds started...');
     const feedsRew = await Feed.find();
 
@@ -21,7 +21,7 @@ async function main () {
     });
 
     if (feeds.length === 0) {
-        return console.log('Feeds with subscribers not found!');
+        return console.log('return: No feeds with subscribers found!');
     } else {
         console.log(`${feeds.length} feeds with subscribers were found`);
     }
