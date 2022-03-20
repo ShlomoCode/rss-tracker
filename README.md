@@ -53,6 +53,8 @@ JWT_KEY # מפתח ההצפנה עבור jwt. ניתן להכניס ערך רנ�
 countMaxFeedsForUser = 10 # מספר הפידים המרבי שכל יוזר יוכל להירשם אליו, ברירת מחדל: 10
 PORT # הפורט שבו האתר יהיה זמין - רלוונטי רק עבור אתר שפועל בlocalhost. ברירת מחדל: 80.
 WEB_SITE_ADDRESS # אם האתר פועל ברשת, לדוגמה על שרת VPS ולא על localhost/heroku. דוגמה: https://my-syte.com
+White_list_including_images="hm-news.co.il|jdn.co.il|93fm.co.il|bahazit.co.il" # אתרים שבהם הפידים יישלחו כולל תמונה
+White_list_does_not_include_images="pinatkafe.com|internet-israel.com|geektime.co.il" # אתרים שבהם הפידים יישלחו ללא תמונה
 ```
 ## פריסה מהירה על הרקו
 
