@@ -85,7 +85,7 @@ module.exports = {
 
         const feeds = await Feed.find({ url });
 
-        if (feeds.length > 0) {
+        if (feeds.length !== 0) {
             return res.status(409).json({
                 message: 'Feed exists'
             });
