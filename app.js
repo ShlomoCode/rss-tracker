@@ -83,5 +83,3 @@ const port = process.env.PORT || 80;
 const server = http.createServer(app);
 
 server.listen(port);
-
-console.log(JSON.parse(process.env.WHITE_LIST)['No picture']);
