@@ -91,14 +91,9 @@ module.exports = {
             });
         }
 
-        let feedImage;
-        let feedDescription;
         let feedTitle;
         try {
             const feedContent = await parseRss(url);
-            const feedMetadata = await parseHtml(feedContent.link);
-            feedImage = feedMetadata.og.image || false;
-            feedDescription = feedMetadata.og.description;
             feedTitle = decodeHtml(feedContent.title);
         } catch (error) {
             return res.status(400).json({
@@ -109,8 +104,6 @@ module.exports = {
         const feed = new Feed({
             _id: new mongoose.Types.ObjectId(),
             title: feedTitle,
-            image: feedImage,
-            description: feedDescription,
             url
         });
 
