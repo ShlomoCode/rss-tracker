@@ -81,7 +81,7 @@ module.exports = {
         }
 
         // הסרת לוכסן מיותר בסוף
-        url = url.replace(/^(https?:\/\/[\w-]+\.\w{2,6}\/.*feed)\/$/, '$1');
+        url = url.replace(/\/$/, '');
 
         const feeds = await Feed.find({ url });
 
