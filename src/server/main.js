@@ -9,7 +9,7 @@ async function main() {
     const feedsRew = await Feed.find();
 
     if (feedsRew.length === 0) {
-        return console.log('feeds not found!');
+        return console.log('return: feeds not found!');
     }
 
     const feeds = feedsRew.filter((feed) => {
@@ -21,7 +21,7 @@ async function main() {
     });
 
     if (feeds.length === 0) {
-        return console.log('return: No feeds with subscribers found!');
+        return console.log('return: 0 feeds with subscribers found!');
     } else {
         console.log(`${feeds.length} feeds with subscribers were found`);
     }
@@ -30,6 +30,12 @@ async function main() {
         const AddressesToSend = [];
         for (let i = 0; i < feed.Subscribers.length; i++) {
             const user = await User.findById(feed.Subscribers[i]);
+
+            if (!user) {
+                console.log(`userID ${feed.Subscribers[i]} Not Found. Removed from list.`);
+                continue;
+            }
+
             if (user?.verifyEmailStatus === true) {
                 AddressesToSend.push(user.emailFront);
             } else {
