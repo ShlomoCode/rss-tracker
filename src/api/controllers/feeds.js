@@ -80,6 +80,17 @@ module.exports = {
             });
         }
 
+        const listFull = process.env.White_list_including_images?.replaceAll('.', '\.') || '.';
+        const listPartial = process.env.White_list_does_not_include_images?.replaceAll('.', '\.') || '.';
+
+        const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull}|${listPartial})`);
+
+        if (!regexWhiteList.test(url)) {
+            return res.status(500).json({
+                message: 'This site is not whitelisted'
+            });
+        }
+
         // הסרת לוכסן מיותר בסוף
         url = url.replace(/\/$/, '');
 

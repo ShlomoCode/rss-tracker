@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const { decode } = require('html-entities');
 const imageToBase64 = require('image-to-base64');
 const bodyVerifyEmail = require('./email-Templates/verification');
+const path = require('path');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -20,14 +21,20 @@ const sendMail = {
  * @returns
  */
     async rss(item, feedTitle, addresses) {
-        let { description, link, title, thumbnail } = item;
+        let { description, link, title, thumbnail: thumbnailLink } = item;
 
         title = decode(title);
         feedTitle = decode(feedTitle);
 
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
-        thumbnail = await imageToBase64(thumbnail);
+        const listFull = process.env.White_list_including_images?.replaceAll('.', '\.') || '.';
+        const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull})`);
+        if (!regexWhiteList.test(link)) {
+            thumbnailLink = path.join(__dirname, '../client/static/main/images', 'example.png');
+        }
+
+        const thumbnail = await imageToBase64(thumbnailLink);
 
         const cidImage = Math.random().toString(36).substring(2, 7);
 
