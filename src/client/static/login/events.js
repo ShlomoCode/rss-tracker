@@ -1,24 +1,23 @@
-function showLoginForm() {
-    $(".message").css("transform", "translateX(0)");
-    if ($(".message").hasClass("login")) {
-        $(".message").removeClass("signup");
-    }
-    $(".message").addClass("login");
-}
-
-
-$("#signup").click(function () {
-    $(".message").css("transform", "translateX(100%)");
-    if ($(".message").hasClass("login")) {
-        $(".message").removeClass("login");
-    }
-    $(".message").addClass("signup");
-});
-
-$("#login").click(showLoginForm);
-
 // // // // //
 import { login, signup } from './lb.js';
+
+function showLoginForm() {
+    $('.message').css('transform', 'translateX(0)');
+    if ($('.message').hasClass('login')) {
+        $('.message').removeClass('signup');
+    }
+    $('.message').addClass('login');
+}
+
+$('#signup').click(function() {
+    $('.message').css('transform', 'translateX(100%)');
+    if ($('.message').hasClass('login')) {
+        $('.message').removeClass('login');
+    }
+    $('.message').addClass('signup');
+});
+
+$('#login').click(showLoginForm);
 
 $('#form-signup').on('submit', (event) => {
     event.preventDefault();
@@ -41,4 +40,4 @@ $('#form-login').on('submit', (event) => {
 
 export {
     showLoginForm
-}
+};
