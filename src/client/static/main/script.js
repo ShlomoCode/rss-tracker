@@ -81,7 +81,7 @@ function PushFeedToPage(feedItem) {
     const item = `<div id="${_id}" class="feed-item">
     <h3><a href="${url.replace('/feed', '')}" target="_blank">${title}</a></h3>
     <div class="members-item-count"><span>${Subscribers}</span> מנויים</div>
-    <button class="Subscribe-btn">${Subscribers ? '➖ Unsubscribe' : '➕ Subscribe'}</button>
+    <button class="Subscribe-btn">${subscriberSelf ? '➖ Unsubscribe' : '➕ Subscribe'}</button>
     </div>`;
     $('#feeds').append(item);
     if (subscriberSelf === true) {
