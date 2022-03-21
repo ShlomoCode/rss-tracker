@@ -51,7 +51,8 @@ async function main() {
         try {
             feedContent = await parseRss(feed.url);
         } catch (error) {
-            console.log(`error: ${error}`);
+            console.log(`Error accessing feed page - ${feed.url}:
+            ${error}`);
             continue;
         }
 
@@ -72,9 +73,15 @@ async function main() {
                 }
 
                 if (!item.thumbnail) {
-                    const htmlFeedLink = await parseHtml(item.link);
-                    item.thumbnail = htmlFeedLink.og.image;
+                    try {
+                        const htmlFeedLink = await parseHtml(item.link);
+                        item.thumbnail = htmlFeedLink.og.image;
+                    } catch (error) {
+                        console.log(`An error accessing the article page ${item.link}`);
+                        continue;
+                    }
                 }
+
                 await sendMail.rss(item, feedTitle, AddressesToSend);
             } else {
                 console.log(`Outdated item: ${item}`);

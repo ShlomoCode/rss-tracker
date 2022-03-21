@@ -28,13 +28,20 @@ const sendMail = {
 
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
+        const pathImageExmple = path.join(__dirname, '../client/static/main/images', 'example.png');
         const listFull = process.env.White_list_including_images?.replaceAll('.', '\.') || '.';
         const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull})`);
-        if (!regexWhiteList.test(link)) {
-            thumbnailLink = path.join(__dirname, '../client/static/main/images', 'example.png');
+
+        if (!regexWhiteList.test(link) || !thumbnailLink) {
+            thumbnailLink = pathImageExmple;
         }
 
-        const thumbnail = await imageToBase64(thumbnailLink);
+        let thumbnail;
+        try {
+            thumbnail = await imageToBase64(thumbnailLink);
+        } catch (error) {
+            thumbnail = await imageToBase64(pathImageExmple);
+        }
 
         const cidImage = Math.random().toString(36).substring(2, 7);
 
