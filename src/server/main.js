@@ -66,7 +66,7 @@ async function main() {
             const checkDate = new Date(LastCheckedOn);
 
             if (pubDate > checkDate) {
-                if (/\[מקודם\]/gm.test(item.description)) {
+                if (/\[מקודם\]/gm.test(item.description) || item.category.includes('דביק - פנים האתר') || item.category.includes('דביק - עמוד הבית')) {
                     console.log(`An advertisement has been removed: ${item.title}\n${item.description}`);
                     continue;
                 }
