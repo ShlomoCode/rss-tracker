@@ -185,7 +185,7 @@ async function getVerifyCode() {
         return notifier.tip('כל עוד המייל שלך לא יהיה מאומת, לא תקבל עדכונים מהמערכת', { labels: { tip: 'שים לב' } });
     }
 
-    if (!/^[0-9]{5,6}$/.test(code)) {
+    if (!/^[0-9]{5,6}$/.test(code.replaceAll(' ', ''))) {
         return notifier.alert('!לא זוהה קוד אימות תקין');
     }
     notifier.asyncBlock(
