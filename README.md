@@ -185,7 +185,7 @@ function fetch() {
 
 * bcrypt - הצפנה ואימות לסיסמאות המשתמשים
 
-* jsonwebtoken - ליצירת הטוקן (ואימות שלו במידלוור)
+* jsonwebtoken - ליצירת הטוקן (ואימות שלו במידלוורס)
 
 * html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 
