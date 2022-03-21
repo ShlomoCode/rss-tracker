@@ -144,7 +144,7 @@ module.exports = {
 
         const userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
 
-        if (userSubscribedFeedsCount > (process.env.countMaxFeedsForUser || 10)) {
+        if (userSubscribedFeedsCount >= (process.env.countMaxFeedsForUser || 10)) {
             return res.status(429).json({
                 message: `Each user is allowed to register for up to ${process.env.countMaxFeedsForUser || 10} feeds`
             });

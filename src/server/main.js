@@ -67,7 +67,7 @@ async function main() {
             const checkDate = new Date(LastCheckedOn);
 
             if (pubDate > checkDate) {
-                if (/\[מקודם\]/gm.test(item.description) || item.category.includes('דביק - פנים האתר') || item.category.includes('דביק - עמוד הבית')) {
+                if (/\[מקודם\]/gm.test(item.description) || item.category.includes('דביק - פנים האתר') || item.category.includes('דביק - עמוד הבית') || (/^https:\/\/www\.jdn\.co\.il/.test(feed.url) && /&gt;&gt;<\/strong><\/a><\/p>/m.test(item.content))) {
                     console.log(`An advertisement has been removed: ${item.title}\n${item.description}`);
                     continue;
                 }

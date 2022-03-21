@@ -42,6 +42,7 @@ async function createCostumFeed() {
     notifier.asyncBlock(
         axios.post('/feeds', { url }),
         (resp) => {
+            console.log(resp.data);
             notifier.success('הפיד נוצר בהצלחה. כעת ניתן להירשם אליו');
         },
         (err) => {
@@ -80,7 +81,7 @@ function PushFeedToPage(feedItem) {
     const item = `<div id="${_id}" class="feed-item">
     <h3><a href="${url.replace('/feed', '')}" target="_blank">${title}</a></h3>
     <div class="members-item-count"><span>${Subscribers}</span> מנויים</div>
-    <button class="Subscribe-btn">${Subscribers ? '➖ UnSubscribe' : '➕ Subscribe'}</button>
+    <button class="Subscribe-btn">${Subscribers ? '➖ Unsubscribe' : '➕ Subscribe'}</button>
     </div>`;
     $('#feeds').append(item);
     if (subscriberSelf === true) {
@@ -107,7 +108,7 @@ async function subscribe(feedID) {
                 unsubscribe(feedID);
             });
 
-            feedElement.text('➖ UnSubscribe');
+            feedElement.text('➖ Unsubscribe');
 
             const subscribersCount = $(`#${feedID} .members-item-count > span`).text();
             $(`#${feedID} .members-item-count > span`).text(parseInt(subscribersCount) + 1);
@@ -232,4 +233,5 @@ loadFeeds();
         getVerifyCode();
         break;
     }
+    // console.log(resp.data);
 })();
