@@ -20,7 +20,15 @@
         },
         "countMaxFeedsForUser": {
             "description": "ברירת מחדל - 10 .מספר הפידים המרבי פר משתמש. אופציונלי",
-             "required": false
+            "required": false
+        },
+        "White_list_including_images": {
+            "description": "רשימה לבנה - כולל תמונות",
+            "required": false
+        },
+        "White_list_does_not_include_images": {
+            "description": "רשימה לבנה - לא כולל תמונות",
+            "required": false
         }
-      }
-  }
+    }
+}
