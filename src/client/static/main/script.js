@@ -162,6 +162,49 @@ async function unsubscribe(feedID) {
     );
 }
 
+async function getVerifyCode() {
+    const code = await swal({
+        title: '!שים לב',
+        icon: 'warning',
+        text: `!המייל שלך לא מאומת
+ 
+  .לא תוכל לקבל עדכונים מהמערכת עד שתאמת אותו
+ 
+ חפש את מייל האימות מהמערכת (ייתכן שהוא הגיע לספאם או ל"קידומי מכירות") ולחץ על קישור האימות, או הכנס בתיבה שלמטה את הקוד`,
+        content: {
+            element: 'input',
+            attributes: {
+                placeholder: 'Enter here the verification code'
+            }
+        },
+        buttons: ['התעלם כרגע', 'שלח']
+    });
+
+    if (code === null) {
+        return notifier.tip('כל עוד המייל שלך לא יהיה מאומת, לא תקבל עדכונים מהמערכת', { labels: { tip: 'שים לב' } });
+    }
+
+    if (!/^[0-9]{5,6}$/.test(code)) {
+        return notifier.alert('!לא זוהה קוד אימות תקין');
+    }
+    notifier.asyncBlock(
+        axios.post('/users/verify', {
+            verifyCode: code
+        }),
+        (resp) => {
+            notifier.success('!המייל אומת בהצלחה');
+            $('#email-verification-status').text(' המייל מאומת').removeClass('far fa-times-circle').removeClass('Not-Verified').addClass('fas fa-check-circle').off('click');
+
+            // setTimeout(() => {
+            //     location.reload();
+            // }, 1400);
+        },
+        (err) => {
+            notifier.alert(err.response.data.message);
+        }
+    );
+}
+
 $('#sign-out').on('click', () => {
     Cookies.remove('token');
     onLoggedOut();
@@ -176,3 +219,17 @@ $('#refresh-feeds').on('click', () => {
 
 // טעינת הפידים מיד בטעינת הדף
 loadFeeds();
+(async() => {
+    const resp = await axios.get('/users/My-Status');
+    $('#Hello #content').text(`שלום, ${resp.data.user.name}!`);
+    switch (resp.data.user.verifyEmailStatus) {
+    case true:
+        $('#email-verification-status').text(' המייל מאומת').addClass('fas fa-check-circle');
+        break;
+    case false:
+        // $('#email-verification-status').html(`<i class="far fa-times-circle"></i>  המייל לא מאומת!`)
+        $('#email-verification-status').text(' המייל לא מאומת!').addClass('far fa-times-circle').addClass('Not-Verified').click(getVerifyCode);
+        getVerifyCode();
+        break;
+    }
+})();

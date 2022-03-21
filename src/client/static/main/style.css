@@ -100,6 +100,7 @@ html {
 
 .feed-item h3 {
     position: relative;
+    margin-bottom: 16px;
     top: -18px;
     text-align: center;
     border-bottom: 1px dotted;
@@ -107,4 +108,39 @@ html {
 
 .feed-item h3 a:visited {
     color: #180bcd;
+}
+
+#email-verification-status {
+    position: absolute;
+    top: -15%;
+    left: 85%;
+    height: 50%;
+    width: 11%;
+}
+
+#email-verification-status.Not-Verified {
+    border: 1px solid;
+    border-radius: 2px;
+    background-color: rgb(234,156,156);
+}
+
+#Hello {
+    position: absolute;
+    top: -5px;
+    right: 13%;
+    height: 30px;
+    width: 18%;
+    border-radius: 100px; 
+}
+
+#Hello img {
+    position: absolute;
+    right: 58px;
+    bottom: 7px;
+    height: 80%;
+}
+
+#Hello #content {
+    position: absolute;
+    right: 85px;
 }
