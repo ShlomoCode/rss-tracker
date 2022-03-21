@@ -1,0 +1,110 @@
+#header {
+    background: #005dde;
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 999;
+    border-bottom: 3px solid;
+}
+
+#sign-out {
+    position: absolute;
+    top: 8px;
+    left: 7px;
+    height: 30px;
+    width: 80px;
+    border-radius: 100px;
+}
+
+#add-costum-feed {
+    position: absolute;
+    top: 8px;
+    left: 100px;
+    height: 30px;
+    width: 100px;
+    border-radius: 100px;
+}
+
+#header h2 {
+    position: absolute;
+    top: -13px;
+    left: 45%;
+    border-bottom: 2px rgb(5, 5, 5) solid;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0);
+}
+
+html {
+    background-image: url('/images/background.jpg');
+    background-size: 150%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+#feeds {
+    position: absolute;
+    right: 30px;
+    top: 17%;
+    height: 500px;
+    width: 90%;
+    border: 1.5px solid;
+    border-radius: 4px;
+    float: right;
+    background: rgba(255,255,255,0.47)
+}
+
+.credit-freepik {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    color: rgba(0, 0, 0, 0.53);
+    background: rgba(253, 252, 252, 0.27);
+    border-radius: 0px 4px;
+}
+
+.feed-item {
+    background: rgb(255,255,255);
+    width: 200px;
+    height: 50px;
+    border: 1.5px solid;
+    border-radius: 4px;
+    margin: 5px;
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+}
+
+.members-item-count {
+    position: relative;
+    width: 45%;
+    height: 35%;
+    bottom: 30px;
+    border-right: 1.5px solid;
+    border-radius: 0 1px 0 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.Subscribe-btn {
+    position: relative;
+    top: -49px;
+    left: 92px;
+    width: 59%;
+    height: 30%;
+    border: 0px solid;
+    font-size: 0.8rem;
+    border-radius: 0 0 4px 0;
+    background: rgba(168, 168, 184, 0.05);
+}
+
+.feed-item h3 {
+    position: relative;
+    top: -18px;
+    text-align: center;
+    border-bottom: 1px dotted;
+}
+
+.feed-item h3 a:visited {
+    color: #180bcd;
+}
