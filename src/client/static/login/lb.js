@@ -29,7 +29,7 @@ async function signup (input) {
     const { name, email, password } = input;
 
     if (!/[0-9- א-תA-z]{3,15}/.test(name)) {
-        return new AWN({ position: 'bottom-left' }).alert('!שם חסר/לא תקין');
+        return new AWN({ position: 'bottom-left' }).alert('שם חסר/לא תקין/קצר מידי');
     }
 
     const notifierSignup = new AWN({
@@ -45,10 +45,18 @@ async function signup (input) {
         },
         (err) => {
             if (err.response.data.message === 'Email exists') {
-                notifierSignup.alert('המייל הזה כבר רשום<br>...נסה להתחבר', { position: 'bottom-left' });
+                notifierSignup.alert('המייל הזה כבר רשום<br>...נסה להתחבר');
                 onResolveRegister();
+            } else if (err.response.data.message === 'Weak password') {
+                notifierSignup.alert('!הסיסמה חלשה מידי');
+                if (err.response.data.weakness.warning !== '') {
+                    notifierSignup.tip(err.response.data.weakness.warning);
+                }
+                if (err.response.data.weakness.suggestions.length > 0) {
+                    notifierSignup.tip(err.response.data.weakness.suggestions[0]);
+                }
             } else {
-                notifierSignup.alert(`${err.response.status}: ${err.response.data.message}`, { position: 'bottom-left' });
+                notifierSignup.alert(`${err.response.status}: ${err.response.data.message}`);
             }
             console.log(err.response);
         });
