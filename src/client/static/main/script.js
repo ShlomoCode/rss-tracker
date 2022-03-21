@@ -1,11 +1,11 @@
-function onLoggedOut() {
+function onLoggedOut(title) {
     const notifier = new AWN();
     function onOkClick() {
         location.reload();
     }
     notifier.confirm('Please refresh!', onOkClick, false, {
         labels: {
-            confirm: 'You have successfully logged out'
+            confirm: title
         }
     });
 }
@@ -208,7 +208,7 @@ async function getVerifyCode() {
 
 $('#sign-out').on('click', () => {
     Cookies.remove('token');
-    onLoggedOut();
+    onLoggedOut('YOU HAVE SUCCESSFULLY LOGGED OUT');
 });
 
 $('#add-costum-feed').on('click', createCostumFeed);
@@ -220,8 +220,19 @@ $('#refresh-feeds').on('click', () => {
 
 // טעינת הפידים מיד בטעינת הדף
 loadFeeds();
+// קבלת מידע יוזר והצגתו
 (async() => {
-    const resp = await axios.get('/users/My-Status');
+    let resp;
+    try {
+        resp = await axios.get('/users/My-Status');
+    } catch (error) {
+        if (error.response.status === 404) {
+            Cookies.remove('token');
+            return onLoggedOut('Authentication failed');
+        } else {
+            console.log(error.response);
+        }
+    }
     $('#Hello #content').text(`שלום, ${resp.data.user.name}!`);
     switch (resp.data.user.verifyEmailStatus) {
     case true:
