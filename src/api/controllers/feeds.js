@@ -98,7 +98,8 @@ module.exports = {
 
         if (feeds.length !== 0) {
             return res.status(409).json({
-                message: 'Feed exists'
+                message: 'Feed exists',
+                id: feeds[0]._id
             });
         }
 

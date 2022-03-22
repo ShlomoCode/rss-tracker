@@ -78,7 +78,7 @@ async function main() {
                         item.thumbnail = htmlFeedLink.og.image;
                     } catch (error) {
                         console.log(`An error accessing the article page ${item.link}`);
-                        continue;
+                        item.thumbnail = undefined;
                     }
                 }
 
