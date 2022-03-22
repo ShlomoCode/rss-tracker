@@ -5,15 +5,15 @@ const userSchema = mongoose.Schema({
     emailProcessed: {
         type: String,
         required: true,
-        match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        match: /^[a-z0-9.]+@[a-z0-9]+\.[a-z0-9]{2,}$/i
     },
     emailFront: {
         type: String,
         required: true,
-        match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        match: /^[a-z0-9.]+(:?\+[a-z0-9.+]+)?@[a-z0-9]+\.[a-z0-9]{2,}$/i
     },
     password: { type: String, required: true },
-    name: { type: String, match: /[0-9-\ א-תA-z]{3,15}/, maxLength: 15, required: true },
+    name: { type: String, match: /[0-9- א-תA-z]{3,15}/, maxLength: 15, required: true },
     verifyEmailStatus: { type: Boolean, default: false },
     verifyEmailCode: { type: String, required: true },
     registrationDate: { type: Date, default: Date.now },
