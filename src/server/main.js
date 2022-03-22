@@ -34,7 +34,12 @@ async function main() {
             const user = await User.findById(feed.Subscribers[i]);
 
             if (!user) {
-                console.log(`userID ${feed.Subscribers[i]} Not Found. Removed from list.`);
+                try {
+                    const feedsUnsubscribedCount = await Feed.updateMany({ Subscribers: feed.Subscribers[i] }, { $pull: { Subscribers: feed.Subscribers[i] } });
+                    console.log(`userID ${feed.Subscribers[i]} Not Found. Removed from list and unsubscribed from ${feedsUnsubscribedCount.modifiedCount} feeds`);
+                } catch (error) {
+                    console.log(`userID ${feed.Subscribers[i]} Not Found. Removed from list (Not removed from feed due to error).`);
+                }
                 continue;
             }
 
