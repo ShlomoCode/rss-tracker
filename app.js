@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 require('dotenv').config({ path: 'config.env' });
 const cookieParser = require('cookie-parser');
+const processingFeeds = require('./src/server/main');
 
 // התחברות לדאטה בייס
 mongoose.connect(process.env.MONGO_URI, {
@@ -67,12 +68,23 @@ app.use((error, req, res, next) => {
 /**
  * Run Back And base
  */
-const processingFeeds = require('./src/server/main');
-const timingRun = (1000 * 60 * 4);
-// הפעלה ראשונה מיד באתחול האפליקציה
-processingFeeds();
-// כל 4 דקות שוב
-setInterval(processingFeeds, timingRun);
+(async() => {
+    function sleep(ms) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
+    };
+
+    do {
+        const resp = await processingFeeds();
+        const ms = 1000 * 60 * 1; // 1 minute
+        if (resp === 'Wait!') {
+            console.log(`Waiting ${ms} milliseconds...`);
+            await sleep(ms);
+            console.log('Waiting completed!');
+        }
+    } while (true);
+})();
 
 /**
  * Listening server

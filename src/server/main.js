@@ -9,7 +9,8 @@ async function main() {
     const feedsRew = await Feed.find();
 
     if (feedsRew.length === 0) {
-        return console.log('return: feeds not found!');
+        console.log('return: feeds not found!');
+        return 'Wait!';
     }
 
     const feeds = feedsRew.filter((feed) => {
@@ -21,7 +22,8 @@ async function main() {
     });
 
     if (feeds.length === 0) {
-        return console.log('return: 0 feeds with subscribers found!');
+        console.log('return: 0 feeds with subscribers found!');
+        return 'Wait!';
     } else {
         console.log(`${feeds.length} feeds with subscribers were found`);
     }
