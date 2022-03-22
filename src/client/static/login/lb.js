@@ -7,7 +7,7 @@ function showLoginForm() {
     $('.message').addClass('login');
 }
 
-async function login (input) {
+async function login(input) {
     const { email, password } = input;
 
     let response;
@@ -31,7 +31,7 @@ async function login (input) {
     open('/', '_self');
 }
 
-async function signup (input) {
+async function signup(input) {
     const { name, email, password } = input;
 
     if (!/[0-9- א-תA-z]{3,15}/.test(name)) {
@@ -67,7 +67,7 @@ async function signup (input) {
             console.log(err.response);
         });
 
-    function onResolveRegister () {
+    function onResolveRegister() {
         showLoginForm();
         $('#login-email').val(email);
         $('#login-password').val(password);

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../../api/models/user');
 
-async function Unsubscribe (req, res, next) {
+async function Unsubscribe(req, res, next) {
     const userID = req.query.userID;
 
     if (!userID) {

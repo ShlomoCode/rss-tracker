@@ -3,7 +3,7 @@
  * כדי שהקישור אימות יישלח באופן תקין ועדכני
  * @returns Website address
  */
-function checkWebsiteAddress () {
+function checkWebsiteAddress() {
     if (process.env.WEB_SITE_ADDRESS) {
         return process.env.WEB_SITE_ADDRESS;
     }
@@ -22,7 +22,7 @@ function checkWebsiteAddress () {
  * @param {Number} code
  * @returns body מעובד
  */
-function body (userID, name, email, code) {
+function body(userID, name, email, code) {
     return `<head>
     <style type="text/css">
         body {

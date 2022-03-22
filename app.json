@@ -19,7 +19,7 @@
             "generator": "secret"
         },
         "countMaxFeedsForUser": {
-            "description": "ברירת מחדל - 10 .מספר הפידים המרבי פר משתמש. אופציונלי",
+            "description": "ברירת מחדל - 10. מספר הפידים המרבי פר משתמש. אופציונלי",
             "required": false
         },
         "White_list_including_images": {

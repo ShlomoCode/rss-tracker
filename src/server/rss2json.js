@@ -6,7 +6,7 @@ const { parse: rssToJson } = require('rss-to-json');
  * @param {string} urlFeed כתובת אינטרנט של הפיד המבוקש
  * @returns {Object} title, items[array], link
  */
-module.exports = async (urlFeed) => {
+module.exports = async(urlFeed) => {
     const rssObject = await rssToJson(urlFeed);
     return {
         title,
