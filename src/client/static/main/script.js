@@ -46,7 +46,7 @@ async function createCostumFeed() {
             notifier.success('הפיד נוצר בהצלחה. כעת ניתן להירשם אליו');
         },
         (err) => {
-            if (err.response.data.message === 'Feed exists') {
+            if (err.response.data?.message === 'Feed exists') {
                 notifier.alert('הפיד הזה כבר קיים<br>...נסה להירשם אליו');
             } else {
                 notifier.alert(`${err.response.status}: ${err.response.data.message}`);
