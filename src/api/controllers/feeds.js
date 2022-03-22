@@ -189,7 +189,7 @@ module.exports = {
         try {
             feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { Subscribers: userID } });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 error
             });
         }
