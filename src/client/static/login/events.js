@@ -1,13 +1,4 @@
-// // // // //
-import { login, signup } from './lb.js';
-
-function showLoginForm() {
-    $('.message').css('transform', 'translateX(0)');
-    if ($('.message').hasClass('login')) {
-        $('.message').removeClass('signup');
-    }
-    $('.message').addClass('login');
-}
+import { login, signup, showLoginForm } from './lb.js';
 
 $('#signup').click(function() {
     $('.message').css('transform', 'translateX(100%)');
@@ -37,7 +28,3 @@ $('#form-login').on('submit', (event) => {
     const password = $('#login-password').val();
     login({ email, password });
 });
-
-export {
-    showLoginForm
-};

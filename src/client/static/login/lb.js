@@ -1,5 +1,11 @@
 /* eslint-disable no-undef */
-import { showLoginForm } from './events.js';
+function showLoginForm() {
+    $('.message').css('transform', 'translateX(0)');
+    if ($('.message').hasClass('login')) {
+        $('.message').removeClass('signup');
+    }
+    $('.message').addClass('login');
+}
 
 async function login (input) {
     const { email, password } = input;
@@ -70,5 +76,6 @@ async function signup (input) {
 
 export {
     login,
-    signup
+    signup,
+    showLoginForm
 };
