@@ -113,7 +113,8 @@ module.exports = {
         } catch (error) {
             await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
-                'User removed - An error sending the email verification ': error
+                message: 'User removed - An error sending the email verification',
+                error
             });
         }
     },
