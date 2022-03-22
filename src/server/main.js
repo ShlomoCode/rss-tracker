@@ -46,6 +46,7 @@ async function main() {
         }
 
         if (AddressesToSend.length === 0) {
+            console.log(`No subscriptions with verified email were found in feedID ${feed._id} (${feed.title})! Continued the next feed.`);
             continue;
         }
 
