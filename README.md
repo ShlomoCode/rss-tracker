@@ -74,10 +74,11 @@
   
 
 ### config
+יש להוריד את המאגר למחשב, ולמלא את הקונפיג;
 
 הקונפיג מוגדר בקובץ `config.env` תחת התקיה הראשית של הפרויקט.
 
-  
+הקונפיג מוכנס בצורה של `שם ערך = ערך`, שורה תחת שורה.
 
 [פרטים נוספים על התחביר](https://www.npmjs.com/package/dotenv  "פרטים נוספים על התחביר").
 
@@ -111,6 +112,7 @@ White_list_does_not_include_images="pinatkafe.com|internet-israel.com|geektime.c
 
 ```
 
+אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת http://localhost.
 ## פריסה מהירה על הרקו
 
 יש ללחוץ על הכפתור 👇👇 ולמלא את הפרטים הנדרשים:
