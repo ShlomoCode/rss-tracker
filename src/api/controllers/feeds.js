@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Feed = require('../models/feed');
-const { parser: parseHtml } = require('html-metadata-parser');
 const parseRss = require('../../server/rss2json');
 const { decode: decodeHtml } = require('html-entities');
 
