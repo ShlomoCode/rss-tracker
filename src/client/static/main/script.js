@@ -244,5 +244,4 @@ loadFeeds();
         getVerifyCode();
         break;
     }
-    // console.log(resp.data);
 })();
