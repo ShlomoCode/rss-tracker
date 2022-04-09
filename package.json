@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "node test.js",
-    "start": "nodemon app.js"
+    "start": "node app.js",
+    "debug": "nodemon app.js"
   },
   "author": "ShlomoCode",
   "license": "UNLICENSED",
