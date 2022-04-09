@@ -135,7 +135,8 @@ module.exports = {
         const feedID = req.params.feedID;
         const { userID } = res.locals.user;
 
-        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+        // אם המזהה פיד לא חוקי
+        if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({
                 message: `${feedID} no feedID Valid!`
             });
