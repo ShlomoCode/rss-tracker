@@ -34,7 +34,7 @@ async function login(input) {
 async function signup(input) {
     const { name, email, password } = input;
 
-    if (!/[0-9- א-תA-z]{3,15}/.test(name)) {
+    if (!/[0-9- א-תA-z]{2,15}/.test(name)) {
         return new AWN({ position: 'bottom-left' }).alert('שם חסר/לא תקין/קצר מידי');
     }
 
