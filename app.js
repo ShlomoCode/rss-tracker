@@ -6,16 +6,6 @@ require('dotenv').config({ path: 'config.env' });
 const cookieParser = require('cookie-parser');
 const processingFeeds = require('./src/server/main');
 
-// התחברות לדאטה בייס
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
-mongoose.connection.on('connected', () => {
-    console.log('mongoDB connected!');
-});
-
 app.use(morgan('dev'));
 
 app.use(express.json());
@@ -68,13 +58,18 @@ app.use((error, req, res, next) => {
 /**
  * Run Back And base
  */
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+};
 (async() => {
-    function sleep(ms) {
-        return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
-    };
-
+    // התחברות לדאטה בייס
+    await mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    console.log('mongoDB connected!');
     do {
         const resp = await processingFeeds();
         const ms = 1000 * 60 * 1; // 1 minute
