@@ -1,6 +1,6 @@
 import { login, signup, showLoginForm } from './lb.js';
 
-$('#signup').click(function() {
+$('#signup').click(function () {
     $('.message').css('transform', 'translateX(100%)');
     if ($('.message').hasClass('login')) {
         $('.message').removeClass('login');

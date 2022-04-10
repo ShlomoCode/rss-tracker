@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const checkLogin = function(req, res, next) {
+const checkLogin = function (req, res, next) {
     try {
         const token = req.headers.authorization.replace('Bearer ', '');
         const infoLogin = jwt.verify(token, process.env.JWT_KEY, { complete: true });

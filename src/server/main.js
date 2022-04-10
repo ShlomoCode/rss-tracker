@@ -4,7 +4,7 @@ const parseRss = require('./rss2json');
 const sendMail = require('./emails');
 const { parser: parseHtml } = require('html-metadata-parser');
 
-async function main() {
+async function main () {
     console.log('processingFeeds started...');
     const feedsRew = await Feed.find();
 

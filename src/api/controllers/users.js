@@ -7,7 +7,7 @@ const zxcvbn = require('zxcvbn');
 const sendMail = require('../../server/emails');
 const path = require('path');
 
-function randomNumber() {
+function randomNumber () {
     const numberRandom = Math.floor((Math.random() * 5000), 0);
     return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString();
 }
@@ -18,7 +18,7 @@ function randomNumber() {
  * @param {String} email כתובת המייל שהתקבלה מהמשתמש
  * @returns
  */
-function normalizeEmail(email) {
+function normalizeEmail (email) {
     if (/g(oogle)?mail\.com|hotmail\.com|outlook\.com/.test(email)) {
         const emailRew = email.replace('googlemail', 'gmail');
         const emailParts = emailRew.split('@');
@@ -33,7 +33,7 @@ function normalizeEmail(email) {
 }
 
 module.exports = {
-    signup: async(req, res) => {
+    signup: async (req, res) => {
         const { email, password, name } = req.body;
 
         if (!email) {
@@ -118,7 +118,7 @@ module.exports = {
             });
         }
     },
-    login: async(req, res) => {
+    login: async (req, res) => {
         const { email, password } = req.body;
 
         if (!email) {
@@ -168,7 +168,7 @@ module.exports = {
             }
         });
     },
-    verifyEmail: async(req, res) => {
+    verifyEmail: async (req, res) => {
         let verifyCode = req.body?.verifyCode || req.query.verifyCode;
         const userID = res.locals.user?.userID || req.params.userID;
 
@@ -231,7 +231,7 @@ module.exports = {
             return res.sendFile(path.join(__dirname, '../../client/static/verify-email', 'index.html'));
         }
     },
-    unsubscribe: async(req, res) => {
+    unsubscribe: async (req, res) => {
         const userID = req.params.userID;
 
         if (!userID) {
@@ -271,7 +271,7 @@ module.exports = {
             message: `Unsubscribe from ${userUnsubscribe.emailFront} has been successfully completed`
         });
     },
-    deleteUser: async(req, res) => {
+    deleteUser: async (req, res) => {
         const userID = req.params.userID;
 
         if (!userID) {
@@ -318,7 +318,7 @@ module.exports = {
             infoUserDeleted: userDeleted
         });
     },
-    getUsers: async(req, res) => {
+    getUsers: async (req, res) => {
         if (res.locals.user.Permissions !== 'admin') {
             return res.status(403).json({
                 message: 'No permission'
@@ -343,7 +343,7 @@ module.exports = {
             users
         });
     },
-    getMyStatus: async(req, res) => {
+    getMyStatus: async (req, res) => {
         const { userID } = res.locals.user;
 
         let user;

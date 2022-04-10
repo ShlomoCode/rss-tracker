@@ -20,8 +20,8 @@ const sendMail = {
  * @param {Array} addresses כתובות מייל שצריכות לקבל את הפיד
  * @returns
  */
-    async rss(item, feedTitle, addresses) {
         let { description, link, title, thumbnail: thumbnailLink } = item;
+    async rss (item, feedTitle, addresses) {
 
         title = decode(title);
         feedTitle = decode(feedTitle);
@@ -69,7 +69,7 @@ const sendMail = {
     * @param {String} address
     * @returns Promise
     */
-    verify(verifyCode, address, name, userID) {
+    verify (verifyCode, address, name, userID) {
         const mailOptions = {
             from: process.env.gmail_user,
             to: address,

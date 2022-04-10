@@ -1,6 +1,6 @@
-function onLoggedOut(title) {
+function onLoggedOut (title) {
     const notifier = new AWN();
-    function onOkClick() {
+    function onOkClick () {
         location.reload();
     }
     notifier.confirm('Please refresh!', onOkClick, false, {
@@ -14,7 +14,7 @@ const notifier = new AWN({
     position: 'bottom-left'
 });
 
-async function createCostumFeed() {
+async function createCostumFeed () {
     const value = await swal(
         `
     הכנס כאן כתובת אתר/קטגוריה/תגית וכדו' למעקב.
@@ -57,7 +57,7 @@ async function createCostumFeed() {
     );
 }
 
-async function loadFeeds() {
+async function loadFeeds () {
     $('.feed-item').remove();
 
     const notifier = new AWN({ position: 'bottom-left' });
@@ -76,7 +76,7 @@ async function loadFeeds() {
     });
 }
 
-function PushFeedToPage(feedItem) {
+function PushFeedToPage (feedItem) {
     const { title, subscriberSelf, Subscribers, _id, url } = feedItem;
     const item = `<div id="${_id}" class="feed-item">
     <h3><a href="${url.replace('/feed', '')}" target="_blank">${title}</a></h3>
@@ -96,7 +96,7 @@ function PushFeedToPage(feedItem) {
     }
 }
 
-async function subscribe(feedID) {
+async function subscribe (feedID) {
     notifier.asyncBlock(
         axios.post(`/feeds/subscribe/${feedID}`),
         (resp) => {
@@ -132,7 +132,7 @@ async function subscribe(feedID) {
     );
 }
 
-async function unsubscribe(feedID) {
+async function unsubscribe (feedID) {
     notifier.asyncBlock(
         axios.delete(`/feeds/subscribe/${feedID}`),
         (resp) => {
@@ -163,7 +163,7 @@ async function unsubscribe(feedID) {
     );
 }
 
-async function getVerifyCode() {
+async function getVerifyCode () {
     const code = await swal({
         title: '!שים לב',
         icon: 'warning',
@@ -221,7 +221,7 @@ $('#refresh-feeds').on('click', () => {
 // טעינת הפידים מיד בטעינת הדף
 loadFeeds();
 // קבלת מידע יוזר והצגתו
-(async() => {
+(async () => {
     let resp;
     try {
         resp = await axios.get('/users/My-Status');
