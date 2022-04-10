@@ -41,6 +41,7 @@ const UnsubscribeMiddleware = require('./src/client/middlewares/unsubscribe');
 
 app.use('/login', checkLoginClient, express.static('src/client/static/login'));
 app.use('/', checkLoginClient, express.static('src/client/static/main'));
+app.use('/images', express.static('src/client/static/images'));
 app.use('/unsubscribe', UnsubscribeMiddleware, express.static('src/client/static/unsubscribe'));
 
 // for 404 page
