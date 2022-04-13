@@ -174,7 +174,7 @@ module.exports = {
 
         if (!verifyCode) {
             return res.status(400).json({
-                message: 'Error: verifyCode A parameter required'
+                message: 'verifyCode parameter required'
             });
         }
 
@@ -182,7 +182,7 @@ module.exports = {
 
         if (verifyCode.length > 6 || /[0-9]{5,6}/.test(verifyCode) === false) {
             return res.status(400).json({
-                message: `${verifyCode} is not verification  code valid`
+                message: `${verifyCode} is not a valid verifyCode`
             });
         }
 
@@ -197,7 +197,7 @@ module.exports = {
 
         if (!user) {
             return res.status(404).json({
-                message: `userID ${userID} Not Found`
+                message: `User ${userID} is not found`
             });
         }
 
@@ -209,7 +209,7 @@ module.exports = {
 
         if (user.verifyEmailStatus === true) {
             return res.status(409).json({
-                message: 'User has already been verified'
+                message: 'verify failed - Email already verified'
             });
         }
 
@@ -225,7 +225,7 @@ module.exports = {
 
         if (!req.query.verifyCode) {
             return res.status(200).json({
-                message: 'Email verification completed'
+                message: 'verify successful'
             });
         } else {
             return res.sendFile(path.join(__dirname, '../../client/static/verified-email', 'index.html'));
@@ -236,13 +236,13 @@ module.exports = {
 
         if (!userID) {
             return res.status(400).json({
-                message: 'userID A required parameter'
+                message: 'userID parameter required'
             });
         }
 
         if (mongoose.Types.ObjectId.isValid(userID) !== true) {
             return res.status(400).json({
-                message: `${userID} is not userID valid`
+                message: `userID ${userID} is not valid`
             });
         }
 
@@ -257,18 +257,18 @@ module.exports = {
 
         if (!userUnsubscribe) {
             return res.status(404).json({
-                message: `User ${userID} Not Found`
+                message: `User ${userID} is not found`
             });
         }
 
         if (userUnsubscribe.verifyEmailStatus === false) {
             return res.status(409).json({
-                message: `The subscription of ${userUnsubscribe.emailFront} has already been canceled!`
+                message: `unsubscribe failed - Email ${userUnsubscribe.emailFront} already unsubscribed`
             });
         }
 
         res.status(200).json({
-            message: `Unsubscribe from ${userUnsubscribe.emailFront} has been successfully completed`
+            message: `unsubscribe successful - Email ${userUnsubscribe.emailFront}`
         });
     },
     deleteUser: async (req, res) => {
@@ -276,19 +276,19 @@ module.exports = {
 
         if (!userID) {
             return res.status(400).json({
-                message: 'userID A required parameter'
+                message: 'userID parameter required'
             });
         }
 
         if (mongoose.Types.ObjectId.isValid(userID) !== true) {
             return res.status(400).json({
-                message: `${userID} no userID Valid!`
+                message: `userID ${userID} is not valid`
             });
         }
 
         if (res.locals.user.Permissions !== 'admin') {
             return res.status(403).json({
-                message: 'No permission'
+                message: 'Permission denied - no permission to delete user'
             });
         }
 
@@ -306,7 +306,7 @@ module.exports = {
 
         if (!userDeleted) {
             return res.status(404).json({
-                message: `User ${userID} Not Found`
+                message: `User ${userID} is not found`
             });
         }
 
@@ -321,7 +321,7 @@ module.exports = {
     getUsers: async (req, res) => {
         if (res.locals.user.Permissions !== 'admin') {
             return res.status(403).json({
-                message: 'No permission'
+                message: 'Permission denied - no permission to get all users'
             });
         }
 
@@ -358,7 +358,7 @@ module.exports = {
         // for not found user
         if (!user) {
             return res.status(404).json({
-                message: `userID ${userID} Not Found`
+                message: `User ${userID} is not found`
             });
         }
 
