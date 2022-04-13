@@ -13,13 +13,12 @@ const {
     getMyStatus
 } = require('../controllers/users');
 
-router.get('/', checkPermissions, getUsers);
+router.get('/', checkLogin, checkPermissions, getUsers);
 router.post('/signup', signup);
 router.post('/login', login);
-router.post('/delete/:userID', checkPermissions, deleteUser);
+router.post('/delete/:userID', checkLogin, checkPermissions, deleteUser);
 router.patch('/unsubscribe/:userID', unsubscribe);
 router.post('/verify', checkLogin, verifyEmail);
-router.get('/verify/:userID', verifyEmail);
 router.get('/My-status', checkLogin, getMyStatus);
 
 module.exports = router;

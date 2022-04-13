@@ -19,6 +19,6 @@ router.post('/', checkLogin, createFeed);
 router.post('/Subscribe/:feedID', checkLogin, SubscribeFeed);
 router.delete('/Subscribe/:feedID', checkLogin, UnSubscribeFeed);
 // for admin only:
-router.delete('/:feedID', checkPermissions, deleteFeed);
+router.delete('/:feedID', checkLogin, checkPermissions, deleteFeed);
 
 module.exports = router;
