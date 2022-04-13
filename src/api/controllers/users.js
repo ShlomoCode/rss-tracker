@@ -347,11 +347,8 @@ module.exports = {
         const { userID } = res.locals.user;
 
         let user;
-        let subscribersRew;
-        // get db
         try {
             user = await User.findById(userID);
-            subscribersRew = await Feed.find({ Subscribers: userID });
         } catch (error) {
             return res.status(500).json({
                 error
@@ -365,23 +362,12 @@ module.exports = {
             });
         }
 
-        // mongoose Object to Regular Object
-        // const subscribers = subscribersRew.map((feed) => {
-        //     return feed.toObject();
-        // });
-
         // Filtered Secret Content
         user.password = undefined;
         user.verifyEmailCode = undefined;
-        // subscribers = subscribers.map((feed) => {
-        //     feed.Subscribers = feed.Subscribers.length;
-        //     return feed;
-        // });
 
-        // return
         return res.status(200).json({
             user
-            // subscribers
         });
     }
 };
