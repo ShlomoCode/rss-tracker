@@ -228,7 +228,7 @@ module.exports = {
                 message: 'Email verification completed'
             });
         } else {
-            return res.sendFile(path.join(__dirname, '../../client/static/verify-email', 'index.html'));
+            return res.sendFile(path.join(__dirname, '../../client/static/verified-email', 'index.html'));
         }
     },
     unsubscribe: async (req, res) => {
