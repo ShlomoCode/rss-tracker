@@ -1,23 +1,21 @@
 const jwt = require('jsonwebtoken');
 
-    let logadin;
 const checkLogin = function (req, res, next) {
     try {
         const token = req.cookies.token;
-        jwt.verify(token, process.env.JWT_KEY, { complete: true });
-        logadin = true;
+        const auth = jwt.verify(token, process.env.JWT_KEY, { complete: true });
+        const { id } = auth.payload;
+        // אם ניסו להתחבר וכבר מחובר
+        if (req.originalUrl === '/login/') {
+            return res.redirect('/');
+        }
+        res.locals.user = { id };
     } catch (error) {
-        logadin = false;
+        console.log(error);
+        if (req.originalUrl === '/') {
+            return res.redirect('/login/');
+        }
     }
-
-    if (req.originalUrl === '/login/' && logadin === true) {
-        return res.redirect('/');
-    }
-
-    if (req.originalUrl === '/' && logadin === false) {
-        return res.redirect('/login');
-    }
-
     next();
 };
 
