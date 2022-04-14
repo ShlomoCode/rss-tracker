@@ -54,15 +54,13 @@
 
 *  `delete` - UnSubscribe
 
-  
-
 `/api/status` - `get`:
 
 * get server status
 
   
 
-# אירוח עצמי של rss to mail
+# self-hosted
 
 הגרסה הציבורים מכילה הגבלות שונות, הן בכמות העדכונים שניתן להירשם (בגלל מגבלה של גוגל על כמות שליחת המיילים), והן ברשימה לבנה של אתרים שאליהם ניתן להירשם (ע"מ שהאתר יהיה פתוח בסינונים השונים).
 הפתרון לכך הוא אירוח עצמי של הפרויקט;
@@ -70,8 +68,6 @@
   
 
 ## פריסה לוקאלית
-
-  
 
 ### config
 יש להוריד את המאגר למחשב, ולמלא את הקונפיג;
@@ -82,56 +78,40 @@
 
 [פרטים נוספים על התחביר](https://www.npmjs.com/package/dotenv  "פרטים נוספים על התחביר").
 
-#### ערכי חובה
+#### Required variables:
 
 ```
-
-MONGO_URI # כתובת URI של מסד נתונים mongoDB.
-
-gmail_user # כתובת אימייל של gmail שממנה ישלחו המיילים
-
-gmail_password # סיסמת החשבון - יש להפעיל גישה ל"אפליקציות לא מאובטחו", או (מומלץ!) להפעיל אימות דו שלבי ולהשתמש ב"סיסמה לאפליקציה".
-
-JWT_KEY # מפתח ההצפנה עבור jwt. ניתן להכניס ערך רנדומלי.
-
+MONGO_URI # mongoDB connection string
+gmail_user # gmail username
+gmail_password # accunt google password or "password for app" - https://support.google.com/mail/answer/185833
+JWT_KEY # JWT secret key
 ```
 
-#### ערכים אופציונליים
+#### Optional variables:
 
 ```
-
-countMaxFeedsForUser = 10 # מספר הפידים המרבי שכל יוזר יוכל להירשם אליו, ברירת מחדל: 10
-
-PORT # הפורט שבו האתר יהיה זמין - רלוונטי רק עבור אתר שפועל בlocalhost. ברירת מחדל: 80.
-
-WEB_SITE_ADDRESS # אם האתר פועל ברשת, לדוגמה על שרת VPS ולא על localhost/heroku. דוגמה: https://my-syte.com
-
-White_list_including_images="hm-news.co.il|jdn.co.il|93fm.co.il|bahazit.co.il" # אתרים שבהם הפידים יישלחו כולל תמונה
-
-White_list_does_not_include_images="pinatkafe.com|internet-israel.com|geektime.co.il" # אתרים שבהם הפידים יישלחו ללא תמונה
-
+countMaxFeedsForUser = 10 # countMaxFeedsForUser. default: 10
+PORT # PORT - for localhost. default: 80.
+WEB_SITE_ADDRESS # site address - for costume domain on heroku or vps server.
+White_list_including_images="hm-news.co.il|jdn.co.il|93fm.co.il|bahazit.co.il" # sites for which images will be sent.
+White_list_does_not_include_images="pinatkafe.com|internet-israel.com|geektime.co.il" # White list to sent without images
 ```
-
 אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת http://localhost.
-## פריסה מהירה על הרקו
 
-יש ללחוץ על הכפתור 👇👇 ולמלא את הפרטים הנדרשים:
+## Quick deployment on Heroku
 
+click on the heroku button 👇👇 and fill the config required:
 * mongoDB uri
-
-* gmail - username
-
-* gmail - password
-
-ניתן למלא גם את הקונפיג האופציונלי.
-
-  
+* gmail user
+* gmail password
 
 <div  align='center'>
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ShlomoCode/rss-to-mail/tree/master)
 
 </div>
+You can also fill optional configs listed above.
+
 
   
 ### מניעת "הירדמות" האפליקציה
@@ -142,7 +122,7 @@ White_list_does_not_include_images="pinatkafe.com|internet-israel.com|geektime.c
  
 יש ליצור ב[גוגל סקריפט](https://script.google.com) סקריפט חדש, ולהכניס בו את הקוד הבא (כמובן לתקן את שם האפליקציה וכתובת המייל לשליחת הדיווח אם האפליקציה לא תקינה):
  ```JS
- const siteUrl = 'https://appname.herokuapp.com/api/status';
+const siteUrl = 'https://appname.herokuapp.com/api/status';
 const emailAddress = 'my.mail@gmail.com';
 
 function fetch() {
@@ -162,42 +142,42 @@ function fetch() {
     }
 }
 ```
-לאחר מכן יש להוסיף בטריגרים הפעלה מתוזמנת כל פחות מ-30 דקות.
-כעת גוגל סקריפט ישלח בקשות דמה לאתר, ו"יעיר" אותו. בנוסף, אם האפליקציה בהרקו קרסה - תקבלו על כך מייל עדכון לכתובת שציינתם במשתנה `emailAddress`.
+after that, you add trigger to the script in every less 30 minutes.
+script will be triggered every 30 minutes, get to you site, if the site is not working, send email to the email address in the `emailAddress` variable.
 
-# ספריות בשימוש:
+# Libraries used in this project
 
-## צד שרת
+## server-side
 
-* morgan - לוגר בקשות
+* morgan - logger
 
-* nodemon - לרענון אוטומטי של הרשת בכל שינוי
+* nodemon - refresh the server on file change
 
-* express - שרת HTTP
+* express - http server
 
-* mongoose - התממשקות עם הדאטה בייס
+* cookie-parser - parse cookies in the server side
 
-* rss-to-json - קבלת הפידים כjson
+* mongoose - connecting to mongoDB
 
-* nodemailer - שליחת המיילים
+* rss-to-json - get rss feed and convert it to json
 
-* zxcvbn - בדיקת חוזק סיסמאות
+* nodemailer - send emails
 
-* bcrypt - הצפנה ואימות לסיסמאות המשתמשים
+* zxcvbn - to check the strength of the password
 
-* jsonwebtoken - ליצירת הטוקן (ואימות שלו במידלוורס)
+* bcrypt - to encrypt the password
+
+* jsonwebtoken - to create the token and validate it
 
 * html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 
-* html-metadata-parser - לקבלת תמונת הכתבה עבור אתרים שלא מחזירים תמונה בפיד, כגון JDN
+* html-metadata-parser - get image from html for sites that don't support og:image (JDN example)
 
-* image-to-base64 - להורדת התמונה והמרתה לbase64
+* image-to-base64 - download image from url and convert it to base64
 
-* dotenv - קונפיג
+* dotenv - config file
 
-* cookie-parser - קבלת העוגיות בצד השרת
-
-## צד לקוח
+## client-side:
 
 * [jQuery](https://jquery.com)
 
