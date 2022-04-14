@@ -25,7 +25,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes
+/* Routes api */
 const usersRoutes = require('./src/api/routes/users');
 const feedsRoutes = require('./src/api/routes/feeds');
 const getStatus = require('./src/api/routes/status');
@@ -33,6 +33,7 @@ const getStatus = require('./src/api/routes/status');
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.use('/api/status', getStatus);
+app.use('/api/', (req, res) => res.status(404).json({ message: 'Not found' }));
 
 app.use(cookieParser());
 
@@ -88,7 +89,5 @@ function sleep (ms) {
  */
 const http = require('http');
 const port = process.env.PORT || 80;
-
 const server = http.createServer(app);
-
 server.listen(port);
