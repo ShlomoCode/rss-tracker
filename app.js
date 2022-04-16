@@ -28,14 +28,13 @@ app.use((req, res, next) => {
 /* Routes api */
 const usersRoutes = require('./src/api/routes/users');
 const feedsRoutes = require('./src/api/routes/feeds');
-const getStatus = require('./src/api/routes/status');
 
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
-app.use('/api/status', getStatus);
 app.use('/api/', (req, res) => res.status(404).json({ message: 'Not found' }));
 
 app.use(cookieParser());
+app.get('/api/status', (req, res) => res.status(200).json({ message: 'OK' }));
 
 const checkLoginClient = require('./src/client/middlewares/checkLogin');
 const UnsubscribeMiddleware = require('./src/client/middlewares/unsubscribe');
