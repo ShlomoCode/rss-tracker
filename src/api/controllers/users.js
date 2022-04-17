@@ -226,19 +226,6 @@ module.exports = {
     },
     unsubscribe: async (req, res) => {
         const { id: userID } = res.locals.user;
-
-        if (!userID) {
-            return res.status(400).json({
-                message: 'userID parameter required'
-            });
-        }
-
-        if (mongoose.Types.ObjectId.isValid(userID) !== true) {
-            return res.status(400).json({
-                message: `userID ${userID} is not valid`
-            });
-        }
-
         let userUnsubscribe;
         try {
             userUnsubscribe = await User.findByIdAndUpdate(userID, { verifyEmailStatus: false });
