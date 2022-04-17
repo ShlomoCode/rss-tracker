@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node test.js",
     "start": "node app.js",
-    "debug": "nodemon app.js"
+    "debug": "nodemon app.js",
+    "fix": "eslint **/*.js --fix"
   },
   "author": "ShlomoCode",
   "license": "UNLICENSED",
