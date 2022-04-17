@@ -340,32 +340,5 @@ module.exports = {
         res.status(200).json({
             users
         });
-    },
-    getMyStatus: async (req, res) => {
-        const { id: userID } = res.locals.user;
-
-        let user;
-        try {
-            user = await User.findById(userID);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
-        // for not found user
-        if (!user) {
-            return res.status(404).json({
-                message: `User ${userID} is not found`
-            });
-        }
-
-        // Filtered Secret Content
-        user.password = undefined;
-        user.verifyEmailCode = undefined;
-
-        return res.status(200).json({
-            user
-        });
     }
 };
