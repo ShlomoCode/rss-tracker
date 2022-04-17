@@ -7,6 +7,9 @@ const zxcvbn = require('zxcvbn');
 const sendMail = require('../../server/emails');
 const path = require('path');
 
+/**
+ * @returns number random in 5 digit in string format
+ */
 function randomNumber () {
     const numberRandom = Math.floor((Math.random() * 5000), 0);
     return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString();
@@ -134,7 +137,6 @@ module.exports = {
                 message: 'password parameter required'
             });
         }
-
         const users = await User.find({ emailProcessed });
         if (users.length === 0) {
             return res.status(401).json({
@@ -268,7 +270,7 @@ module.exports = {
         }
 
         res.status(200).json({
-            message: `unsubscribe successful - Email ${userUnsubscribe.emailFront}`
+            message: `unsubscribe successful for Email ${userUnsubscribe.emailFront}`
         });
     },
     deleteUser: async (req, res) => {

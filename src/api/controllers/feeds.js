@@ -75,7 +75,7 @@ module.exports = {
 
         if (!url) {
             return res.status(400).json({
-                message: 'Error: url A parameter required!'
+                message: 'url is required'
             });
         }
 

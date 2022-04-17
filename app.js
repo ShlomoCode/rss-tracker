@@ -50,9 +50,7 @@ app.use('*', express.static('src/client/static/404'));
 app.use((error, req, res, next) => {
     res.status(500);
     res.json({
-        error: {
-            message: error.message
-        }
+        message: error.message
     });
 });
 
@@ -65,7 +63,6 @@ function sleep (ms) {
     });
 };
 (async () => {
-    // התחברות לדאטה בייס
     console.log('connecting to mongo...');
     await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,

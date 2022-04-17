@@ -59,7 +59,7 @@ async function main () {
         try {
             feedContent = await parseRss(feed.url);
         } catch (error) {
-            console.log(`Error accessing feed page - ${feed.url}:
+            console.log(`Error accessing to feed page - ${feed.url}:
             ${error}`);
             continue;
         }
