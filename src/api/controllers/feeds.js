@@ -111,6 +111,10 @@ module.exports = {
             });
         }
 
+        if (/תגובות לפוסט:/.test(feedTitle)) {
+            return res.status(400).json({ message: 'This is a comment feed, not feed...' });
+        }
+
         const feed = new Feed({
             _id: new mongoose.Types.ObjectId(),
             title: feedTitle,
