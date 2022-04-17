@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('../models/user');
 const Feed = require('../models/feed');
 const parseRss = require('../../server/rss2json');
 const { decode: decodeHtml } = require('html-entities');
@@ -85,7 +86,7 @@ module.exports = {
         const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull}|${listPartial})`);
 
         if (!regexWhiteList.test(url)) {
-            return res.status(500).json({
+            return res.status(400).json({
                 message: 'This site is not whitelisted'
             });
         }
