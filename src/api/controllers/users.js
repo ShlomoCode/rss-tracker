@@ -171,8 +171,8 @@ module.exports = {
         });
     },
     verifyEmail: async (req, res) => {
-        let verifyCode = req.body?.verifyCode || req.query.verifyCode;
-        const userID = res.locals.user?.userID || req.params.userID;
+        let { verifyCode } = req.query;
+        const { id: userID } = res.locals.user;
 
         if (!verifyCode) {
             return res.status(400).json({
@@ -225,16 +225,12 @@ module.exports = {
             }
         }
 
-        if (!req.query.verifyCode) {
-            return res.status(200).json({
-                message: 'verify successful'
-            });
-        } else {
-            return res.sendFile(path.join(__dirname, '../../client/static/verified-email', 'index.html'));
-        }
+        return res.status(200).json({
+            message: 'verify successful'
+        });
     },
     unsubscribe: async (req, res) => {
-        const userID = req.params.userID;
+        const { id: userID } = res.locals.user;
 
         if (!userID) {
             return res.status(400).json({
@@ -288,12 +284,6 @@ module.exports = {
             });
         }
 
-        if (res.locals.user.Permissions !== 'admin') {
-            return res.status(403).json({
-                message: 'Permission denied - no permission to delete user'
-            });
-        }
-
         let userDeleted;
         let removedFeedsCount;
         try {
@@ -321,12 +311,6 @@ module.exports = {
         });
     },
     getUsers: async (req, res) => {
-        if (res.locals.user.Permissions !== 'admin') {
-            return res.status(403).json({
-                message: 'Permission denied - no permission to get all users'
-            });
-        }
-
         let usersRew;
         try {
             usersRew = await User.find();
@@ -346,7 +330,7 @@ module.exports = {
         });
     },
     getMyStatus: async (req, res) => {
-        const { userID } = res.locals.user;
+        const { id: userID } = res.locals.user;
 
         let user;
         try {

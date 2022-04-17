@@ -18,7 +18,7 @@
 
 * verify - `post`
 
-* unsubscribe - `patch`
+* unsubscribe - `delete`
 
 * delete - `post` (for admin only)
 

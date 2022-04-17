@@ -5,7 +5,7 @@ const { decode: decodeHtml } = require('html-entities');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
-        const { userID } = res.locals.user;
+        const { id: userID } = res.locals.user;
 
         let feedsRew;
 
@@ -36,7 +36,7 @@ module.exports = {
     },
     getFeed: async (req, res) => {
         const feedID = req.params.feedID;
-        const { userID } = res.locals.user;
+        const { id: userID } = res.locals.user;
 
         if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
             return res.status(400).json({
@@ -133,7 +133,7 @@ module.exports = {
     },
     SubscribeFeed: async (req, res) => {
         const feedID = req.params.feedID;
-        const { userID } = res.locals.user;
+        const { id: userID } = res.locals.user;
 
         // אם המזהה פיד לא חוקי
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
@@ -177,7 +177,7 @@ module.exports = {
     },
     UnSubscribeFeed: async (req, res) => {
         const feedID = req.params.feedID;
-        const { userID } = res.locals.user;
+        const { id: userID } = res.locals.user;
 
         if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
             return res.status(400).json({
@@ -224,12 +224,6 @@ module.exports = {
         if (!feed) {
             return res.status(404).json({
                 message: 'Not Found Feed'
-            });
-        }
-
-        if (res.locals.user.Permissions !== 'admin') {
-            return res.status(403).json({
-                message: 'No permission'
             });
         }
 

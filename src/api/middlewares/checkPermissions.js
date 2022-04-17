@@ -1,11 +1,15 @@
 const User = require('../models/user');
 
 const checkPermissions = async (req, res, next) => {
-    const { userID } = res.locals.user;
+    const { id: userID } = res.locals.user;
     let user;
     try {
         user = await User.findById(userID);
-        res.locals.user.Permissions = user.Permissions;
+        if (user.Permissions !== 'admin') {
+            return res.status(403).json({
+                message: 'You are not allowed to do this action'
+            });
+        }
     } catch (error) {
         return res.status(500).json({
             error
