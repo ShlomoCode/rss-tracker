@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const { decode } = require('html-entities');
 const imageToBase64 = require('image-to-base64');
-const bodyVerifyEmail = require('./email-Templates/verification');
 const path = require('path');
+const ejs = require('ejs');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -69,14 +69,23 @@ const sendMail = {
     * @param {String} address
     * @returns Promise
     */
-    verify (verifyCode, address, name, userID) {
+    async verify (verifyCode, address, name) {
         const mailOptions = {
             from: process.env.gmail_user,
             to: address,
             subject: `קוד האימות שלך הוא: ${verifyCode}`,
-            html: bodyVerifyEmail(userID, name, address, verifyCode)
+            html: await ejs.renderFile(path.join(__dirname, './email-Templates/verification.ejs'),
+                {
+                    name,
+                    code: verifyCode,
+                    email: address,
+                    process: {
+                        env: require('dotenv').config({ path: 'config.env' }).parsed
+                    }
+                })
         };
         return transporter.sendMail(mailOptions);
     }
 };
+
 module.exports = sendMail;

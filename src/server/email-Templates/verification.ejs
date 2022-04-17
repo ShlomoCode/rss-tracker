@@ -1,29 +1,4 @@
-/**
- * פונקציה שמחזירה את הכתובת שבה האתר פעיל
- * כדי שהקישור אימות יישלח באופן תקין ועדכני
- * @returns Website address
- */
-function checkWebsiteAddress() {
-    if (process.env.WEB_SITE_ADDRESS) {
-        return process.env.WEB_SITE_ADDRESS;
-    }
-
-    if (process.env.HEROKU_APP_NAME) {
-        return `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`;
-    } else {
-        return `http://localhost:${process.env.PORT || 80}`;
-    }
-}
-
-/**
- *
- * @param {String} name
- * @param {String} mail
- * @param {Number} code
- * @returns body מעובד
- */
-function body(userID, name, email, code) {
-    return `<head>
+<head>
     <style type="text/css">
         body {
             margin: 0;
@@ -335,9 +310,9 @@ margin-top: 40px;
 margin-bottom: 0;
 ">כמעט סיימת!</h1>
                                     <p class="near_title last" style="margin-top: 10px;margin-bottom: 0;">
-                                        שלום ${name}<br>כדי להשלים את ההרשמה ולקבל מיילים מהמערכת, אנא אמת את כתובת הדוא"ל שלך (${email}).
+                                        שלום <%=name%>,<br>כדי להשלים את ההרשמה ולקבל מיילים מהמערכת, אנא אמת את כתובת הדוא"ל שלך (<%=email%>).
                                     </p>
-                                    <a href="${checkWebsiteAddress()}/api/users/verify/${userID}?verifyCode=${code}" style="display: block;
+                                    <a href="<%=process.env.WEB_SITE_ADDRESS || (process.env.HEROKU_APP_NAME ? `https://${process.env.HEROKU_APP_NAME}.herokuapp.com` : `http://localhost:${process.env.PORT || 80}`)%>/verify?verifyCode=<%=code%>" style="display: block;
 width: 100%;
 max-width: 300px;
 background: #20da9c;
@@ -347,7 +322,7 @@ font-size: 18px;
 padding: 12px 0;
 margin: 30px auto 0;
 text-decoration: none;
-">לאימות המייל</a>
+">לאימות המייל</a
                                     <small style="display: block;
 width: 100%;
 max-width: 330px;
@@ -383,9 +358,9 @@ vertical-align: top;
     border: none !important;
 padding: 20px;">
                                     <p class="marginless" style="margin: 0;">
-                                    הקישור לא עובד? נסו לפתוח אותו בחלון גלישה בסתר, או להכניס את קוד האימות בתיבת האימות שבאתר.
+                                    הקישור לא עובד? ניתן להכניס את קוד האימות גם בדף האימות שבאתר.
                                     <br>
-                                    קוד האימות הוא: <b>${code}</b>
+                                    קוד האימות הוא: <b><%=code%></b>
                                     </p>
                                 </td>
                             </tr>
@@ -412,7 +387,4 @@ margin: 0 auto;
 width: 100%;
 max-width: 500px;
 ">
-</body>`;
-}
-
-module.exports = body;
+</body>
