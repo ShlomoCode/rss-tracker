@@ -1,13 +1,13 @@
-function onLoggedOut (title) {
+function onLoggedOut () {
     const notifier = new AWN();
-    function onOkClick () {
-        location.reload();
-    }
-    notifier.confirm('Please refresh!', onOkClick, false, {
+    notifier.confirm('The page will reload in 2.5 seconds...', () => location.reload(), false, {
         labels: {
-            confirm: title
+            confirm: 'YOU HAVE SUCCESSFULLY LOGGED OUT'
         }
     });
+    setTimeout(() => {
+        location.reload();
+    }, 2500);
 }
 
 const notifier = new AWN({
@@ -43,6 +43,7 @@ async function createCostumFeed () {
         axios.post('/feeds', { url }),
         (resp) => {
             console.log(resp.data);
+            PushFeedToPage(resp.data.feed);
             notifier.success('הפיד נוצר בהצלחה. כעת ניתן להירשם אליו');
         },
         (err) => {
@@ -72,7 +73,7 @@ async function loadFeeds () {
             PushFeedToPage(feeds[i], [i]);
         }
 
-        notifier.success(`${feeds.length} feeds has been loaded!`);
+        notifier.info(`${feeds.length} feeds has been loaded!`);
     });
 }
 
@@ -80,16 +81,16 @@ function PushFeedToPage (feedItem) {
     const { title, subscriberSelf, Subscribers, _id, url } = feedItem;
     const item = `<div id="${_id}" class="feed-item">
     <h3><a href="${url.replace('/feed', '')}" target="_blank">${title}</a></h3>
-    <div class="members-item-count"><span>${Subscribers}</span> מנויים</div>
+    <div class="members-item-count" dir="rtl"><span>${Subscribers}</span> מנויים</div>
     <button class="Subscribe-btn">${subscriberSelf ? '➖ Unsubscribe' : '➕ Subscribe'}</button>
     </div>`;
     $('#feeds').append(item);
-    if (subscriberSelf === true) {
+    if (subscriberSelf) {
         $(`#${_id} .Subscribe-btn`).on('click', () => {
             unsubscribe(_id);
         });
     }
-    if (subscriberSelf === false) {
+    if (!subscriberSelf) {
         $(`#${_id} .Subscribe-btn`).on('click', () => {
             subscribe(_id);
         });
@@ -101,18 +102,13 @@ async function subscribe (feedID) {
         axios.post(`/feeds/subscribe/${feedID}`),
         (resp) => {
             const feedElement = $(`#${feedID} .Subscribe-btn`);
-
             feedElement.off('click');
-
             feedElement.on('click', () => {
                 unsubscribe(feedID);
             });
-
             feedElement.text('➖ Unsubscribe');
-
             const subscribersCount = $(`#${feedID} .members-item-count > span`).text();
             $(`#${feedID} .members-item-count > span`).text(parseInt(subscribersCount) + 1);
-
             notifier.success('נרשמת בהצלחה');
         },
         (err) => {
@@ -163,52 +159,9 @@ async function unsubscribe (feedID) {
     );
 }
 
-async function getVerifyCode () {
-    const code = await swal({
-        title: '!שים לב',
-        icon: 'warning',
-        text: `!המייל שלך לא מאומת
- 
-.לא תוכל לקבל עדכונים מהמערכת עד שתאמת אותו
- 
- חפש את מייל האימות מהמערכת (ייתכן שהוא הגיע לספאם או ל"קידומי מכירות") ולחץ על קישור האימות, או הכנס בתיבה שלמטה את הקוד`,
-        content: {
-            element: 'input',
-            attributes: {
-                placeholder: 'Enter here the verification code'
-            }
-        },
-        buttons: ['התעלם כרגע', 'שלח']
-    });
-
-    if (code === null) {
-        return notifier.tip('כל עוד המייל שלך לא יהיה מאומת, לא תקבל עדכונים מהמערכת', { labels: { tip: 'שים לב' } });
-    }
-
-    if (!/^[0-9]{5,6}$/.test(code.replaceAll(' ', ''))) {
-        return notifier.alert('!לא זוהה קוד אימות תקין');
-    }
-    notifier.asyncBlock(
-        axios.post('/users/verify', {
-            verifyCode: code
-        }),
-        (resp) => {
-            notifier.success('!המייל אומת בהצלחה');
-            $('#email-verification-status').text(' המייל מאומת').removeClass('far fa-times-circle').removeClass('Not-Verified').addClass('fas fa-check-circle').off('click');
-
-            // setTimeout(() => {
-            //     location.reload();
-            // }, 1400);
-        },
-        (err) => {
-            notifier.alert(err.response.data.message);
-        }
-    );
-}
-
 $('#sign-out').on('click', () => {
     Cookies.remove('token');
-    onLoggedOut('YOU HAVE SUCCESSFULLY LOGGED OUT');
+    onLoggedOut();
 });
 
 $('#add-costum-feed').on('click', createCostumFeed);
@@ -220,28 +173,3 @@ $('#refresh-feeds').on('click', () => {
 
 // טעינת הפידים מיד בטעינת הדף
 loadFeeds();
-// קבלת מידע יוזר והצגתו
-(async () => {
-    let resp;
-    try {
-        resp = await axios.get('/users/My-Status');
-    } catch (error) {
-        if (error.response.status === 404) {
-            Cookies.remove('token');
-            return onLoggedOut('Authentication failed');
-        } else {
-            console.log(error.response);
-        }
-    }
-    $('#Hello #content').text(`שלום, ${resp.data.user.name}!`);
-    switch (resp.data.user.verifyEmailStatus) {
-    case true:
-        $('#email-verification-status').text(' המייל מאומת').addClass('fas fa-check-circle');
-        break;
-    case false:
-        // $('#email-verification-status').html(`<i class="far fa-times-circle"></i>  המייל לא מאומת!`)
-        $('#email-verification-status').text(' המייל לא מאומת!').addClass('far fa-times-circle').addClass('Not-Verified').click(getVerifyCode);
-        getVerifyCode();
-        break;
-    }
-})();

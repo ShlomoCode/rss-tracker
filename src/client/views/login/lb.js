@@ -27,7 +27,7 @@ async function login (input) {
     }
 
     const { token } = response.data;
-    Cookies.set('token', token, { expires: 14 });
+    Cookies.set('token', token, { expires: 25, secure: true });
     open('/', '_self');
 }
 
@@ -62,7 +62,7 @@ async function signup (input) {
                     notifierSignup.tip(err.response.data.weakness.suggestions[0]);
                 }
             } else {
-                notifierSignup.alert(`${err.response.status}: ${err.response.data.error.message}`);
+                notifierSignup.alert(`${err.response.status}: ${err.response.data.message}`);
             }
             console.log(err.response);
         });

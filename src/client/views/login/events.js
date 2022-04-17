@@ -7,7 +7,6 @@ $('#signup').click(function () {
     }
     $('.message').addClass('signup');
 });
-
 $('#login').click(showLoginForm);
 
 $('#form-signup').on('submit', (event) => {

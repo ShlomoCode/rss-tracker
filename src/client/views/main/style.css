@@ -6,7 +6,7 @@
     left: 0px;
     top: 0px;
     z-index: 999;
-    border-bottom: 3px solid;
+    border-bottom: 1px solid;
 }
 
 #sign-out {
@@ -49,7 +49,7 @@ html {
     top: 17%;
     height: 500px;
     width: 90%;
-    border: 1.5px solid;
+    border: 1.2px solid;
     border-radius: 4px;
     float: right;
     background: rgba(255,255,255,0.47)
@@ -68,7 +68,7 @@ html {
     background: rgb(255,255,255);
     width: 200px;
     height: 50px;
-    border: 1.5px solid;
+    border: 1px solid;
     border-radius: 4px;
     margin: 5px;
     margin-left: 2.5px;
@@ -104,32 +104,19 @@ html {
     top: -18px;
     text-align: center;
     border-bottom: 1px dotted;
+    font-size: 1.10em;
 }
 
 .feed-item h3 a:visited {
     color: #180bcd;
 }
 
-#email-verification-status {
-    position: absolute;
-    top: -15%;
-    left: 85%;
-    height: 50%;
-    width: 11%;
-}
-
-#email-verification-status.Not-Verified {
-    border: 1px solid;
-    border-radius: 2px;
-    background-color: rgb(234,156,156);
-}
-
 #Hello {
     position: absolute;
     top: -5px;
-    right: 13%;
+    right: -1.5%;
     height: 30px;
-    width: 18%;
+    width: 25%;
     border-radius: 100px; 
 }
 
@@ -143,4 +130,14 @@ html {
 #Hello #content {
     position: absolute;
     right: 85px;
+}
+
+#info {
+    position: fixed;
+    left: 25%
+}
+
+#unsubscribe {
+    position: fixed;
+    right: 19%
 }

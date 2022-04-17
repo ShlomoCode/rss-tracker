@@ -4,18 +4,19 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 require('dotenv').config({ path: 'config.env' });
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const processingFeeds = require('./src/server/main');
 
 app.use(morgan('dev'));
-
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: false
-}));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.set('view engine', 'ejs');
+app.set('views', './src/client/views');
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-Wite, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-Wite, Content-Type, Accept');
     if (req.method === 'OPTIONS') {
         res.header('Access-Control-Allow-Methods', 'POST', 'PATCH', 'DELETE', 'GET');
         return res.status(200).json({
@@ -31,21 +32,25 @@ const feedsRoutes = require('./src/api/routes/feeds');
 
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
-app.use('/api/', (req, res) => res.status(404).json({ message: 'Not found' }));
-
-app.use(cookieParser());
 app.get('/api/status', (req, res) => res.status(200).json({ message: 'OK' }));
+app.all('/api/', (req, res) => res.status(404).json({ message: 'Not found' }));
 
+/* client */
 const checkLoginClient = require('./src/client/middlewares/checkLogin');
-const UnsubscribeMiddleware = require('./src/client/middlewares/unsubscribe');
+const checkVerificationClient = require('./src/client/middlewares/checkVerification');
+const renders = {
+    main: require('./src/client/renders/main'),
+    verify: require('./src/client/renders/verify'),
+    unsubscribe: require('./src/client/renders/unsubscribe')
+};
 
-app.use('/login', checkLoginClient, express.static('src/client/static/login'));
-app.use('/', checkLoginClient, express.static('src/client/static/main'));
-app.use('/images', express.static('src/client/static/images'));
-app.use('/unsubscribe', UnsubscribeMiddleware, express.static('src/client/static/unsubscribe'));
-
-// for 404 page
-app.use('*', express.static('src/client/static/404'));
+app.use(express.static('src/client/views', { index: false }));
+app.use('/images', express.static('src/client/images'));
+app.get('/login', checkLoginClient, (req, res) => res.sendFile(path.join(__dirname, 'src/client/views/login', 'index.html')));
+app.get('/verify', checkLoginClient, checkVerificationClient, renders.verify);
+app.get('/unsubscribe', checkLoginClient, checkVerificationClient, renders.unsubscribe);
+app.get('/', checkLoginClient, checkVerificationClient, renders.main);
+app.all('*', (req, res) => res.sendFile(path.join(__dirname, 'src/client/views', '404.html')));
 
 app.use((error, req, res, next) => {
     res.status(500);

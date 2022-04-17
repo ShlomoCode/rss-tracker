@@ -126,6 +126,8 @@ module.exports = {
             });
         }
 
+        feedCreated.Subscribers = 0;
+
         res.status(200).json({
             message: 'Feed Crated',
             feed: feedCreated
@@ -142,14 +144,46 @@ module.exports = {
             });
         }
 
-        const userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
+        /**
+         * ודא שהמייל של המשתמש מאומת
+         */
+        let user;
+        try {
+            user = await User.findById(userID);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+        // אם היוזר לא נמצא
+        if (!user) {
+            return res.status(404).json({
+                message: `userID ${userID} Not Found`
+            });
+        }
+        // אם המייל לא מאומת
+        if (!user.verifyEmailStatus) {
+            return res.status(403).json({
+                message: 'Email not verified'
+            });
+        }
 
+        // בדוק מגבלת פידים פר יוזר
+        let userSubscribedFeedsCount;
+        try {
+            userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
         if (userSubscribedFeedsCount >= (process.env.countMaxFeedsForUser || 10)) {
             return res.status(429).json({
                 message: `Each user is allowed to register for up to ${process.env.countMaxFeedsForUser || 10} feeds`
             });
         }
 
+        // ההרשמה בפועל
         let feedSubscribe;
         try {
             feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } });

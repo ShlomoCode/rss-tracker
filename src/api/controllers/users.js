@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const sendMail = require('../../server/emails');
-const path = require('path');
 
 /**
  * @returns number random in 5 digit in string format
@@ -108,7 +107,7 @@ module.exports = {
         }
 
         try {
-            const infoSend = await sendMail.verify(verifyEmailCode, email, name, userID);
+            const infoSend = await sendMail.verify(verifyEmailCode, email, name);
             console.log('Email sent: ' + infoSend.response);
             return res.status(200).json({
                 message: 'User created and verification email sent'
@@ -154,11 +153,7 @@ module.exports = {
             }
 
             if (result === true) {
-                const token = jwt.sign(
-                    { id: user._id, email: user.email },
-                    process.env.JWT_KEY,
-                    { expiresIn: '3 days' });
-
+                const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_KEY, { expiresIn: '25 days' });
                 return res.status(200).json({
                     message: 'Auth successful',
                     token
@@ -265,8 +260,18 @@ module.exports = {
             });
         }
 
+        let feedsUnsubscribedCount;
+        try {
+            feedsUnsubscribedCount = (await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } })).modifiedCount;
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
         res.status(200).json({
-            message: `unsubscribe successful for Email ${userUnsubscribe.emailFront}`
+            message: `unsubscribe successful for Email ${userUnsubscribe.emailFront}`,
+            feedsUnsubscribedCount
         });
     },
     deleteUser: async (req, res) => {
@@ -278,18 +283,15 @@ module.exports = {
             });
         }
 
-        if (mongoose.Types.ObjectId.isValid(userID) !== true) {
+        if (!mongoose.Types.ObjectId.isValid(userID)) {
             return res.status(400).json({
                 message: `userID ${userID} is not valid`
             });
         }
 
         let userDeleted;
-        let removedFeedsCount;
         try {
             userDeleted = await User.findByIdAndDelete(userID);
-            // Number of feeds updated:
-            removedFeedsCount = await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } });
         } catch (error) {
             return res.status(500).json({
                 error
@@ -305,9 +307,19 @@ module.exports = {
         // הסרת הסיסמה (ההאש שלה) מהפלט
         userDeleted.password = undefined;
 
+        let unsubscribeFeedsCount;
+        try {
+            unsubscribeFeedsCount = (await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } })).modifiedCount;
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
         res.status(200).json({
-            message: `userId ${userID} Deleted; Unsubscribed for ${removedFeedsCount.modifiedCount} feeds.`,
-            infoUserDeleted: userDeleted
+            message: `userId ${userID} Deleted; Unsubscribed for ${unsubscribeFeedsCount} feeds.`,
+            userDeleted,
+            unsubscribeFeedsCount
         });
     },
     getUsers: async (req, res) => {

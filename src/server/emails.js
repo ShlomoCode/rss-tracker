@@ -28,7 +28,7 @@ const sendMail = {
 
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
-        const pathImageExmple = path.join(__dirname, '../client/static/main/images', 'example.png');
+        const pathImageExmple = path.join(__dirname, '../client/images/main/images', 'example.png');
         const listFull = process.env.White_list_including_images?.replaceAll('.', '\.') || '.';
         const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull})`);
 
