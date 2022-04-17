@@ -75,3 +75,29 @@ $('#log-out').on('click', () => {
         }, 1400);
     }
 });
+
+$('#again-send-verification-email').on('click', async () => {
+    const confirmSend = await swal({
+        title: 'האם אתה בטוח שברצונך לשלוח את המייל שוב?',
+        text: 'שים לב: ייתכן שהמייל נכנס לקטגוריית קידומי מכירות/ספאם. יש לבדוק שם לפני בקשת שליחה חוזרת.',
+        icon: 'warning',
+        buttons: {
+            cancel: true,
+            confirm: 'שלח בכל זאת'
+        }
+    });
+
+    if (confirmSend) {
+        notifier.async(axios.post('/users/againSendVerificationEmail'),
+            (resp) => {
+                notifier.success('!המייל נשלח בהצלחה');
+            },
+            (error) => {
+                console.log(error.response.data);
+                if (error.response.status === 429) {
+                    return $(notifier.alert(`ניתן לשלוח מייל אימות רק פעם ביום. נסה שוב בעוד ${error.response.data.tryAgainAfter}`)).css({ direction: 'rtl' });
+                }
+                notifier.alert(error.response.data.message);
+            });
+    }
+});

@@ -17,7 +17,8 @@ const userSchema = mongoose.Schema({
     verifyEmailStatus: { type: Boolean, default: false },
     verifyEmailCode: { type: String, required: true },
     registrationDate: { type: Date, default: Date.now },
-    Permissions: { type: String, default: 'user' }
+    Permissions: { type: String, default: 'user' },
+    lastVerifyEmailSentAt: { type: Date },
 });
 
 module.exports = mongoose.model('User', userSchema);

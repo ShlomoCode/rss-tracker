@@ -12,22 +12,25 @@
 
 <body>
   <div class="container">
-      <%=email%> | <a style="color: red" id="log-out">Log out</a>
-    <h2>Verify Your Account!</h2>
-    <p>
-      We emailed you the five digit code to <span><b><%=email%></b></span>.<br />
-      Enter the code below to confirm your email address.
-    </p>
-    <div class="code-container">
-      <input type="number" class="code" placeholder="0" min="0" max="9" required />
-      <input type="number" class="code" placeholder="0" min="0" max="9" required />
-      <input type="number" class="code" placeholder="0" min="0" max="9" required />
-      <input type="number" class="code" placeholder="0" min="0" max="9" required />
-      <input type="number" class="code" placeholder="0" min="0" max="9" required />
-    </div>
-    <small class="info" dir="rtl">
-      <i class="fas fa-info-circle"></i> אם כבר אימתת את החשבון שלך דרך הקישור שנשלח אליך במייל, פשוט רענן את הדף...
-    </small>
+    <%=email%> | <a style="color: red" id="log-out">Log out</a> | <a style="color: #229fff;"
+        id="again-send-verification-email">לא קיבלתי את מייל האימות</a>
+      <h2>Verify Your Account!</h2>
+      <p>
+        We emailed you the five digit code to <span><b>
+            <%=email%>
+          </b></span>.<br />
+        Enter the code below to confirm your email address.
+      </p>
+      <div class="code-container">
+        <input type="number" class="code" placeholder="0" min="0" max="9" required />
+        <input type="number" class="code" placeholder="0" min="0" max="9" required />
+        <input type="number" class="code" placeholder="0" min="0" max="9" required />
+        <input type="number" class="code" placeholder="0" min="0" max="9" required />
+        <input type="number" class="code" placeholder="0" min="0" max="9" required />
+      </div>
+      <small class="info" dir="rtl">
+        <i class="fas fa-info-circle"></i> אם כבר אימתת את החשבון שלך דרך הקישור שנשלח אליך במייל, פשוט רענן את הדף...
+      </small>
   </div>
   <!-- axios -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -42,9 +45,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
     integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- js-cookie -->
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"
-integrity="sha256-0H3Nuz3aug3afVbUlsu12Puxva3CP4EhJtPExqs54Vg=" crossorigin="anonymous"></script>
+  <!-- js-cookie -->
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"
+    integrity="sha256-0H3Nuz3aug3afVbUlsu12Puxva3CP4EhJtPExqs54Vg=" crossorigin="anonymous"></script>
+  <!-- sweetalert -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- script -->
   <script src="lb.js"></script>
 </body>

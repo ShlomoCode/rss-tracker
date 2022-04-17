@@ -177,6 +177,8 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * dotenv - config file
 
+* ms - convert miliseconds to human readable format or time in string to miliseconds
+
 ## client-side:
 
 * [jQuery](https://jquery.com)

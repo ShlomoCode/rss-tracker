@@ -4,6 +4,7 @@ const Feed = require('../models/feed');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
+const ms = require('ms');
 const sendMail = require('../../server/emails');
 
 /**
@@ -326,6 +327,51 @@ module.exports = {
 
         res.status(200).json({
             users
+        });
+    },
+    againSendVerificationEmail: async (req, res) => {
+        const { id: userID } = res.locals.user;
+        let user;
+        try {
+            user = await User.findById(userID);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
+        if (!user) {
+            return res.status(404).json({
+                message: `User ${userID} is not found`
+            });
+        }
+
+        if (user.verifyEmailStatus === true) {
+            return res.status(409).json({
+                message: `verify failed - Email ${user.emailFront} already verified`
+            });
+        }
+
+        const delay = '1d';
+        if (user.lastVerifyEmailSentAt && (Date.now() - user.lastVerifyEmailSentAt) < ms(delay)) {
+            return res.status(429).json({
+                message: `send verification email failed - last verification email sent at ${ms(Date.now() - user.lastVerifyEmailSentAt, { long: true })} ago. Please wait ${ms(ms(delay) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })} before trying again`,
+                tryAgainAfter: ms(ms(delay) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })
+            });
+        }
+
+        try {
+            const infoSend = await sendMail.verify(user.verifyEmailCode, user.emailFront, user.name);
+            console.log('Email sent: ' + infoSend.response);
+            await User.findByIdAndUpdate(userID, { lastVerifyEmailSentAt: Date.now() });
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
+        return res.status(200).json({
+            message: `verify email sent again to ${email}`
         });
     }
 };

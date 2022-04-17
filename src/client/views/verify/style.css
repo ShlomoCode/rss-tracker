@@ -75,3 +75,10 @@ body {
     max-width: 70px;
   }
 }
+
+.swal-modal {
+  direction: rtl
+}
+.swal-text{
+  text-align: center
+}
