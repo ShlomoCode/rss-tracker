@@ -23,7 +23,7 @@ const feedsRoutes = require('./src/api/routes/feeds');
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.get('/api/status', (req, res) => res.status(200).json({ message: 'OK' }));
-app.all('/api/', (req, res) => res.status(404).json({ message: 'Not found' }));
+app.all('/api/*', (req, res) => res.status(404).json({ message: 'Not found' }));
 
 /* client */
 const checkLoginClient = require('./src/client/middlewares/checkLogin');
