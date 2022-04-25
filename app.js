@@ -5,26 +5,16 @@ const morgan = require('morgan');
 require('dotenv').config({ path: 'config.env' });
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const cors = require('cors');
 const processingFeeds = require('./src/server/main');
 
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.set('views', './src/client/views');
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-Wite, Content-Type, Accept');
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'POST', 'PATCH', 'DELETE', 'GET');
-        return res.status(200).json({
-            message: 'OPTIONS'
-        });
-    }
-    next();
-});
+app.use(cookieParser());
+app.use(cors());
 
 /* Routes api */
 const usersRoutes = require('./src/api/routes/users');
@@ -53,10 +43,7 @@ app.get('/', checkLoginClient, checkVerificationClient, renders.main);
 app.all('*', (req, res) => res.sendFile(path.join(__dirname, 'src/client/views', '404.html')));
 
 app.use((error, req, res, next) => {
-    res.status(500);
-    res.json({
-        message: error.message
-    });
+    res.status(500).json({ message: error.message });
 });
 
 /**
