@@ -155,7 +155,7 @@ module.exports = {
 
             if (result === true) {
                 const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_KEY, { expiresIn: '25 days' });
-                return res.status(200).json({
+                return res.cookie('token', token, { path: '/', secure: true, maxAge: (1000 * 60 * 60 * 24 * 25) }).status(200).json({
                     message: 'Auth successful',
                     token
                 });

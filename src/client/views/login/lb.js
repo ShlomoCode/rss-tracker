@@ -10,12 +10,13 @@ function showLoginForm () {
 async function login (input) {
     const { email, password } = input;
 
-    let response;
     try {
-        response = await axios.post('/users/login', {
+        await axios.post('/users/login', {
             email: email,
             password: password
         });
+        new AWN().success('התחברת בהצלחה');
+        open('/', '_self');
     } catch (error) {
         if (error.response.status === 401) {
             new AWN({ position: 'bottom-left' }).alert(`שם המשתמש או הסיסמה שגויים
@@ -25,10 +26,6 @@ async function login (input) {
         }
         return console.log(error.response);
     }
-
-    const { token } = response.data;
-    Cookies.set('token', token, { expires: 25, secure: true });
-    open('/', '_self');
 }
 
 async function signup (input) {
