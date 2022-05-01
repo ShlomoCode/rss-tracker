@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const checkLogin = function (req, res, next) {
-    const token = req.cookies.token;
+    const { token } = req.cookies;
     if (!token) {
         if (req.originalUrl === '/login/') {
             return next();

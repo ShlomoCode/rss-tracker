@@ -33,7 +33,7 @@ function sendVerifyCodeToAuth (inputStringCode) {
     notifier.asyncBlock(
         axios.post('/users/verify', null, { params: { verifyCode: inputStringCode } }),
         (resp) => {
-            notifier.success('כעת תוכל להירשם לקבלת העדכונים החדשים בדוא"ל', {
+            notifier.success('כעת החשבון שלך פעיל', {
                 labels: { success: '!המייל אומת בהצלחה' }
             });
             setTimeout(() => {
