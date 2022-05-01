@@ -1,4 +1,5 @@
-function onLoggedOut () {
+function logOut () {
+    Cookies.remove('token');
     const notifier = new AWN();
     notifier.confirm('The page will reload in 2.5 seconds...', () => location.reload(), false, {
         labels: {
@@ -148,10 +149,6 @@ async function unsubscribe (feedID) {
             notifier.success('הוסרת בהצלחה');
         },
         (err) => {
-            if (err.response.status === 409) {
-                return notifier.alert('כבר ביטלת את הרשמתך לפיד זה');
-            }
-
             console.log(err.response);
             notifier.alert(err.response.data?.message);
         },
@@ -159,10 +156,7 @@ async function unsubscribe (feedID) {
     );
 }
 
-$('#sign-out').on('click', () => {
-    Cookies.remove('token');
-    onLoggedOut();
-});
+$('#sign-out').on('click', logOut);
 
 $('#add-costum-feed').on('click', createCostumFeed);
 
