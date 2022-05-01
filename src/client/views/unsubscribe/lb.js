@@ -16,9 +16,12 @@ $('#cancel').on('mouseover', () => {
 
 async function unsubscribe () {
     const notifier = new AWN();
-    notifier.asyncBlock(axios.delete('/api/users/unsubscribe'), (resp) => {
+    notifier.asyncBlock(axios.post('/api/subscriptions/unsubscribe-all'), (resp) => {
         console.log(resp.data);
-        notifier.info(`הוסרת בהצלחה, ובוטלה הרשמתך ל${resp.data.feedsUnsubscribedCount} מינויים`);
+        notifier.info(`ביטלת בהצלחה את הרשמתך לכל המינויים (היית מנוי ל-${resp.data.feedsUnsubscribedCount} מינויים)`);
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 2700);
     }
     , (err) => {
         console.log(err.response);

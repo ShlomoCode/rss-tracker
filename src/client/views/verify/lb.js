@@ -88,7 +88,7 @@ $('#again-send-verification-email').on('click', async () => {
     });
 
     if (confirmSend) {
-        notifier.async(axios.post('/users/againSendVerificationEmail'),
+        notifier.async(axios.post('/users/resendVerificationEmail'),
             (resp) => {
                 notifier.success('!המייל נשלח בהצלחה');
             },

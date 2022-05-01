@@ -8,17 +8,15 @@ const {
     login,
     verifyEmail,
     deleteUser,
-    unsubscribe,
     getUsers,
-    againSendVerificationEmail
+    resendVerificationEmail
 } = require('../controllers/users');
 
-router.get('/', checkLogin, checkPermissions, getUsers);
 router.post('/signup', signup);
 router.post('/login', login);
-router.post('/delete/:userID', checkLogin, checkPermissions, deleteUser);
-router.delete('/unsubscribe', checkLogin, unsubscribe);
 router.post('/verify', checkLogin, verifyEmail);
-router.post('/againSendVerificationEmail', checkLogin, againSendVerificationEmail);
+router.post('/resendVerificationEmail', checkLogin, resendVerificationEmail);
+router.get('/', checkLogin, checkPermissions, getUsers);
+router.post('/delete/:userID', checkLogin, checkPermissions, deleteUser);
 
 module.exports = router;

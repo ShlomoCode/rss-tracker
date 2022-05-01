@@ -99,7 +99,7 @@ function PushFeedToPage (feedItem) {
 
 async function subscribe (feedID) {
     notifier.asyncBlock(
-        axios.post(`/feeds/subscribe/${feedID}`),
+        axios.post(`/subscriptions/${feedID}`),
         (resp) => {
             const feedElement = $(`#${feedID} .Subscribe-btn`);
             feedElement.off('click');
@@ -130,7 +130,7 @@ async function subscribe (feedID) {
 
 async function unsubscribe (feedID) {
     notifier.asyncBlock(
-        axios.delete(`/feeds/subscribe/${feedID}`),
+        axios.delete(`/subscriptions/${feedID}`),
         (resp) => {
             const feedElement = $(`#${feedID} .Subscribe-btn`);
 

@@ -222,44 +222,7 @@ module.exports = {
         }
 
         return res.status(200).json({
-            message: 'verify successful'
-        });
-    },
-    unsubscribe: async (req, res) => {
-        const { id: userID } = res.locals.user;
-        let userUnsubscribe;
-        try {
-            userUnsubscribe = await User.findByIdAndUpdate(userID, { verifyEmailStatus: false });
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
-        if (!userUnsubscribe) {
-            return res.status(404).json({
-                message: `User ${userID} is not found`
-            });
-        }
-
-        if (userUnsubscribe.verifyEmailStatus === false) {
-            return res.status(409).json({
-                message: `unsubscribe failed - Email ${userUnsubscribe.emailFront} already unsubscribed`
-            });
-        }
-
-        let feedsUnsubscribedCount;
-        try {
-            feedsUnsubscribedCount = (await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } })).modifiedCount;
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
-        res.status(200).json({
-            message: `unsubscribe successful for Email ${userUnsubscribe.emailFront}`,
-            feedsUnsubscribedCount
+            message: 'Verification successful'
         });
     },
     deleteUser: async (req, res) => {
@@ -329,7 +292,7 @@ module.exports = {
             users
         });
     },
-    againSendVerificationEmail: async (req, res) => {
+    resendVerificationEmail: async (req, res) => {
         const { id: userID } = res.locals.user;
         let user;
         try {
@@ -371,7 +334,7 @@ module.exports = {
         }
 
         return res.status(200).json({
-            message: `verify email sent again to ${email}`
+            message: `verify email sent again to ${user.emailFront}`
         });
     }
 };

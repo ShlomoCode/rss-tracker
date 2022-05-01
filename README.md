@@ -51,18 +51,12 @@ query: `{
        "verifyCode": "verifyCode"
     }`
 
-#### unsubscribe
-
-ביטול אישור קבלת מיילים עבור המשתמש המחובר כעת.
-
-    DELETE /api/users/unsubscribe
-
 #### re-send verify email
 
 שליחת מייל אימות מחדש למייל המשתמש המחובר כעת.
 מוגבל לפעמים אחת ביום.
 
-    POST /api/users/againSendVerificationEmail
+    POST /api/users/resendVerificationEmail
 
 ## feeds
 
@@ -87,21 +81,25 @@ APIs תחת הנתיב `/api/feeds`.
 יצירת פיד חדש.
 
     POST /api/feeds
+    
     query: `{
         "url": "url"
     }`
 
-#### Subscribe to feed
+## subscriptions
+ניהול הרשמות לפידים.
 
-הרשמה לפיד.
+#### subscribe to feed
 
-    POST /api/feeds/subscribe/:id
+    POST /api/subscriptions/:subscriptionId
 
-#### Unsubscribe from feed
+#### unsubscribe from feed
+    
+    DELETE /api/subscriptions/:subscriptionId
 
-ביטול הרשמה לפיד.
+#### unsubscribe from all feeds
 
-    DELETE /api/feeds/unsubscribe/:id
+    POST /api/subscriptions/unsubscribe-all
 
 ## APIs for admin - עשוי להתבטל בהמשך
 
