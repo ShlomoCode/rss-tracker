@@ -40,7 +40,7 @@ app.get('/login', checkLoginClient, (req, res) => res.sendFile(path.join(__dirna
 app.get('/verify', checkLoginClient, checkVerificationClient, renders.verify);
 app.get('/unsubscribe', checkLoginClient, checkVerificationClient, renders.unsubscribe);
 app.get('/', checkLoginClient, checkVerificationClient, renders.main);
-app.all('*', (req, res) => res.sendFile(path.join(__dirname, 'src/client/views', '404.html')));
+app.all('*', (req, res) => res.status(404).sendFile(path.join(__dirname, 'src/client/views', '404.html')));
 
 app.use((error, req, res, next) => {
     res.status(500).json({ message: error.message });
