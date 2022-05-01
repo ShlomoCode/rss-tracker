@@ -13,6 +13,10 @@
 כל הנתיבים הם תחת הנתיב `/api/`.
 כל הפרמטרים הם חובה, אלא אם כן צוין אחרת.
 
+
+<details>
+<summary>users</summary>
+
 ## users
 
 APIs תחת הנתיב `/api/users`.
@@ -58,6 +62,12 @@ query: `{
 
     POST /api/users/resendVerificationEmail
 
+
+</details>
+
+<details>
+<summary>feeds</summary>
+
 ## feeds
 
 APIs תחת הנתיב `/api/feeds`.
@@ -86,6 +96,12 @@ APIs תחת הנתיב `/api/feeds`.
         "url": "url"
     }`
 
+
+</details>
+
+<details>
+<summary>subscriptions</summary>
+
 ## subscriptions
 ניהול הרשמות לפידים.
 
@@ -100,6 +116,11 @@ APIs תחת הנתיב `/api/feeds`.
 #### unsubscribe from all feeds
 
     POST /api/subscriptions/unsubscribe-all
+
+</details>
+
+<details>
+<summary>APIs for admin</summary>
 
 ## APIs for admin - עשוי להתבטל בהמשך
 
@@ -119,6 +140,8 @@ APIs תחת הנתיב `/api/feeds`.
 פרטים רגישים במיוחד כגון סיסמאות מושמטים מהפלט.
 
     GET /api/users
+
+</details>
 
 # self-hosted
 
