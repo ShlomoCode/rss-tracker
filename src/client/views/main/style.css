@@ -141,3 +141,9 @@ html {
     position: fixed;
     right: 19%
 }
+
+#subscribersCount {
+    position: absolute;
+    right: 366px;
+    top: 5px
+}

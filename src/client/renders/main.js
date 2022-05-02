@@ -1,6 +1,8 @@
 const path = require('path');
+const Feed = require('../.././api/models/feed');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
+    const { id: userID, name, email } = res.locals.user;
     const hours = new Date().getHours();
     const timeMesseges = {
         morning: 'בוקר טוב',
@@ -20,7 +22,14 @@ module.exports = (req, res) => {
         // למקרה שלא נמצאה שום התאמה
         return 'ברוך הבא';
     }
-    const { name, email } = res.locals.user;
-    const variables = { time: timeMesseges[getTime()], name, email };
+    let subscribersCount;
+    try {
+        subscribersCount = await Feed.count({ Subscribers: userID });
+    } catch (error) {
+        return res.status(500).json({
+            error
+        });
+    }
+    const variables = { time: timeMesseges[getTime()], name, email, subscribersCount };
     res.render(path.join(__dirname, '../views/main', 'index.ejs'), variables);
 };

@@ -110,6 +110,7 @@ async function subscribe (feedID) {
             feedElement.text('➖ Unsubscribe');
             const subscribersCount = $(`#${feedID} .members-item-count > span`).text();
             $(`#${feedID} .members-item-count > span`).text(parseInt(subscribersCount) + 1);
+            $('#subscribersCount span').text(parseInt(subscribersCount) + 1);
             notifier.success('נרשמת בהצלחה');
         },
         (err) => {
@@ -145,6 +146,7 @@ async function unsubscribe (feedID) {
 
             const subscribersCount = $(`#${feedID} .members-item-count > span`).text();
             $(`#${feedID} .members-item-count > span`).text(parseInt(subscribersCount) - 1);
+            $('#subscribersCount span').text(parseInt(subscribersCount) - 1);
 
             notifier.success('הוסרת בהצלחה');
         },
