@@ -82,17 +82,18 @@ async function main () {
 
                 if (!item.thumbnail) {
                     try {
-                        const htmlFeedLink = await parseHtml(item.link);
-                        item.thumbnail = htmlFeedLink.og.image;
+                        const htmlArticle = await parseHtml(item.link);
+                        item.thumbnail = htmlArticle.og.image;
                     } catch (error) {
                         console.log(`An error accessing the article page ${item.link}`);
                         item.thumbnail = undefined;
                     }
                 }
 
-                await sendMail.rss(item, feedTitle, AddressesToSend);
+                console.log(`New article found: ${item.title}; sending email to ${address.length} subscribers...`);
+                await sendMail.rss(item, feedTitle, address);
             } else {
-                console.log(`Outdated item: ${item}`);
+                console.log('Outdated item. Skipped');
             }
         }
 
