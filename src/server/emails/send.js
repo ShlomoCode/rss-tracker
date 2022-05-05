@@ -45,7 +45,6 @@ const sendMail = {
             from: process.env.gmail_user,
             bcc: addresses,
             subject: 'RSS חדש! 🎉 ⟫ ' + title + ` | ${feedTitle}`,
-            //  getRssBody(description, link, title, cidImage, content),
             html: await ejs.renderFile(path.join(__dirname, '../emails/templates/', 'rss.ejs'),
                 {
                     description,

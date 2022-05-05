@@ -29,31 +29,29 @@ async function main () {
     }
 
     for (const feed of feeds) {
-        const AddressesToSend = [];
-        for (let i = 0; i < feed.Subscribers.length; i++) {
-            const user = await User.findById(feed.Subscribers[i]);
+        const dateOfProcessing = new Date();
+        const users = await Promise.all(feed.Subscribers.map(async (userId) => {
+            const user = await User.findById(userId);
+            return user;
+        }));
+        const usersFiltered = users.filter((user) => {
+            return Boolean(user && user.verifyEmailStatus);
+        });
 
-            if (!user) {
-                try {
-                    const feedsUnsubscribedCount = await Feed.updateMany({ Subscribers: feed.Subscribers[i] }, { $pull: { Subscribers: feed.Subscribers[i] } });
-                    console.log(`userID ${feed.Subscribers[i]} Not Found. Removed from list and unsubscribed from ${feedsUnsubscribedCount.modifiedCount} feeds`);
-                } catch (error) {
-                    console.log(`userID ${feed.Subscribers[i]} Not Found. Removed from list (Not removed from feed due to error).`);
-                }
-                continue;
+        if (usersFiltered.length === 0) {
+            console.log(`${feed.Title} has no subscribers`);
+            try {
+                console.log('Update lestCheckedAt & continue...');
+                await Feed.findByIdAndUpdate(feed._id, { LastCheckedOn: dateOfProcessing });
+            } catch (error) {
+                console.log(error);
             }
-
-            if (user?.verifyEmailStatus === true) {
-                AddressesToSend.push(user.emailFront);
-            } else {
-                console.log(`userID ${feed.Subscribers[i]} doesn't have a verified email. Removed from list.`);
-            }
-        }
-
-        if (AddressesToSend.length === 0) {
-            console.log(`No subscriptions with verified email were found in feedID ${feed._id} (${feed.title})! Continued the next feed.`);
             continue;
         }
+
+        const address = usersFiltered.map((user) => {
+            return user.emailFront;
+        });
 
         let feedContent;
         try {
@@ -63,8 +61,6 @@ async function main () {
             ${error}`);
             continue;
         }
-
-        const dateOfProcessing = new Date();
 
         const { title: feedTitle, items } = feedContent;
 
