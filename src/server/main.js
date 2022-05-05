@@ -87,7 +87,7 @@ async function main () {
                 }
 
                 console.log(`New article found: ${item.title}; sending email to ${address.length} subscribers...`);
-                await sendMail.rss(item, feedTitle, address);
+                    await sendMail.rss(item, feedTitle, feed.url, address);
             } else {
                 console.log('Outdated item. Skipped');
             }

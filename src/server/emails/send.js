@@ -19,7 +19,7 @@ const sendMail = {
      * @param {Array} addresses כתובות מייל שצריכות לקבל את הפיד
      * @returns
      */
-    async rss (item, feedTitle, addresses) {
+    async rss (item, feedTitle, feedUrl, addresses) {
         let { description, link, title, thumbnail: thumbnailLink, content, category, author, created } = item;
 
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
@@ -51,6 +51,7 @@ const sendMail = {
                     title,
                     url: link,
                     author,
+                    feedUrl: feedUrl.replace(/feed\/?/, ''),
                     time: ((time) => {
                         const daysNames = [
                             'יום ראשון',
