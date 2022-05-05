@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const ms = require('ms');
-const sendMail = require('../../server/emails');
+const sendMail = require('../../server/emails/send');
 
 /**
  * @returns number random in 5 digit in string format
@@ -116,7 +116,7 @@ module.exports = {
         } catch (error) {
             await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
-                message: 'User removed - An error sending the email verification',
+                message: 'Error sending email',
                 error
             });
         }

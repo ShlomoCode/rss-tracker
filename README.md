@@ -264,6 +264,8 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * ms - convert miliseconds to human readable format or time in string to miliseconds
 
+* javascript-time-ago - convert time to human readable format (for emails)
+
 ## client-side
 
 * [jQuery](https://jquery.com)

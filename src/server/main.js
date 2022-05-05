@@ -1,7 +1,7 @@
 const Feed = require('../api/models/feed');
 const User = require('../api/models/user');
 const parseRss = require('./rss2json');
-const sendMail = require('./emails');
+const sendMail = require('./emails/send');
 const { parser: parseHtml } = require('html-metadata-parser');
 
 async function main () {
