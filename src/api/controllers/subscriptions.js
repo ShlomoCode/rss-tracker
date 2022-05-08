@@ -10,7 +10,7 @@ module.exports = {
             if (!userUnsubscribe) {
                 return res.status(404).send({
                     success: false,
-                    message: 'User not found.'
+                    message: 'User not found'
                 });
             }
         } catch (error) {
@@ -99,7 +99,7 @@ module.exports = {
             });
         }
 
-        if (feedSubscribe.Subscribers.includes(userID) === true) {
+        if (feedSubscribe.Subscribers.includes(userID)) {
             return res.status(409).json({
                 message: 'You are already a subscriber'
             });

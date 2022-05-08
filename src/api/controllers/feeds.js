@@ -38,14 +38,13 @@ module.exports = {
         const feedID = req.params.feedID;
         const { id: userID } = res.locals.user;
 
-        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+        if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({
                 message: `${feedID} no feedID Valid!`
             });
         }
 
         let feedRew;
-
         try {
             feedRew = await Feed.findById(feedID);
         } catch (error) {
@@ -140,7 +139,7 @@ module.exports = {
     deleteFeed: async (req, res) => {
         const feedID = req.params.feedID;
 
-        if (mongoose.Types.ObjectId.isValid(feedID) !== true) {
+        if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({
                 message: `${feedID} no feedID Valid!`
             });
