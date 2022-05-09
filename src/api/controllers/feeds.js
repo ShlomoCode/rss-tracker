@@ -5,7 +5,7 @@ const { decode: decodeHtml } = require('html-entities');
 
 module.exports = {
     getAllFeeds: async (req, res) => {
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
 
         let feedsRew;
 
@@ -36,7 +36,7 @@ module.exports = {
     },
     getFeed: async (req, res) => {
         const feedID = req.params.feedID;
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
 
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({

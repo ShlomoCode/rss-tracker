@@ -68,11 +68,15 @@ if (location.search.split('?verifyCode=')[1]) {
 
 $('#log-out').on('click', () => {
     if (confirm('אתה בטוח שברצונך להתנתק מהחשבון?')) {
-        Cookies.remove('token');
-        notifier.tip('התנתקת בהצלחה');
-        setTimeout(() => {
-            open('/login', '_parent');
-        }, 1400);
+        notifier.asyncBlock(
+            axios.post('/users/log-out'),
+            (resp) => {
+                notifier.success('התנתקת בהצלחה');
+                open('/login', '_parent');
+            },
+            (err) => {
+                notifier.alert(err.response.data?.message);
+            });
     }
 });
 

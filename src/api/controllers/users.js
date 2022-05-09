@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const Feed = require('../models/feed');
+const Session = require('../models/session');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
@@ -137,7 +138,16 @@ module.exports = {
                 message: 'password parameter required'
             });
         }
-        const users = await User.find({ emailProcessed });
+
+        let users;
+        try {
+            users = await User.find({ emailProcessed });
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
         if (users.length === 0) {
             return res.status(401).json({
                 message: 'Auth failed'
@@ -146,29 +156,71 @@ module.exports = {
 
         const [user] = users;
 
-        bcrypt.compare(password, user.password, (error, result) => {
-            if (error) {
-                return res.status(401).json({
-                    message: 'Auth failed'
-                });
-            }
+        let isMatch;
+        try {
+            isMatch = await bcrypt.compare(password, user.password);
+        } catch (error) {
+            return res.status(401).json({
+                message: 'Auth failed'
+            });
+        }
 
-            if (result === true) {
-                const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_KEY, { expiresIn: '25 days' });
-                return res.cookie('token', token, { path: '/', secure: true, maxAge: (1000 * 60 * 60 * 24 * 25) }).status(200).json({
-                    message: 'Auth successful',
-                    token
-                });
-            } else {
-                return res.status(401).json({
-                    message: 'Auth failed'
-                });
-            }
+        if (!isMatch) {
+            return res.status(401).json({
+                message: 'Auth failed'
+            });
+        }
+
+        const sessionId = new mongoose.Types.ObjectId();
+        try {
+            await Session.create({
+                _id: sessionId,
+                userId: user._id
+            });
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
+        const token = jwt.sign({ sessionId }, process.env.JWT_KEY);
+        res.status(200).cookie('jwt', token, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
+            message: 'Auth successful',
+            jwt: token
+        });
+    },
+    logout: async (req, res) => {
+        const { sessionId } = res.locals;
+
+        if (!sessionId) {
+            return res.status(400).json({
+                message: 'sessionId parameter required'
+            });
+        }
+
+        let sessionDelete;
+        try {
+            sessionDelete = await Session.findByIdAndDelete(sessionId);
+        } catch (error) {
+            return res.status(500).json({
+                error
+            });
+        }
+
+        if (!sessionDelete) {
+            return res.status(409).json({
+                message: 'Session not found'
+            });
+        }
+
+        res.status(200).clearCookie('jwt').json({
+            message: 'Logout successful',
+            clearCookie: true
         });
     },
     verifyEmail: async (req, res) => {
         let { verifyCode } = req.query;
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
 
         if (!verifyCode) {
             return res.status(400).json({
@@ -205,7 +257,7 @@ module.exports = {
             });
         }
 
-        if (user.verifyEmailStatus === true) {
+        if (user.verified) {
             return res.status(409).json({
                 message: 'verify failed - Email already verified'
             });
@@ -213,7 +265,7 @@ module.exports = {
 
         if (verifyCode === user.verifyEmailCode) {
             try {
-                await User.findByIdAndUpdate(userID, { verifyEmailStatus: true });
+                await User.findByIdAndUpdate(userID, { verified: true });
             } catch (error) {
                 res.status(500).json({
                     error
@@ -293,7 +345,7 @@ module.exports = {
         });
     },
     resendVerificationEmail: async (req, res) => {
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
         let user;
         try {
             user = await User.findById(userID);
@@ -309,7 +361,7 @@ module.exports = {
             });
         }
 
-        if (user.verifyEmailStatus === true) {
+        if (user.verified) {
             return res.status(409).json({
                 message: `verify failed - Email ${user.emailFront} already verified`
             });

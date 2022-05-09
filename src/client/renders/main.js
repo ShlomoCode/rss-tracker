@@ -2,7 +2,7 @@ const path = require('path');
 const Feed = require('../.././api/models/feed');
 
 module.exports = async (req, res) => {
-    const { id: userID, name, email } = res.locals.user;
+    const { id: userID, name, emailFront: email } = res.locals.user;
     const hours = new Date().getHours();
     const timeMesseges = {
         morning: 'בוקר טוב',

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 module.exports = {
     unsubscribeAll: async (req, res) => {
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
         try {
             const userUnsubscribe = await User.findById(userID);
             if (!userUnsubscribe) {
@@ -35,7 +35,7 @@ module.exports = {
     },
     subscribeFeed: async (req, res) => {
         const feedID = req.params.subscriptionId;
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
 
         // אם המזהה פיד לא חוקי
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
@@ -62,7 +62,7 @@ module.exports = {
             });
         }
         // אם המייל לא מאומת
-        if (!user.verifyEmailStatus) {
+        if (!user.verified) {
             return res.status(403).json({
                 message: 'Email not verified'
             });
@@ -111,7 +111,7 @@ module.exports = {
     },
     unsubscribeFeed: async (req, res) => {
         const feedID = req.params.subscriptionId;
-        const { id: userID } = res.locals.user;
+        const { _id: userID } = res.locals.user;
 
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({

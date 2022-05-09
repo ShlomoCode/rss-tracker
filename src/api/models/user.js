@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
     },
     password: { type: String, required: true },
     name: { type: String, match: /[0-9- א-תA-z]{2,15}/, maxLength: 15, required: true },
-    verifyEmailStatus: { type: Boolean, default: false },
+    verified: { type: Boolean, default: false },
     verifyEmailCode: { type: String, required: true },
     registrationDate: { type: Date, default: Date.now },
     Permissions: { type: String, default: 'user' },

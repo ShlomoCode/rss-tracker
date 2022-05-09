@@ -1,16 +1,3 @@
-function logOut () {
-    Cookies.remove('token');
-    const notifier = new AWN();
-    notifier.confirm('The page will reload in 2.5 seconds...', () => location.reload(), false, {
-        labels: {
-            confirm: 'YOU HAVE SUCCESSFULLY LOGGED OUT'
-        }
-    });
-    setTimeout(() => {
-        location.reload();
-    }, 2500);
-}
-
 const notifier = new AWN({
     position: 'bottom-left'
 });
@@ -158,7 +145,17 @@ async function unsubscribe (feedID) {
     );
 }
 
-$('#sign-out').on('click', logOut);
+$('#sign-out').on('click', async () => {
+    notifier.asyncBlock(
+        axios.post('/users/log-out'),
+        (resp) => {
+            notifier.success('התנתקת בהצלחה');
+            window.location.href = '/login';
+        },
+        (err) => {
+            notifier.alert(err.response.data?.message);
+        });
+});
 
 $('#add-costum-feed').on('click', createCostumFeed);
 

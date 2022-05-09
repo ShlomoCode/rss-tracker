@@ -8,11 +8,12 @@
 
 # API
 
-כל הAPIs דורשים אימות על ידי שליחת עוגיה בשם `token` עם מזהה jwt.
-את העוגיה הנ"ל ניתן לקבל בכתובת הלוגין על ידי שליחת שם משתמש וסיסמה.
-כל הנתיבים הם תחת הנתיב `/api/`.
-כל הפרמטרים הם חובה, אלא אם כן צוין אחרת.
+כל הAPIs דורשים אימות על ידי שליחת מזהה סשן בתוך jwt, בתור עוגיה בשם `jwt`, או כBearer ב-authorization header:
 
+```Authorization: Bearer <jwt-token>```
+
+ את הטוקן ניתן לקבל בכתובת הlogin על ידי שליחת שם משתמש וסיסמה. כל הנתיבים הם תחת הנתיב `/api/`.
+כל הפרמטרים הם חובה, אלא אם כן צוין אחרת.
 
 <details>
 <summary>users</summary>
@@ -44,6 +45,12 @@ APIs תחת הנתיב `/api/users`.
         "email": "email",
         "password": "password"
     }`
+
+#### log-out
+
+התנתקות ומחיקת הסשן הפעיל מהדאטהבייס.
+
+    POST /api/users/log-out
 
 #### verify
 
@@ -271,8 +278,6 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 * [jQuery](https://jquery.com)
 
 * [axios](https://github.com/axios/axios)
-
-* [js-cookie](https://github.com/js-cookie/js-cookie)
 
 * [awesome-notifications](https://f3oall.github.io/awesome-notifications)
 

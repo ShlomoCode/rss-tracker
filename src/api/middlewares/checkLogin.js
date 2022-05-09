@@ -1,16 +1,65 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const Session = require('../models/session');
 
-const checkLogin = function (req, res, next) {
+const checkLogin = async (req, res, next) => {
+    let token = req.cookies.jwt || req.headers.authorization;
+    if (!token) return res.status(401).json({ message: 'jwt is required. please login' });
+
+    token = token.replace('Bearer ', '');
+    let auth;
     try {
-        const token = req.cookies.token;
-        const infoLogin = jwt.verify(token, process.env.JWT_KEY);
-        res.locals.user = { id: infoLogin.id };
-        next();
+        auth = jwt.verify(token, process.env.JWT_KEY, { maxAge: '120d' });
     } catch (error) {
-        return res.status(401).json({
-            message: 'Auth failed'
+        if (error.message === 'maxAge exceeded') {
+            return res.status(401).clearCookie('jwt').json({
+                message: 'jwt is expired',
+                clearCookie: true
+            });
+        }
+        return res.clearCookie('jwt').status(401).json({
+            message: 'jwt invalid',
+            clearCookie: true
         });
     }
+
+    const { sessionId } = auth;
+
+    let session;
+    try {
+        session = await Session.findById(sessionId);
+    } catch (error) {
+        return res.status(500).json({
+            error
+        });
+    }
+
+    if (!session) {
+        return res.clearCookie('jwt').status(401).json({
+            message: 'session not found. Please login again',
+            clearCookie: true
+        });
+    }
+
+    let user;
+    try {
+        user = await User.findById(session.userId);
+    } catch (error) {
+        return res.status(500).json({
+            error
+        });
+    }
+
+    if (!user) {
+        return res.status(401).clearCookie('jwt').json({
+            message: 'user not found',
+            clearCookie: true
+        });
+    }
+
+    res.locals.user = user;
+    res.locals.sessionId = sessionId;
+    next();
 };
 
 module.exports = checkLogin;
