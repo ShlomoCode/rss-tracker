@@ -100,7 +100,8 @@ module.exports = {
         });
 
         try {
-            await user.save();
+            const infoSend = await sendMail.verify(verifyEmailCode, email, name);
+            console.log('Email sent: ' + infoSend.response);
         } catch (error) {
             return res.status(500).json({
                 error
@@ -108,12 +109,9 @@ module.exports = {
         }
 
         try {
-            const infoSend = await sendMail.verify(verifyEmailCode, email, name);
-            console.log('Email sent: ' + infoSend.response);
+            await user.save();
         } catch (error) {
-            await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
-                message: 'Error sending email',
                 error
             });
         }
