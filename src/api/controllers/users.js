@@ -110,9 +110,6 @@ module.exports = {
         try {
             const infoSend = await sendMail.verify(verifyEmailCode, email, name);
             console.log('Email sent: ' + infoSend.response);
-            return res.status(200).json({
-                message: 'User created and verification email sent'
-            });
         } catch (error) {
             await User.findOneAndDelete({ emailProcessed });
             return res.status(500).json({
@@ -120,6 +117,10 @@ module.exports = {
                 error
             });
         }
+
+        res.status(200).json({
+            message: 'User created and verification email sent'
+        });
     },
     login: async (req, res) => {
         const { email, password } = req.body;
@@ -272,7 +273,7 @@ module.exports = {
             }
         }
 
-        return res.status(200).json({
+        res.status(200).json({
             message: 'Verification successful'
         });
     },
@@ -317,7 +318,7 @@ module.exports = {
             });
         }
 
-        return res.status(200).json({
+        res.status(200).json({
             message: `verify email sent again to ${user.emailFront}`
         });
     }
