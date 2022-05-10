@@ -9,7 +9,7 @@ const checkLogin = async (req, res, next) => {
     token = token.replace('Bearer ', '');
     let auth;
     try {
-        auth = jwt.verify(token, process.env.JWT_KEY, { maxAge: '120d' });
+        auth = jwt.verify(token, process.env.JWT_SECRET, { maxAge: '120d' });
     } catch (error) {
         if (error.message === 'maxAge exceeded') {
             return res.status(401).clearCookie('jwt').json({

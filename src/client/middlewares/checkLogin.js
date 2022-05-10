@@ -15,7 +15,7 @@ const checkLogin = async (req, res, next) => {
 
     let auth;
     try {
-        auth = jwt.verify(token, process.env.JWT_KEY);
+        auth = jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
         if (req.originalUrl !== '/login/') {
             return res.clearCookie('jwt').redirect('/login/');

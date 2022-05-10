@@ -157,7 +157,7 @@ APIs תחת הנתיב `/api/feeds`.
 MONGO_URI # mongoDB connection string
 gmail_user # gmail username
 gmail_password # accunt google password or "password for app" - https://support.google.com/mail/answer/185833
-JWT_KEY # JWT secret key
+JWT_SECRET # JWT secret key
 ```
 
 #### Optional variables

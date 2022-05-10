@@ -183,7 +183,7 @@ module.exports = {
             });
         }
 
-        const token = jwt.sign({ sessionId }, process.env.JWT_KEY);
+        const token = jwt.sign({ sessionId }, process.env.JWT_SECRET);
         res.status(200).cookie('jwt', token, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
             message: 'Auth successful',
             jwt: token
