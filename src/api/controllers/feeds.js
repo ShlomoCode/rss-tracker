@@ -135,33 +135,5 @@ module.exports = {
             message: 'Feed Crated',
             feed: feedCreated
         });
-    },
-    deleteFeed: async (req, res) => {
-        const feedID = req.params.feedID;
-
-        if (!mongoose.Types.ObjectId.isValid(feedID)) {
-            return res.status(400).json({
-                message: `${feedID} no feedID Valid!`
-            });
-        }
-
-        const feed = await Feed.findById(feedID);
-
-        if (!feed) {
-            return res.status(404).json({
-                message: 'Not Found Feed'
-            });
-        }
-
-        try {
-            await Feed.deleteOne({ _id: feedID });
-            res.status(200).json({
-                message: `Feed id: ${feedID} deleted.`
-            });
-        } catch (error) {
-            res.status(500).json({
-                error
-            });
-        }
     }
 };

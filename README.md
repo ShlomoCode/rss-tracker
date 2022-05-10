@@ -115,6 +115,7 @@ APIs תחת הנתיב `/api/feeds`.
 <summary>subscriptions</summary>
 
 ## subscriptions
+
 ניהול הרשמות לפידים.
 
 #### subscribe to feed
@@ -122,7 +123,7 @@ APIs תחת הנתיב `/api/feeds`.
     POST /api/subscriptions/:subscriptionId
 
 #### unsubscribe from feed
-    
+
     DELETE /api/subscriptions/:subscriptionId
 
 #### unsubscribe from all feeds
@@ -132,28 +133,6 @@ APIs תחת הנתיב `/api/feeds`.
 </details>
 
 <details>
-<summary>APIs for admin</summary>
-
-## APIs for admin - עשוי להתבטל בהמשך
-
-### users
-
-#### delete user
-
-מחיקת משתמש מהמערכת.
-זמין רק למנהלים.
-
-    DELETE /api/users/:id
-
-#### get all users
-
-מחזיר את כל המשתמשים במערכת.
-זמין רק למנהלים.
-פרטים רגישים במיוחד כגון סיסמאות מושמטים מהפלט.
-
-    GET /api/users
-
-</details>
 
 # self-hosted
 
