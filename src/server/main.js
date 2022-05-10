@@ -35,7 +35,7 @@ async function main () {
             return user;
         }));
         const usersFiltered = users.filter((user) => {
-            return Boolean(user && user.verifyEmailStatus);
+            return Boolean(user && user.verified);
         });
 
         if (usersFiltered.length === 0) {
