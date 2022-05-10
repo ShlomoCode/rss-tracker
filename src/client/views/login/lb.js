@@ -22,7 +22,7 @@ async function login (input) {
             new AWN({ position: 'bottom-left' }).alert(`שם המשתמש או הסיסמה שגויים
             <br>...נסה שוב`);
         } else {
-            new AWN().alert(`${error.response.status}: ${error.response.data.message}`);
+            new AWN().alert(`${error.response.status}: ${error.response.data?.message}`);
         }
         return console.log(error.response);
     }
@@ -47,10 +47,10 @@ async function signup (input) {
             notifierSignup.success(`${resp.data.message}.<br> Please login...`);
         },
         (err) => {
-            if (err.response.data.message === 'Email exists') {
+            if (err.response.data?.message === 'Email exists') {
                 notifierSignup.alert('המייל הזה כבר רשום<br>...נסה להתחבר');
                 onResolveRegister();
-            } else if (err.response.data.message === 'Weak password') {
+            } else if (err.response.data?.message === 'Weak password') {
                 notifierSignup.alert('!הסיסמה חלשה מידי');
                 if (err.response.data.weakness.warning !== '') {
                     notifierSignup.tip(err.response.data.weakness.warning);
@@ -59,7 +59,7 @@ async function signup (input) {
                     notifierSignup.tip(err.response.data.weakness.suggestions[0]);
                 }
             } else {
-                notifierSignup.alert(`${err.response.status}: ${err.response.data.message}`);
+                notifierSignup.alert(`${err.response.status}: ${err.response.data?.message}`);
             }
             console.log(err.response);
         });

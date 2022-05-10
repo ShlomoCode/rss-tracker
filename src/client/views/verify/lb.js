@@ -44,10 +44,10 @@ function sendVerifyCodeToAuth (inputStringCode) {
         (err) => {
             console.log(err.response.data);
             notifier.alert(err.response.data.message);
-            if (/already verified/.test(err.response.data.message)) {
                 return setTimeout(() => {
                     open('/', '_self');
                 }, 1400);
+            if (/already verified/.test(err.response.data?.message)) {
             }
             for (const code of codes) {
                 code.value = '';
