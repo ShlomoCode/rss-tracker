@@ -158,8 +158,8 @@ module.exports = {
         try {
             isMatch = await bcrypt.compare(password, user.password);
         } catch (error) {
-            return res.status(401).json({
-                message: 'Auth failed'
+            return res.status(500).json({
+                error
             });
         }
 
