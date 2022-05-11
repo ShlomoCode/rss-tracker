@@ -132,8 +132,6 @@ APIs תחת הנתיב `/api/feeds`.
 
 </details>
 
-<details>
-
 # self-hosted
 
 הגרסה הציבורים מכילה הגבלות שונות, הן בכמות העדכונים שניתן להירשם (בגלל מגבלה של גוגל על כמות שליחת המיילים), והן ברשימה לבנה של אתרים שאליהם ניתן להירשם (ע"מ שהאתר יהיה פתוח בסינונים השונים).
@@ -156,7 +154,7 @@ APIs תחת הנתיב `/api/feeds`.
 ```
 MONGO_URI # mongoDB connection string
 gmail_user # gmail username
-gmail_password # accunt google password or "password for app" - https://support.google.com/mail/answer/185833
+gmail_password # account google password or "password for app" - https://support.google.com/mail/answer/185833
 JWT_SECRET # JWT secret key
 ```
 
