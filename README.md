@@ -176,7 +176,7 @@ click on the heroku button 👇👇 and fill the config required:
 
 * mongoDB uri
 * gmail user
-* gmail password
+* gmail password (see above)
 
 <div  align='center'>
 
@@ -251,7 +251,9 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * dotenv - config file
 
-* ms - convert miliseconds to human readable format or time in string to miliseconds
+* ms - convert milliseconds to human readable format or time in string to miliseconds
+
+* ejs - template engine - site and emails
 
 * javascript-time-ago - convert time to human readable format (for emails)
 
