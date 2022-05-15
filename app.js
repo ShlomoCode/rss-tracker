@@ -48,6 +48,9 @@ app.use((error, req, res, next) => {
     res.status(500).json({ message: error.message });
 });
 
+/* Set app url */
+process.env.APP_URL = process.env.WEB_SITE_ADDRESS || (process.env.HEROKU_APP_NAME ? `https://${process.env.HEROKU_APP_NAME}.herokuapp.com` : `http://localhost:${process.env.PORT || 80}`);
+
 /**
  * Run Back And base
  */
@@ -81,3 +84,4 @@ const http = require('http');
 const port = process.env.PORT || 80;
 const server = http.createServer(app);
 server.listen(port);
+console.log(`Server is running on port ${port} - ${process.env.APP_URL}`);

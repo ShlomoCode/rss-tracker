@@ -78,7 +78,7 @@ const sendMail = {
                         return timeAgo.format(new Date(time));
                     })(new Date(created)),
                     process: {
-                        env: require('dotenv').config({ path: 'config.env' }).parsed
+                        env: process.env
                     }
                 }),
             attachments: [{
@@ -111,7 +111,7 @@ const sendMail = {
                     code: verifyCode,
                     email: address,
                     process: {
-                        env: require('dotenv').config({ path: 'config.env' }).parsed
+                        env: process.env
                     }
                 })
         };
