@@ -29,7 +29,7 @@ module.exports = {
         }
 
         res.status(200).json({
-            message: `${feedsUnsubscribedCount} feeds were unsubscribed.`,
+            message: `${feedsUnsubscribedCount} feeds were unsubscribed`,
             feedsUnsubscribedCount
         });
     },
@@ -40,7 +40,7 @@ module.exports = {
         // אם המזהה פיד לא חוקי
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({
-                message: `${feedID} no feedID Valid!`
+                message: `${feedID} is not a valid feedID`
             });
         }
 
@@ -79,7 +79,7 @@ module.exports = {
         }
         if (userSubscribedFeedsCount >= (process.env.countMaxFeedsForUser || 10)) {
             return res.status(429).json({
-                message: `Each user is allowed to register for up to ${process.env.countMaxFeedsForUser || 10} feeds`
+                message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.countMaxFeedsForUser || 10})`
             });
         }
 
@@ -115,7 +115,7 @@ module.exports = {
 
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({
-                message: `${feedID} no feedID Valid!`
+                message: `${feedID} is not a valid feedID`
             });
         }
 
@@ -136,12 +136,12 @@ module.exports = {
 
         if (!feedUnSubscribe.Subscribers.includes(userID)) {
             return res.status(409).json({
-                message: 'No subscription found'
+                message: 'You are not a subscriber'
             });
         }
 
         res.status(200).json({
-            message: 'UnSubscribe to feed done!'
+            message: 'Unsubscribe done successfully!'
         });
     }
 };

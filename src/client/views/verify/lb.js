@@ -67,7 +67,7 @@ if (location.search.split('?verifyCode=')[1]) {
 }
 
 $('#log-out').on('click', () => {
-    if (confirm('אתה בטוח שברצונך להתנתק מהחשבון?')) {
+    if (confirm('האם אתה בטוח שברצונך להתנתק מהחשבון?')) {
         notifier.asyncBlock(
             axios.post('/users/log-out'),
             (resp) => {

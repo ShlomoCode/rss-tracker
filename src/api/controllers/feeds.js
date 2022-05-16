@@ -18,8 +18,8 @@ module.exports = {
         }
 
         if (!feedsRew) {
-            return res.status(406).json({
-                message: 'No feeds found'
+            return res.status(404).json({
+                message: 'Feeds not found'
             });
         }
 
@@ -40,7 +40,7 @@ module.exports = {
 
         if (!mongoose.Types.ObjectId.isValid(feedID)) {
             return res.status(400).json({
-                message: `${feedID} no feedID Valid!`
+                message: `${feedID} is not a valid feedID`
             });
         }
 
@@ -74,7 +74,7 @@ module.exports = {
 
         if (!url) {
             return res.status(400).json({
-                message: 'url is required'
+                message: 'url parameter required'
             });
         }
 
@@ -96,7 +96,7 @@ module.exports = {
 
         if (feeds.length !== 0) {
             return res.status(409).json({
-                message: 'Feed exists'
+                message: 'This feed already exists'
             });
         }
 
@@ -106,12 +106,12 @@ module.exports = {
             feedTitle = decodeHtml(feedContent.title);
         } catch (error) {
             return res.status(400).json({
-                message: `${url} Not Normal feed`
+                message: `${url} is not a valid feed`
             });
         }
 
         if (/תגובות לפוסט:/.test(feedTitle)) {
-            return res.status(400).json({ message: 'This is a comment feed, not feed...' });
+            return res.status(400).json({ message: 'This url is a comment feed' });
         }
 
         const feed = new Feed({
@@ -132,8 +132,8 @@ module.exports = {
         feedCreated.Subscribers = 0;
 
         res.status(200).json({
-            message: 'Feed Crated',
-            feed: feedCreated
+            message: 'Feed created successfully',
+            feedCreated
         });
     }
 };

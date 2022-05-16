@@ -257,7 +257,7 @@ module.exports = {
 
         if (user.verified) {
             return res.status(409).json({
-                message: 'verify failed - Email already verified'
+                message: 'verify failed - User already verified'
             });
         }
 
@@ -277,6 +277,7 @@ module.exports = {
     },
     resendVerificationEmail: async (req, res) => {
         const { _id: userID } = res.locals.user;
+
         let user;
         try {
             user = await User.findById(userID);
@@ -294,15 +295,15 @@ module.exports = {
 
         if (user.verified) {
             return res.status(409).json({
-                message: `verify failed - Email ${user.emailFront} already verified`
+                message: 'verify failed - User already verified'
             });
         }
 
-        const delay = '1d';
-        if (user.lastVerifyEmailSentAt && (Date.now() - user.lastVerifyEmailSentAt) < ms(delay)) {
+        const limit = '1d';
+        if (user.lastVerifyEmailSentAt && (Date.now() - user.lastVerifyEmailSentAt) < ms(limit)) {
             return res.status(429).json({
-                message: `send verification email failed - last verification email sent at ${ms(Date.now() - user.lastVerifyEmailSentAt, { long: true })} ago. Please wait ${ms(ms(delay) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })} before trying again`,
-                tryAgainAfter: ms(ms(delay) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })
+                message: `verify failed - Too many requests. Try again in ${ms(ms(limit) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })}`,
+                tryAgainAfter: ms(ms(limit) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })
             });
         }
 

@@ -31,7 +31,7 @@ async function createCostumFeed () {
         axios.post('/feeds', { url }),
         (resp) => {
             console.log(resp.data);
-            PushFeedToPage(resp.data.feed);
+            PushFeedToPage(resp.data.feedCreated);
             notifier.success('הפיד נוצר בהצלחה. כעת ניתן להירשם אליו');
         },
         (err) => {

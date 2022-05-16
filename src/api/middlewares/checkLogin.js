@@ -13,7 +13,7 @@ const checkLogin = async (req, res, next) => {
     } catch (error) {
         if (error.message === 'maxAge exceeded') {
             return res.status(401).clearCookie('jwt').json({
-                message: 'jwt is expired',
+                message: 'jwt is expired, please login again',
                 clearCookie: true
             });
         }

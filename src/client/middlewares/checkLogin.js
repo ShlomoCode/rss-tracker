@@ -53,8 +53,8 @@ const checkLogin = async (req, res, next) => {
     }
 
     if (!user) {
-        return res.status(401).clearCookie('jwt').json({
-            message: 'user not found',
+        return res.status(404).clearCookie('jwt').json({
+            message: 'User not found',
             clearCookie: true
         });
     }
