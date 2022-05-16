@@ -28,17 +28,6 @@
 APIs תחת הנתיב `/api/users`.
 מכילים פעולות הקשורות למשתמשים.
 
-#### login
-
-התחברות.
-
-    POST /api/users/login
-  
-   body: `{
-        "username": "username",
-        "password": "password"
-    }`
-
 #### signup
 
 הרשמה.
@@ -48,6 +37,17 @@ APIs תחת הנתיב `/api/users`.
    body: `{
         "name": "name",
         "email": "email",
+        "password": "password"
+    }`
+
+#### login
+
+התחברות.
+
+    POST /api/users/login
+  
+   body: `{
+        "username": "username",
         "password": "password"
     }`
 
@@ -64,7 +64,7 @@ APIs תחת הנתיב `/api/users`.
     POST /api/users/verify
   
 query: `{
-       "verifyCode": "verifyCode"
+       "verifyCode": "5 digit code"
     }`
 
 #### re-send verify email
@@ -74,6 +74,9 @@ query: `{
 
     POST /api/users/resendVerificationEmail
 
+body: `{
+        "email": "email"
+    }`
 
 </details>
 
@@ -107,7 +110,6 @@ APIs תחת הנתיב `/api/feeds`.
     query: `{
         "url": "url"
     }`
-
 
 </details>
 
@@ -196,7 +198,7 @@ You can also fill optional configs listed above.
 
  ```JS
 const siteUrl = 'https://appname.herokuapp.com/api/status';
-const emailAddress = 'my.mail@gmail.com';
+const emailAddress = null;
 
 function fetch() {
     const siteCall = UrlFetchApp.fetch(siteUrl, {
@@ -208,7 +210,7 @@ function fetch() {
     if (siteStatus !== 200) {
         const body = `the response of google apps scripts request was: status ${siteStatus}. check the status quickly! ${siteUrl}`;
         const subject = 'something wrong in heroku apps';
-        GmailApp.sendEmail(emailAddress, subject, body);
+        GmailApp.sendEmail(emailAddress Session.getActiveUser().getEmail(), subject, body);
         Logger.log('something failed. email send succesfuly');
     } else {
         Logger.log(`${siteUrl} is ${siteStatus} code.`);
