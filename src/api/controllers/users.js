@@ -190,12 +190,6 @@ module.exports = {
     logout: async (req, res) => {
         const { sessionId } = res.locals;
 
-        if (!sessionId) {
-            return res.status(400).json({
-                message: 'sessionId parameter required'
-            });
-        }
-
         let sessionDelete;
         try {
             sessionDelete = await Session.findByIdAndDelete(sessionId);
