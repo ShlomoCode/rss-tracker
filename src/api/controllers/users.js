@@ -228,7 +228,7 @@ module.exports = {
 
         verifyCode = verifyCode.toString();
 
-        if (verifyCode.length > 6 || /[0-9]{5,6}/.test(verifyCode) === false) {
+        if (verifyCode.length > 5 || !/[0-9]{5}/.test(verifyCode)) {
             return res.status(400).json({
                 message: `${verifyCode} is not a valid verifyCode`
             });
