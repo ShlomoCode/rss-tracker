@@ -54,7 +54,7 @@ async function loadFeeds () {
         const feeds = resp.data.feeds;
 
         if (feeds.length === 0) {
-            return notifier.alert('עדיין אין פידים במערכת.<br>אתה יכול ליצור אחד... :)');
+            return notifier.tip('עדיין אין פידים במערכת.<br>אתה יכול ליצור אחד... :)');
         }
 
         for (let i = 0; i < feeds.length; i++) {
