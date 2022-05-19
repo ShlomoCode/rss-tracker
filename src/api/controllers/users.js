@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const ms = require('ms');
+const { validate: emailValidator } = require('deep-email-validator');
 const sendMail = require('../../server/emails/send');
 
 /**
@@ -61,6 +62,27 @@ module.exports = {
          * normalize-email by regex
          */
         const emailProcessed = normalizeEmail(email);
+
+        const validateEmail = await emailValidator({
+            email: emailProcessed,
+            validateRegex: true,
+            validateMx: true,
+            validateTypo: false,
+            validateDisposable: true,
+            validateSMTP: false
+        });
+
+        if (!validateEmail.valid) {
+            if (validateEmail.reason === 'disposable') {
+                return res.status(400).json({
+                    message: 'disposable email not allowed'
+                });
+            } else {
+                return res.status(400).json({
+                    message: 'email is not valid'
+                });
+            }
+        }
 
         const weakness = zxcvbn(password);
 
