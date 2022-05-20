@@ -25,7 +25,7 @@ async function unsubscribe () {
     }
     , (err) => {
         console.log(err.response);
-        notifier.alert(err.response.data.message);
+        notifier.alert(err.response.data?.message);
     });
 }
 $('#unsubscribe').on('click', unsubscribe);
