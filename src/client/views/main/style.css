@@ -57,11 +57,14 @@ html {
 
 .credit-freepik {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
-    color: rgba(0, 0, 0, 0.53);
-    background: rgba(253, 252, 252, 0.27);
+    transform: rotate(90deg);
+    bottom: 70px;
+    left: -65px;
     border-radius: 0px 4px;
+}
+
+.credit-freepik:visited {
+        color: rgb(0,0,0);
 }
 
 .feed-item {
