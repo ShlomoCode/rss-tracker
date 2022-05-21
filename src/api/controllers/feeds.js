@@ -78,8 +78,8 @@ module.exports = {
             });
         }
 
-        const listFull = process.env.White_list_including_images?.replaceAll('.', '\.') || '.';
-        const listPartial = process.env.White_list_does_not_include_images?.replaceAll('.', '\.') || '.';
+        const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '\.') || '.';
+        const listPartial = process.env.ALLOWED_DOMAINS_NO_IMAGES?.replaceAll('.', '\.') || '.';
 
         const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull}|${listPartial})`);
 

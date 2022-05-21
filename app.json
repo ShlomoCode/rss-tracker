@@ -8,25 +8,25 @@
         "MONGO_URI": {
             "description": "כתובת URI של מסד נתונים mongoDB. ניתן לקבל כזה בתוכנית החינמית של https://www.clever-cloud.com או בmongoDB cloud - https://cloud.mongodb.com"
         },
-        "gmail_user": {
+        "GMAIL_USER": {
             "description": "כתובת אימייל של חשבון gmail שממנו ישלחו המיילים"
         },
-        "gmail_password": {
+        "GMAIL_PASSWORD": {
             "description": "סיסמת החשבון - יש להפעיל גישה ל\"אפליקציות לא מאובטחות\", או (מומלץ!) להפעיל אימות דו שלבי ולהשתמש ב\"סיסמה לאפליקציה\"."
         },
         "JWT_SECRET": {
             "description": "מפתח ההצפנה עבור jwt. ערך רנדומלי, ניתן לשנות אותו לאחר יצירת האפליקציה.",
             "generator": "secret"
         },
-        "countMaxFeedsForUser": {
+        "MAX_FEEDS_PER_USER": {
             "description": "ברירת מחדל - 10. מספר הפידים המרבי פר משתמש. אופציונלי",
             "required": false
         },
-        "White_list_including_images": {
+        "ALLOWED_DOMAINS_WITH_IMAGES": {
             "description": "רשימה לבנה - כולל תמונות",
             "required": false
         },
-        "White_list_does_not_include_images": {
+        "ALLOWED_DOMAINS_NO_IMAGES": {
             "description": "רשימה לבנה - לא כולל תמונות",
             "required": false
         }

@@ -6,8 +6,8 @@ const ejs = require('ejs');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.gmail_user,
-        pass: process.env.gmail_password
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASSWORD
     }
 });
 
@@ -25,7 +25,7 @@ const sendMail = {
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
         const pathImageExmple = path.join(__dirname, '../../client/images', 'example.png');
-        const listFull = process.env.White_list_including_images?.replaceAll('.', '\.') || '.';
+        const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '\.') || '.';
         const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull})`);
 
         if (!regexWhiteList.test(link) || !thumbnailLink) {
@@ -42,7 +42,7 @@ const sendMail = {
         const cidImage = Math.random().toString(36).substring(2, 7);
 
         const mailOptions = {
-            from: process.env.gmail_user,
+            from: process.env.GMAIL_USER,
             bcc: addresses,
             subject: 'RSS חדש! 🎉 ⟫ ' + title + ` | ${feedTitle}`,
             html: await ejs.renderFile(path.join(__dirname, '../emails/templates/', 'rss.ejs'),
@@ -102,7 +102,7 @@ const sendMail = {
     */
     async verify (verifyCode, address, name) {
         const mailOptions = {
-            from: process.env.gmail_user,
+            from: process.env.GMAIL_USER,
             to: address,
             subject: `קוד האימות שלך הוא: ${verifyCode}`,
             html: await ejs.renderFile(path.join(__dirname, '../emails/templates/', 'verification.ejs'),

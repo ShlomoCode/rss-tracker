@@ -77,9 +77,9 @@ module.exports = {
                 error
             });
         }
-        if (userSubscribedFeedsCount >= (process.env.countMaxFeedsForUser || 10)) {
+        if (userSubscribedFeedsCount >= (process.env.MAX_FEEDS_PER_USER || 10)) {
             return res.status(429).json({
-                message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.countMaxFeedsForUser || 10})`
+                message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.MAX_FEEDS_PER_USER || 10})`
             });
         }
 

@@ -155,19 +155,19 @@ APIs תחת הנתיב `/api/feeds`.
 
 ```
 MONGO_URI # mongoDB connection string
-gmail_user # gmail username
-gmail_password # account google password or "password for app" - https://support.google.com/mail/answer/185833
+GMAIL_USER # gmail username
+GMAIL_PASSWORD # account google password or "password for app" - https://support.google.com/mail/answer/185833
 JWT_SECRET # JWT secret key
 ```
 
 #### Optional variables
 
 ```
-countMaxFeedsForUser = 10 # countMaxFeedsForUser. default: 10
+MAX_FEEDS_PER_USER = 10 # MAX_FEEDS_PER_USER. default: 10
 PORT # PORT - for localhost. default: 80.
 WEB_SITE_ADDRESS # site address - for costume domain on heroku or vps server.
-White_list_including_images="hm-news.co.il|jdn.co.il|93fm.co.il|bahazit.co.il" # sites for which images will be sent.
-White_list_does_not_include_images="pinatkafe.com|internet-israel.com|geektime.co.il" # White list to sent without images
+ALLOWED_DOMAINS_WITH_IMAGES="hm-news.co.il|jdn.co.il|93fm.co.il|bahazit.co.il" # sites for which images will be sent.
+ALLOWED_DOMAINS_NO_IMAGES="pinatkafe.com|internet-israel.com|geektime.co.il" # White list to sent without images
 ```
 
 אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת <http://localhost>.
