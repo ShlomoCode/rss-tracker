@@ -7,16 +7,7 @@ module.exports = {
     getAllFeeds: async (req, res) => {
         const { _id: userID } = res.locals.user;
 
-        let feedsRew;
-
-        try {
-            feedsRew = await Feed.find();
-        } catch (error) {
-            res.status(500).json({
-                error
-            });
-        }
-
+        const feedsRew = await Feed.find();
         if (!feedsRew) {
             return res.status(404).json({
                 message: 'Feeds not found'
@@ -44,15 +35,7 @@ module.exports = {
             });
         }
 
-        let feedRew;
-        try {
-            feedRew = await Feed.findById(feedID);
-        } catch (error) {
-            res.status(500).json({
-                error
-            });
-        }
-
+        const feedRew = await Feed.findById(feedID);
         if (!feedRew) {
             return res.status(404).json({
                 message: 'Feed Not Found'
@@ -120,14 +103,7 @@ module.exports = {
             url
         });
 
-        let feedCreated;
-        try {
-            feedCreated = await feed.save();
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        const feedCreated = await feed.save();
 
         feedCreated.Subscribers = 0;
 

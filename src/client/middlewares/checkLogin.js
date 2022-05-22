@@ -23,15 +23,8 @@ const checkLogin = async (req, res, next) => {
     }
 
     const { sessionId } = auth;
-    let session;
-    try {
-        session = await Session.findById(sessionId);
-    } catch (error) {
-        return res.status(500).json({
-            error
-        });
-    }
 
+    const session = await Session.findById(sessionId);
     if (!session) {
         if (req.originalUrl !== '/login/') {
             return res.clearCookie('jwt').redirect('/login/');
@@ -43,15 +36,7 @@ const checkLogin = async (req, res, next) => {
         return res.redirect('/');
     }
 
-    let user;
-    try {
-        user = await User.findById(session.userId);
-    } catch (error) {
-        return res.status(500).json({
-            error
-        });
-    }
-
+    const user = await User.findById(session.userId);
     if (!user) {
         return res.status(404).clearCookie('jwt').json({
             message: 'User not found',

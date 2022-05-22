@@ -5,28 +5,15 @@ const mongoose = require('mongoose');
 module.exports = {
     unsubscribeAll: async (req, res) => {
         const { _id: userID } = res.locals.user;
-        try {
-            const userUnsubscribe = await User.findById(userID);
-            if (!userUnsubscribe) {
-                return res.status(404).send({
-                    success: false,
-                    message: 'User not found'
-                });
-            }
-        } catch (error) {
-            return res.status(500).json({
-                error
+        const userUnsubscribe = await User.findById(userID);
+        if (!userUnsubscribe) {
+            return res.status(404).send({
+                success: false,
+                message: 'User not found'
             });
         }
 
-        let feedsUnsubscribedCount;
-        try {
-            feedsUnsubscribedCount = (await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } })).modifiedCount;
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        const feedsUnsubscribedCount = (await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } })).modifiedCount;
 
         res.status(200).json({
             message: `${feedsUnsubscribedCount} feeds were unsubscribed`,
@@ -47,14 +34,7 @@ module.exports = {
         /**
          * ודא שהמייל של המשתמש מאומת
          */
-        let user;
-        try {
-            user = await User.findById(userID);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        const user = await User.findById(userID);
         // אם היוזר לא נמצא
         if (!user) {
             return res.status(404).json({
@@ -69,14 +49,7 @@ module.exports = {
         }
 
         // בדוק מגבלת פידים פר יוזר
-        let userSubscribedFeedsCount;
-        try {
-            userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        const userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
         if (userSubscribedFeedsCount >= (process.env.MAX_FEEDS_PER_USER || 10)) {
             return res.status(429).json({
                 message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.MAX_FEEDS_PER_USER || 10})`
@@ -84,14 +57,7 @@ module.exports = {
         }
 
         // ההרשמה בפועל
-        let feedSubscribe;
-        try {
-            feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } });
-        } catch (error) {
-            res.status(500).json({
-                error
-            });
-        }
+        const feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } });
 
         if (!feedSubscribe) {
             return res.status(404).json({
@@ -119,15 +85,7 @@ module.exports = {
             });
         }
 
-        let feedUnSubscribe;
-        try {
-            feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { Subscribers: userID } });
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
+        const feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { Subscribers: userID } });
         if (!feedUnSubscribe) {
             return res.status(404).json({
                 message: 'Feed Not Found'

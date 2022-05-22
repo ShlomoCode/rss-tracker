@@ -6,6 +6,7 @@ require('dotenv').config({ path: 'config.env' });
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const cors = require('cors');
+require('express-async-errors');
 const processingFeeds = require('./src/server/main');
 
 app.use(morgan('dev'));
@@ -44,8 +45,11 @@ app.get('/unsubscribe', checkLoginClient, checkVerificationClient, renders.unsub
 app.get('/', checkLoginClient, checkVerificationClient, renders.main);
 app.all('*', (req, res) => res.status(404).sendFile(path.join(__dirname, 'src/client/views', '404.html')));
 
+// eslint-disable-next-line node/handle-callback-err
 app.use((error, req, res, next) => {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+        message: 'Internal server error'
+    });
 });
 
 /* Set app url */

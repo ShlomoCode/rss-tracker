@@ -25,15 +25,7 @@ const checkLogin = async (req, res, next) => {
 
     const { sessionId } = auth;
 
-    let session;
-    try {
-        session = await Session.findById(sessionId);
-    } catch (error) {
-        return res.status(500).json({
-            error
-        });
-    }
-
+    const session = await Session.findById(sessionId);
     if (!session) {
         return res.clearCookie('jwt').status(401).json({
             message: 'session not found. Please login again',
@@ -41,15 +33,7 @@ const checkLogin = async (req, res, next) => {
         });
     }
 
-    let user;
-    try {
-        user = await User.findById(session.userId);
-    } catch (error) {
-        return res.status(500).json({
-            error
-        });
-    }
-
+    const user = await User.findById(session.userId);
     if (!user) {
         return res.status(401).clearCookie('jwt').json({
             message: 'user not found',

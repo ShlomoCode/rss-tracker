@@ -259,6 +259,8 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * javascript-time-ago - convert time to human readable format (for emails)
 
+* express-async-errors - to handle async errors in express
+
 ## client-side
 
 * [jQuery](https://jquery.com)

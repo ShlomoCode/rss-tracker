@@ -22,14 +22,8 @@ module.exports = async (req, res) => {
         // למקרה שלא נמצאה שום התאמה
         return 'ברוך הבא';
     }
-    let subscribersCount;
-    try {
-        subscribersCount = await Feed.count({ Subscribers: userID });
-    } catch (error) {
-        return res.status(500).json({
-            error
-        });
-    }
-    const variables = { time: timeMesseges[getTime()], name, email, subscribersCount };
+
+    const subscribersCount = await Feed.count({ Subscribers: userID });
+    const variables = { time: timeMessages[getTime()], name, email, subscribersCount };
     res.render(path.join(__dirname, '../views/main', 'index.ejs'), variables);
 };

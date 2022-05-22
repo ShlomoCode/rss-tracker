@@ -93,15 +93,7 @@ module.exports = {
             });
         }
 
-        let hash;
-        try {
-            hash = await bcrypt.hash(password, 10);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
+        const hash = await bcrypt.hash(password, 10);
         const users = await User.find({ emailProcessed });
         if (users.length > 0) {
             return res.status(409).json({
@@ -121,22 +113,10 @@ module.exports = {
             verifyEmailCode
         });
 
-        try {
-            const infoSend = await sendMail.verify(verifyEmailCode, email, name);
-            console.log('Email sent: ' + infoSend.response);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        const infoSend = await sendMail.verify(verifyEmailCode, email, name);
+        console.log('Email sent: ' + infoSend.response);
 
-        try {
-            await user.save();
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        await user.save();
 
         res.status(200).json({
             message: 'User created and verification email sent'
@@ -159,16 +139,8 @@ module.exports = {
             });
         }
 
-        let users;
-        try {
-            users = await User.find({ emailProcessed });
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
         if (users.length === 0) {
+        const users = await User.find({ emailProcessed });
             return res.status(401).json({
                 message: 'Auth failed'
             });
@@ -176,15 +148,7 @@ module.exports = {
 
         const [user] = users;
 
-        let isMatch;
-        try {
-            isMatch = await bcrypt.compare(password, user.password);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({
                 message: 'Auth failed'
@@ -192,16 +156,10 @@ module.exports = {
         }
 
         const sessionId = new mongoose.Types.ObjectId();
-        try {
-            await Session.create({
-                _id: sessionId,
-                userId: user._id
-            });
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
+        await Session.create({
+            _id: sessionId,
+            userId: user._id
+        });
 
         const token = jwt.sign({ sessionId }, process.env.JWT_SECRET);
         res.status(200).cookie('jwt', token, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
@@ -212,15 +170,7 @@ module.exports = {
     logout: async (req, res) => {
         const { sessionId } = res.locals;
 
-        let sessionDelete;
-        try {
-            sessionDelete = await Session.findByIdAndDelete(sessionId);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
+        const sessionDelete = await Session.findByIdAndDelete(sessionId);
         if (!sessionDelete) {
             return res.status(409).json({
                 message: 'Session not found'
@@ -250,15 +200,10 @@ module.exports = {
             });
         }
 
-        let user;
-        try {
-            user = await User.findById(userID);
-        } catch (error) {
-            return res.status(500).json({
-                error
             });
         }
 
+        const user = await User.findById(userID);
         if (!user) {
             return res.status(404).json({
                 message: `User ${userID} is not found`
@@ -278,13 +223,7 @@ module.exports = {
         }
 
         if (verifyCode === user.verifyEmailCode) {
-            try {
-                await User.findByIdAndUpdate(userID, { verified: true });
-            } catch (error) {
-                res.status(500).json({
-                    error
-                });
-            }
+            await User.findByIdAndUpdate(userID, { verified: true });
         }
 
         res.status(200).json({
@@ -294,15 +233,7 @@ module.exports = {
     resendVerificationEmail: async (req, res) => {
         const { _id: userID } = res.locals.user;
 
-        let user;
-        try {
-            user = await User.findById(userID);
-        } catch (error) {
-            return res.status(500).json({
-                error
-            });
-        }
-
+        const user = await User.findById(userID);
         if (!user) {
             return res.status(404).json({
                 message: `User ${userID} is not found`
@@ -323,13 +254,14 @@ module.exports = {
             });
         }
 
-        try {
-            const infoSend = await sendMail.verify(user.verifyEmailCode, user.emailFront, user.name);
-            console.log('Email sent: ' + infoSend.response);
-            await User.findByIdAndUpdate(userID, { lastVerifyEmailSentAt: Date.now() });
-        } catch (error) {
-            return res.status(500).json({
-                error
+        const infoSend = await sendMail.verify(user.verifyEmailCode, user.emailFront, user.name);
+        console.log('Email sent: ' + infoSend.response);
+        await User.findByIdAndUpdate(userID, { lastVerifyEmailSentAt: Date.now() });
+
+        res.status(200).json({
+            message: `verify email sent again to ${user.emailFront}`
+        });
+    },
             });
         }
 
