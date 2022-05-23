@@ -45,10 +45,9 @@ app.get('/unsubscribe', checkLoginClient, checkVerificationClient, renders.unsub
 app.get('/', checkLoginClient, checkVerificationClient, renders.main);
 app.all('*', (req, res) => res.status(404).sendFile(path.join(__dirname, 'src/client/views', '404.html')));
 
-// eslint-disable-next-line node/handle-callback-err
 app.use((error, req, res, next) => {
     res.status(500).json({
-        message: 'Internal server error'
+        message: process.env.NODE_ENV !== 'production' ? error.message : 'Internal server error'
     });
 });
 

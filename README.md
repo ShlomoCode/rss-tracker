@@ -261,6 +261,8 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * express-async-errors - to handle async errors in express
 
+* cross-env - to set env variables in command line
+
 ## client-side
 
 * [jQuery](https://jquery.com)

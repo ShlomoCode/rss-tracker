@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "node test.js",
-    "start": "node app.js",
-    "debug": "nodemon app.js",
+    "start": "cross-env NODE_ENV=production node app.js",
+    "debug": "cross-env NODE_ENV=development nodemon app.js",
     "fix": "eslint **/*.js --fix"
   },
   "author": "ShlomoCode",
@@ -34,6 +34,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
