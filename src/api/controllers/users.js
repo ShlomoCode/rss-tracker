@@ -95,7 +95,7 @@ module.exports = {
 
         const hash = await bcrypt.hash(password, 10);
         const users = await User.find({ emailProcessed });
-        if (users.length > 0) {
+        if (users.length) {
             return res.status(409).json({
                 message: 'Email exists'
             });
@@ -139,8 +139,8 @@ module.exports = {
             });
         }
 
-        if (users.length === 0) {
         const users = await User.find({ emailProcessed });
+        if (!users.length) {
             return res.status(401).json({
                 message: 'Auth failed'
             });
@@ -183,7 +183,7 @@ module.exports = {
         });
     },
     verifyEmail: async (req, res) => {
-        let { verifyCode } = req.query;
+        const { verifyCode } = req.query;
         const { _id: userID } = res.locals.user;
 
         if (!verifyCode) {
@@ -192,14 +192,9 @@ module.exports = {
             });
         }
 
-        verifyCode = verifyCode.toString();
-
         if (verifyCode.length > 5 || !/[0-9]{5}/.test(verifyCode)) {
             return res.status(400).json({
                 message: `${verifyCode} is not a valid verifyCode`
-            });
-        }
-
             });
         }
 
@@ -227,7 +222,7 @@ module.exports = {
         }
 
         res.status(200).json({
-            message: 'Verification successful'
+            message: 'verify successful'
         });
     },
     resendVerificationEmail: async (req, res) => {

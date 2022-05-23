@@ -19,7 +19,7 @@ async function login (input) {
         open('/', '_self');
     } catch (error) {
         if (error.response.status === 401) {
-            new AWN({ position: 'bottom-left' }).alert(`שם המשתמש או הסיסמה שגויים
+            new AWN({ position: 'bottom-left' }).alert(`!שם המשתמש או הסיסמה שגויים
             <br>...נסה שוב`);
         } else {
             new AWN().alert(`${error.response.status}: ${error.response.data?.message}`);

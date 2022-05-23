@@ -7,7 +7,6 @@ const { parser: parseHtml } = require('html-metadata-parser');
 async function main () {
     console.log('processingFeeds started...');
     const feedsRew = await Feed.find();
-
     if (feedsRew.length === 0) {
         console.log('return: feeds not found!');
         return 'Wait!';
@@ -87,7 +86,7 @@ async function main () {
                 }
 
                 console.log(`New article found: ${item.title}; sending email to ${address.length} subscribers...`);
-                    await sendMail.rss(item, feedTitle, feed.url, address);
+                await sendMail.rss(item, feedTitle, feed.url, address);
             } else {
                 console.log('Outdated item. Skipped');
             }

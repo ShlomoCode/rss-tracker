@@ -58,7 +58,6 @@ module.exports = {
 
         // ההרשמה בפועל
         const feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } });
-
         if (!feedSubscribe) {
             return res.status(404).json({
                 message: 'Feed Not Found'

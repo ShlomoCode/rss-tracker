@@ -76,7 +76,6 @@ module.exports = {
         url = url.replace(/\/$/, '');
 
         const feeds = await Feed.find({ url });
-
         if (feeds.length !== 0) {
             return res.status(409).json({
                 message: 'This feed already exists'

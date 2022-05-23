@@ -4,7 +4,7 @@ const Feed = require('../.././api/models/feed');
 module.exports = async (req, res) => {
     const { id: userID, name, emailFront: email } = res.locals.user;
     const hours = new Date().getHours();
-    const timeMesseges = {
+    const timeMessages = {
         morning: 'בוקר טוב',
         afternoon: 'צהריים טובים',
         evening: 'לילה טוב'
