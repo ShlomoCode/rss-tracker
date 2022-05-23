@@ -263,6 +263,8 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * cross-env - to set env variables in command line
 
+* colors - to print colors in the console
+
 ## client-side
 
 * [jQuery](https://jquery.com)

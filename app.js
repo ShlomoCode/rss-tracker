@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const cors = require('cors');
 require('express-async-errors');
+require('colors');
 const processingFeeds = require('./src/server/main');
 
 app.use(morgan('dev'));
@@ -50,6 +51,15 @@ app.use((error, req, res, next) => {
         message: process.env.NODE_ENV !== 'production' ? error.message : 'Internal server error'
     });
 });
+
+if (!process.env.GMAIL_USER || !process.env.GMAIL_PASSWORD) {
+    console.log('Config Error:', 'Please set GMAIL_USER and GMAIL_PASSWORD environment variables'.red);
+    process.exit(1);
+}
+if (!process.env.JWT_SECRET) {
+    console.log('Config Error:', 'Please set JWT_SECRET environment variable'.red);
+    process.exit(1);
+}
 
 /* Set app url */
 process.env.APP_URL = process.env.WEB_SITE_ADDRESS || (process.env.HEROKU_APP_NAME ? `https://${process.env.HEROKU_APP_NAME}.herokuapp.com` : `http://localhost:${process.env.PORT || 80}`);
