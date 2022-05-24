@@ -24,19 +24,20 @@ const sendMail = {
 
         title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
 
-        const pathImageExmple = path.join(__dirname, '../../client/images', 'example.png');
         const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '\.') || '.';
         const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull})`);
 
-        if (!regexWhiteList.test(link) || !thumbnailLink) {
-            thumbnailLink = pathImageExmple;
-        }
-
+        let isAllowedImages;
         let thumbnail;
-        try {
-            thumbnail = await imageToBase64(thumbnailLink);
-        } catch (error) {
-            thumbnail = await imageToBase64(pathImageExmple);
+        if (!regexWhiteList.test(link) || !thumbnailLink) {
+            isAllowedImages = false;
+        } else {
+            isAllowedImages = true;
+            try {
+                thumbnail = await imageToBase64(thumbnailLink);
+            } catch (error) {
+                isAllowedImages = false;
+            }
         }
 
         const cidImage = Math.random().toString(36).substring(2, 7);
@@ -47,6 +48,8 @@ const sendMail = {
             subject: 'RSS חדש! 🎉 ⟫ ' + title + ` | ${feedTitle}`,
             html: await ejs.renderFile(path.join(__dirname, '../emails/templates/', 'rss.ejs'),
                 {
+                    isAllowedImages,
+                    thumbnailLink,
                     description,
                     title,
                     url: link,
@@ -81,11 +84,13 @@ const sendMail = {
                         env: process.env
                     }
                 }),
-            attachments: [{
-                path: `data:image/jpg;base64,${thumbnail}`,
-                filename: title,
-                cid: cidImage
-            }]
+            attachments: isAllowedImages
+                ? [{
+                    path: `data:image/jpg;base64,${thumbnail}`,
+                    filename: title,
+                    cid: cidImage
+                }]
+                : []
         };
         return transporter.sendMail(mailOptions)
             .then((info) => {

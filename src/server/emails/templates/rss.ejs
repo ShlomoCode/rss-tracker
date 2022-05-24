@@ -210,15 +210,18 @@
                                                         cellspacing="0" role="presentation"
                                                         style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
                                                         <tr>
-                                                            <td style="width:100%;padding-right:0px;padding-left:0px;">
-                                                                <div align="center" style="line-height:10px"><a
-                                                                        href="<%= url %>" target="_blank"
-                                                                        style="outline:none" tabindex="-1"><img
-                                                                            class="fullMobileWidth big"
-                                                                            src="cid:<%= cidImage %>"
-                                                                            style="display: block; height: auto; border: 0; width: 664px; max-width: 100%;"
-                                                                            width="664"></a></div>
-                                                            </td>
+                                                            <% if (isAllowedImages || thumbnailLink) { %>
+                                                                <td
+                                                                    style="width:100%;padding-right:0px;padding-left:0px;">
+                                                                    <div align="center" style="line-height:10px"><a
+                                                                            href="<%= url %>" target="_blank"
+                                                                            style="outline:none" tabindex="-1"><img
+                                                                                class="fullMobileWidth big"
+                                                                                src="<%= isAllowedImages ? `cid:${cidImage}` : thumbnailLink %>"
+                                                                                style="display: block; height: auto; border: 0; width: 664px; max-width: 100%;"
+                                                                                width="664"></a></div>
+                                                                </td>
+                                                                <% } %>
                                                         </tr>
                                                     </table>
                                                     <table class="paragraph_block" width="100%" border="0"
