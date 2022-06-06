@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const checkLogin = require('../middlewares/checkLogin');
 const checkVerification = require('../middlewares/checkVerification');
+const checkRequest = require('../middlewares/validations/subscriptions');
 
 const {
     unsubscribeFeed,
@@ -10,7 +11,7 @@ const {
 } = require('../controllers/subscriptions');
 
 router.post('/unsubscribe-all', checkLogin, checkVerification, unsubscribeAll);
-router.post('/:subscriptionId', checkLogin, checkVerification, subscribeFeed);
-router.delete('/:subscriptionId', checkLogin, checkVerification, unsubscribeFeed);
+router.post('/:subscriptionId', checkLogin, checkVerification, checkRequest, subscribeFeed);
+router.delete('/:subscriptionId', checkLogin, checkVerification, checkRequest, unsubscribeFeed);
 
 module.exports = router;

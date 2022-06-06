@@ -261,9 +261,13 @@ script will be triggered every 30 minutes, get to you site, if the site is not w
 
 * express-async-errors - to handle async errors in express
 
-* cross-env - to set env variables in command line
+* cross-env - Setting environment variables in the command line (for cross-platform) 
 
 * colors - to print colors in the console
+
+* ajv - to validate the requests
+
+* validator - to validate the input
 
 ## client-side
 

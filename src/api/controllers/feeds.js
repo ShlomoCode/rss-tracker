@@ -55,12 +55,6 @@ module.exports = {
     createFeed: async (req, res) => {
         let { url } = req.body;
 
-        if (!url) {
-            return res.status(400).json({
-                message: 'url parameter required'
-            });
-        }
-
         const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '\.') || '.';
         const listPartial = process.env.ALLOWED_DOMAINS_NO_IMAGES?.replaceAll('.', '\.') || '.';
 

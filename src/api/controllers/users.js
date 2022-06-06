@@ -40,24 +40,6 @@ module.exports = {
     signup: async (req, res) => {
         const { email, password, name } = req.body;
 
-        if (!email) {
-            return res.status(400).json({
-                message: 'email parameter required'
-            });
-        }
-
-        if (!password) {
-            return res.status(400).json({
-                message: 'password parameter required'
-            });
-        }
-
-        if (!name) {
-            return res.status(400).json({
-                message: 'name parameter required'
-            });
-        }
-
         /**
          * normalize-email by regex
          */
@@ -128,19 +110,7 @@ module.exports = {
     login: async (req, res) => {
         const { email, password } = req.body;
 
-        if (!email) {
-            return res.status(400).json({
-                message: 'email parameter required'
-            });
-        }
-
         const emailProcessed = normalizeEmail(email);
-
-        if (!password) {
-            return res.status(400).json({
-                message: 'password parameter required'
-            });
-        }
 
         const users = await User.find({ emailProcessed });
         if (!users.length) {
@@ -188,18 +158,6 @@ module.exports = {
     verifyEmail: async (req, res) => {
         const { verifyCode } = req.query;
         const { _id: userID } = res.locals.user;
-
-        if (!verifyCode) {
-            return res.status(400).json({
-                message: 'verifyCode parameter required'
-            });
-        }
-
-        if (verifyCode.length > 5 || !/[0-9]{5}/.test(verifyCode)) {
-            return res.status(400).json({
-                message: `${verifyCode} is not a valid verifyCode`
-            });
-        }
 
         const user = await User.findById(userID);
         if (!user) {
@@ -263,20 +221,14 @@ module.exports = {
     resetPassword: async (req, res) => {
         const { email } = req.body;
 
-        if (!email) {
-            return res.status(400).json({
-                message: 'email parameter required'
-            });
-        }
-
         /**
          * normalize-email by regex
          */
         const emailProcessed = normalizeEmail(email);
 
         /**
-                 * validate email
-                */
+        * validate email
+        */
         const validateEmail = await emailValidator({
             email: emailProcessed,
             validateRegex: true,
@@ -324,40 +276,6 @@ module.exports = {
     resetPasswordConfirm: async (req, res) => {
         const { resetPasswordToken, email, newPassword } = req.body;
 
-        if (!resetPasswordToken) {
-            return res.status(400).json({
-                message: 'resetPasswordToken parameter required'
-            });
-        }
-        if (!email) {
-            return res.status(400).json({
-                message: 'email parameter required'
-            });
-        }
-        if (!newPassword) {
-            return res.status(400).json({
-                message: 'newPassword parameter required'
-            });
-        }
-
-        if (typeof resetPasswordToken !== 'string') {
-            return res.status(400).json({
-                message: 'resetPasswordToken must be a string'
-            });
-        }
-
-        if (typeof email !== 'string') {
-            return res.status(400).json({
-                message: 'email must be a string'
-            });
-        }
-
-        if (typeof newPassword !== 'string') {
-            return res.status(400).json({
-                message: 'newPassword must be a string'
-            });
-        }
-
         const emailProcessed = normalizeEmail(email);
 
         const user = await User.findOne({ emailProcessed });
@@ -367,9 +285,9 @@ module.exports = {
             });
         }
 
-        if (resetPasswordToken.length > 5 || !/[0-9]{5}/.test(resetPasswordToken)) {
+        if (!/[0-9]{5}/.test(resetPasswordToken)) {
             return res.status(400).json({
-                message: `${resetPasswordToken} is not a valid resetPasswordToken`
+                message: 'reset password token is not valid - must be 5 digits'
             });
         }
 
@@ -399,29 +317,6 @@ module.exports = {
     changePassword: async (req, res) => {
         const { _id: userId } = res.locals.user;
         const { oldPassword, newPassword } = req.body;
-
-        if (!oldPassword) {
-            return res.status(400).json({
-                message: 'oldPassword parameter required'
-            });
-        }
-        if (!newPassword) {
-            return res.status(400).json({
-                message: 'newPassword parameter required'
-            });
-        }
-
-        if (typeof oldPassword !== 'string') {
-            return res.status(400).json({
-                message: 'oldPassword must be a string'
-            });
-        }
-
-        if (typeof newPassword !== 'string') {
-            return res.status(400).json({
-                message: 'newPassword must be a string'
-            });
-        }
 
         const user = await User.findById(userId);
         if (!user) {

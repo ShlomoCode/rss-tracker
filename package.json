@@ -12,6 +12,7 @@
   "author": "ShlomoCode",
   "license": "UNLICENSED",
   "dependencies": {
+    "ajv": "^8.11.0",
     "bcrypt": "^5.0.1",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
@@ -32,6 +33,7 @@
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "rss-to-json": "^2.0.2",
+    "validator": "^13.7.0",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
