@@ -16,7 +16,7 @@ body {
     background-attachment: fixed;
 }
 
-.container {
+.container-main {
     margin-top: 70px;
     width: 700px;
     height: 400px;
@@ -110,7 +110,7 @@ form input:focus {
     cursor: pointer;
 }
 @media (max-width: 750px) {
-    .container {
+    .container-main {
         transform: scale(0.8);
     }
 }

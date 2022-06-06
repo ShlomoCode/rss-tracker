@@ -121,6 +121,23 @@ const sendMail = {
                 })
         };
         return transporter.sendMail(mailOptions);
+    },
+    async resetPassword (code, address, name) {
+        const mailOptions = {
+            from: process.env.GMAIL_USER,
+            to: address,
+            subject: `קוד האימות שלך לאיפוס הסיסמה הוא: ${code}`,
+            html: await ejs.renderFile(path.join(__dirname, '../emails/templates/', 'reset-password.ejs'),
+                {
+                    name,
+                    code: code,
+                    email: address,
+                    process: {
+                        env: process.env
+                    }
+                })
+        };
+        return transporter.sendMail(mailOptions);
     }
 };
 

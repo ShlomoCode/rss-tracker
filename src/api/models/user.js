@@ -17,8 +17,9 @@ const userSchema = mongoose.Schema({
     verified: { type: Boolean, default: false },
     verifyEmailCode: { type: String, required: true },
     registrationDate: { type: Date, default: Date.now },
-    Permissions: { type: String, default: 'user' },
     lastVerifyEmailSentAt: { type: Date },
+    passwordResetToken: { type: String },
+    passwordResetAt: { type: Date }
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,4 +1,4 @@
-import { login, signup, showLoginForm } from './lb.js';
+import { login, signup, showLoginForm, resetPassword } from './lb.js';
 
 $('#signup').click(function () {
     $('.message').css('transform', 'translateX(100%)');
@@ -27,3 +27,5 @@ $('#form-login').on('submit', (event) => {
     const password = $('#login-password').val();
     login({ email, password });
 });
+
+$('#reset-password-btn').on('click', () => resetPassword(1));
