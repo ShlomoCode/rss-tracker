@@ -241,7 +241,7 @@ module.exports = {
             });
         }
 
-        const limit = '1d';
+        const limit = '1h';
         if (user.lastVerifyEmailSentAt && (Date.now() - user.lastVerifyEmailSentAt) < ms(limit)) {
             return res.status(429).json({
                 message: `verify failed - Too many requests. Try again in ${ms(ms(limit) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })}`,

@@ -81,7 +81,7 @@ $('#log-out').on('click', () => {
 $('#again-send-verification-email').on('click', async () => {
     const confirmSend = await swal({
         title: 'האם אתה בטוח שברצונך לשלוח את המייל שוב?',
-        text: 'ייתכן שהמייל נכנס לקידומי מכירות/ספאם, יש לבדוק שם לפני בקשת שליחה חוזרת.\nשימו לב - ניתן לבקש שליחה חוזרת רק פעם ביום!',
+        text: 'ייתכן שהאימייל שלך בקידומי מכירות או בספאם, אנא בדוק שם לפני שליחה מחדש\nשימו לב - ניתן לבקש שליחה חוזרת רק פעם בשעה!',
         icon: 'warning',
         buttons: {
             cancel: true,
@@ -97,7 +97,7 @@ $('#again-send-verification-email').on('click', async () => {
             (error) => {
                 console.log(error.response.data);
                 if (error.response.status === 429) {
-                    return $(notifier.alert(`ניתן לשלוח מייל אימות רק פעם ביום. נסה שוב בעוד ${error.response.data.tryAgainAfter}`)).css({ direction: 'rtl' });
+                    return $(notifier.alert(`ניתן לשלוח מייל אימות רק פעם בשעה. נסה שוב בעוד ${error.response.data.tryAgainAfter}`)).css({ direction: 'rtl' });
                 }
                 notifier.alert(error.response.data.message);
             });
