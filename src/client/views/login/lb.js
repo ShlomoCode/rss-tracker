@@ -11,16 +11,14 @@ async function login (input) {
     const { email, password } = input;
 
     try {
-        await axios.post('/users/login', {
-            email: email,
-            password: password
-        });
+        await axios.post('/users/login', { email, password });
         new AWN().success('התחברת בהצלחה');
         open('/', '_self');
     } catch (error) {
         if (error.response.status === 401) {
             new AWN({ position: 'bottom-left' }).alert(`!שם המשתמש או הסיסמה שגויים
             <br>...נסה שוב`);
+            $('#reset-password-btn').css('font-weight', 'bold');
         } else {
             new AWN().alert(`${error.response.status}: ${error.response.data?.message}`);
         }

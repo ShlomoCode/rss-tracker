@@ -1,12 +1,16 @@
+body {
+    font-family: 'Assistant', sans-serif;
+    font-size: 107%
+}
+
 #header {
-    background: #005dde;
     height: 50px;
     width: 100%;
     position: fixed;
     left: 0px;
     top: 0px;
     z-index: 999;
-    border-bottom: 1px solid;
+    border-bottom: 2px dotted
 }
 
 #sign-out {
@@ -18,60 +22,44 @@
     border-radius: 100px;
 }
 
-#add-costum-feed {
+#add-costume-feed {
     position: absolute;
     top: 8px;
     left: 100px;
     height: 30px;
-    width: 100px;
+    width: 105px;
     border-radius: 100px;
 }
 
-#header h2 {
-    position: absolute;
-    top: -13px;
-    left: 45%;
-    border-bottom: 2px rgb(5, 5, 5) solid;
-    z-index: 999;
-    background: rgba(0, 0, 0, 0);
-}
-
 html {
-    background-image: url('/images/background.jpg');
+    background-image: url('/images/background-main.png');
     background-size: 150%;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
 #feeds {
+    /* direction: rtl; */
     position: absolute;
     right: 30px;
     top: 17%;
     height: 500px;
-    width: 90%;
-    border: 1.2px solid;
-    border-radius: 4px;
+    width: 95%;
+    border-right: 2px dotted;
+    border-left: 2px dotted;
     float: right;
-    background: rgba(255,255,255,0.47)
+    background: rgba(255,255,255,0.56);
 }
 
-.credit-freepik {
-    position: fixed;
-    transform: rotate(90deg);
-    bottom: 70px;
-    left: -65px;
-    border-radius: 0px 4px;
-}
-
-.credit-freepik:visited {
-        color: rgb(0,0,0);
+#refresh-feeds {
+    margin-left: 3px
 }
 
 .feed-item {
     background: rgb(255,255,255);
     width: 200px;
     height: 50px;
-    border: 1px solid;
+    border: 1px double;
     border-radius: 4px;
     margin: 5px;
     margin-left: 2.5px;
@@ -81,22 +69,21 @@ html {
 .members-item-count {
     position: relative;
     width: 45%;
-    height: 35%;
-    bottom: 30px;
-    border-right: 1.5px solid;
+    height: 30%;
+    bottom: 32px;
     border-radius: 0 1px 0 0;
     text-align: center;
     font-weight: bold;
+    font-size: 1rem;
 }
 
 .Subscribe-btn {
     position: relative;
-    top: -49px;
-    left: 92px;
+    top: -51.5px;
     width: 59%;
     height: 30%;
     border: 0px solid;
-    font-size: 0.8rem;
+    font-size: 1rem;
     border-radius: 0 0 4px 0;
     background: rgba(168, 168, 184, 0.05);
 }
@@ -135,12 +122,20 @@ html {
     right: 85px;
 }
 
-#info {
-    position: fixed;
-    left: 25%
+#feeds {
+    /* direction: rtl; */
+    position: absolute;
+    right: 30px;
+    top: 17%;
+    height: 500px;
+    width: 95%;
+    border-right: 2px dotted;
+    border-left: 2px dotted;
+    float: right;
+    background: rgba(255,255,255,0.18);
 }
 
-#unsubscribe {
+#unsubscribe-all {
     position: fixed;
     right: 19%
 }
@@ -149,4 +144,19 @@ html {
     position: absolute;
     right: 366px;
     top: 5px
+}
+
+#info {
+    position: fixed;
+    left: 25%;
+    top: 1.45%
+}
+
+a {
+    color: #0b59cd !important
+}
+
+/* rules for mobile */
+@media screen and (max-width: 600px) {
+
 }

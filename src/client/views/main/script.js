@@ -1,8 +1,13 @@
 const notifier = new AWN({
-    position: 'bottom-left'
+    position: 'bottom-left',
+    labels: {
+        error: 'שגיאה',
+        success: 'הצלחה',
+        info: 'מידע'
+    }
 });
 
-async function createCostumFeed () {
+async function createCostumeFeed () {
     const value = await swal(
         `
     הכנס כאן כתובת אתר/קטגוריה/תגית וכדו' למעקב.
@@ -35,7 +40,7 @@ async function createCostumFeed () {
             notifier.success('הפיד נוצר בהצלחה. כעת ניתן להירשם אליו');
         },
         (err) => {
-            if (err.response.data?.message === 'Feed exists') {
+            if (err.response.status === 409) {
                 notifier.alert('הפיד הזה כבר קיים<br>...נסה להירשם אליו');
             } else {
                 notifier.alert(`${err.response.status}: ${err.response.data.message}`);
@@ -61,16 +66,17 @@ async function loadFeeds () {
             PushFeedToPage(feeds[i], [i]);
         }
 
-        notifier.info(`${feeds.length} feeds has been loaded!`);
+        const loadedNotify = new AWN({ position: 'bottom-right', durations: { info: 1800 }, labels: { info: 'מידע' } }).info(`${feeds.length} פידים נטענו בהצלחה!`);
+        $(loadedNotify).css('direction', 'rtl');
     });
 }
 
 function PushFeedToPage (feedItem) {
     const { title, subscriberSelf, Subscribers, _id, url } = feedItem;
     const item = `<div id="${_id}" class="feed-item">
-    <h3><a href="${url.replace('/feed', '')}" target="_blank">${title}</a></h3>
+    <h3><a href="${url.replace('/feed', '')}" target="_blank">${title}</a> <img src="https://www.google.com/s2/favicons?sz=16&domain_url=${url.replace('/feed', '')}" style="position: relative; top:3px"></h3>
     <div class="members-item-count" dir="rtl"><span>${Subscribers}</span> מנויים</div>
-    <button class="Subscribe-btn">${subscriberSelf ? '➖ Unsubscribe' : '➕ Subscribe'}</button>
+    <button class="Subscribe-btn" style="left: ${subscriberSelf ? '82px' : '92px'}">${subscriberSelf ? '➖ בטל הרשמה' : '➕ הרשמה'}</button>
     </div>`;
     $('#feeds').append(item);
     if (subscriberSelf) {
@@ -94,11 +100,12 @@ async function subscribe (feedID) {
             feedElement.on('click', () => {
                 unsubscribe(feedID);
             });
-            feedElement.text('➖ Unsubscribe');
+            feedElement.text('➖ בטל הרשמה');
+            feedElement.css('left', '82px');
             const subscribersCount = $(`#${feedID} .members-item-count > span`).text();
             $(`#${feedID} .members-item-count > span`).text(parseInt(subscribersCount) + 1);
             $('#subscribersCount span').text(parseInt(subscribersCount) + 1);
-            notifier.success('נרשמת בהצלחה');
+            new AWN({ durations: { success: 1800 } }).success('נרשמת בהצלחה');
         },
         (err) => {
             console.log(err.response);
@@ -129,13 +136,14 @@ async function unsubscribe (feedID) {
                 subscribe(feedID);
             });
 
-            feedElement.text('➕ Subscribe');
+            feedElement.text('➕ הרשמה');
+            feedElement.css('left', '92px');
 
             const subscribersCount = $(`#${feedID} .members-item-count > span`).text();
             $(`#${feedID} .members-item-count > span`).text(parseInt(subscribersCount) - 1);
             $('#subscribersCount span').text(parseInt(subscribersCount) - 1);
 
-            notifier.success('הוסרת בהצלחה');
+            new AWN({ durations: { success: 1800 } }).success('הוסרת בהצלחה');
         },
         (err) => {
             console.log(err.response);
@@ -157,7 +165,7 @@ $('#sign-out').on('click', async () => {
         });
 });
 
-$('#add-costum-feed').on('click', createCostumFeed);
+$('#add-costume-feed').on('click', createCostumeFeed);
 
 // refresh feeds
 $('#refresh-feeds').on('click', () => {

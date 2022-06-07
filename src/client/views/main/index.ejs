@@ -6,22 +6,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
-    <title>Rss To Mail - main</title>
+    <title>עמוד ראשי</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
     <!-- styling -->
     <link rel="stylesheet" href="main/style.css">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div id="header">
-        <button id="sign-out" class="fas fa-sign-out-alt"> sign out</button>
-        <button id="add-costum-feed">➕ Add Feed</button>
-        <h2>RSS TO MAIL</h2>
-        <h3 id="Hello" dir="rtl"><img src="/images/profile-picture.png"/><span id="content"><%=time%>, <%=name%>!</span><span id="info"><%=email.length > 20 ? email.slice(0, 20) + '...' : email;%></span> | <a href="/unsubscribe" id="unsubscribe">ביטול כל המינויים</a></h3>
-        <small><p dir="rtl" id="subscribersCount">(יש לך <span><%=subscribersCount%></span> מינויים)</p></small>
+        <button id="sign-out" class="fas fa-sign-out-alt"> התנתקות</button>
+        <button id="add-costume-feed">➕ הוספת חדש</button>
+        <h3 id="Hello" dir="rtl"><img src="/images/profile-picture.png" /><span id="content">
+                <%=time%>, <%=name%>!
+            </span><span id="info">
+                <%=email.length> 20 ? email.slice(0, 20) + '...' : email;%>
+            </span> | <a href="/unsubscribe" id="unsubscribe-all">ביטול כל המינויים</a></h3>
+        <small>
+            <p dir="rtl" id="subscribersCount">(יש לך <span>
+                    <%=subscribersCount%>
+                </span> מינויים)</p>
+        </small>
     </div>
-    <div id="feeds"><button id="refresh-feeds" class="fas fa-sync"> refresh</button></div>
-    <a class="credit-freepik" href='https://www.freepik.com/vectors/background'>Background by freepik</a>
+    <div id="feeds"><button id="refresh-feeds" class="fas fa-sync"> רענון</button></div>
 </body>
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
