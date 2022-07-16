@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node test.js",
     "start": "cross-env NODE_ENV=production node app.js",
-    "debug": "cross-env NODE_ENV=development nodemon app.js",
+    "dev": "cross-env NODE_ENV=development nodemon app.js",
     "fix": "eslint **/*.js --fix"
   },
   "author": "ShlomoCode",
