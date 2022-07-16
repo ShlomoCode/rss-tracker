@@ -81,7 +81,7 @@ async function main () {
                         item.thumbnail = htmlArticle.og.image;
                     } catch (error) {
                         console.log(`An error accessing the article page ${item.link}`);
-                        item.thumbnail = undefined;
+                        delete item.thumbnail;
                     }
                 }
 
