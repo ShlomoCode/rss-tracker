@@ -4,14 +4,12 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const cors = require('cors');
 require('express-async-errors');
 require('colors');
 const setAndCheckConfig = require('./setup');
 setAndCheckConfig();
 const processingFeeds = require('./src/server/main');
 
-app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
