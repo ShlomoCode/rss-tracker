@@ -50,9 +50,9 @@ module.exports = {
 
         // בדוק מגבלת פידים פר יוזר
         const userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
-        if (userSubscribedFeedsCount >= (process.env.MAX_FEEDS_PER_USER || 10)) {
+        if (userSubscribedFeedsCount >= (process.env.MAX_FEEDS_PER_USER)) {
             return res.status(429).json({
-                message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.MAX_FEEDS_PER_USER || 10})`
+                message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.MAX_FEEDS_PER_USER})`
             });
         }
 
