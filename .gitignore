@@ -1,5 +1,5 @@
 ﻿node_modules
 temp
-config.env
+config.json
 test.js
 .vscode

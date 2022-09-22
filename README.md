@@ -141,91 +141,75 @@ APIs תחת הנתיב `/api/feeds`.
 
 ## פריסה לוקאלית
 
-### config
+חובה להריץ את כל הפקודות לפי הסדר.</br>
+פקודת `npm run configure` מפעילה סקריפט אינטראקטיבי ליצירת קובץ `config.json`.</br>
+משתני סביבה **ידרסו** את ההגדרות שבקובץ ה-json.
 
-יש להוריד את המאגר למחשב, ולמלא את הקונפיג;
+- 🧰 Clone the code:
+  - ```git clone https://github.com/ShlomoCode/rss-tracker-server```
+- 📦 Install dependencies:
+  - `npm install`
+- ⚙️ Configure the app:
+  - `npm run configure`
+- 🏃 Run the server:
+  - `npm start`
 
-הקונפיג מוגדר בקובץ `config.env` תחת התקיה הראשית של הפרויקט.
-
-הקונפיג מוכנס בצורה של `שם ערך = ערך`, שורה תחת שורה.
-
-[פרטים נוספים על התחביר](https://www.npmjs.com/package/dotenv  "פרטים נוספים על התחביר").
-
-#### Required variables
-
-```
-MONGO_URI # mongoDB connection string
-GMAIL_USER # gmail username
-GMAIL_PASSWORD # account google password or "password for app" - https://support.google.com/mail/answer/185833
-JWT_SECRET # JWT secret key
-```
-
-#### Optional variables
-
-```
-MAX_FEEDS_PER_USER = 10 # MAX_FEEDS_PER_USER. default: 10
-PORT # PORT - for localhost. default: 80.
-WEB_SITE_ADDRESS # The server address.
-ALLOWED_DOMAINS_WITH_IMAGES="hm-news.co.il|jdn.co.il|93fm.co.il|bahazit.co.il" # sites for which images will be sent.
-ALLOWED_DOMAINS_NO_IMAGES="pinatkafe.com|internet-israel.com|geektime.co.il" # White list to sent without images
-```
-
-אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת <http://localhost>.
+אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת <http://localhost:4000>.
 
 # Libraries used in this project
 
 ## server-side
 
-* morgan - logger
+- morgan - logger
 
-* nodemon - refresh the server on file change
+- nodemon - refresh the server on file change
 
-* express - http server
+- express - http server
 
-* cookie-parser - parse cookies in the server side
+- cookie-parser - parse cookies in the server side
 
-* mongoose - connecting to mongoDB
+- mongoose - connecting to mongoDB
 
-* rss-to-json - get rss feed and convert it to json
+- rss-to-json - get rss feed and convert it to json
 
-* nodemailer - send emails
+- nodemailer - send emails
 
-* zxcvbn - to check the strength of the password
+- zxcvbn - to check the strength of the password
 
-* bcrypt - to encrypt the password
+- bcrypt - to encrypt the password
 
-* jsonwebtoken - to create the token and validate it
+- jsonwebtoken - to create the token and validate it
 
-* html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
+- html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 
-* html-metadata-parser - get image from html for sites that don't support og:image (JDN example)
+- html-metadata-parser - get image from html for sites that don't support og:image (JDN example)
 
-* image-to-base64 - download image from url and convert it to base64
+- image-to-base64 - download image from url and convert it to base64
 
-* dotenv - config file
+- prompts - to get the user input in the configuration process (setup.js file)
 
-* ms - convert milliseconds to human readable format or time in string to miliseconds
+- ms - convert milliseconds to human readable format or time in string to miliseconds
 
-* ejs - template engine - site and emails
+- ejs - template engine - site and emails
 
-* javascript-time-ago - convert time to human readable format (for emails)
+- javascript-time-ago - convert time to human readable format (for emails)
 
-* express-async-errors - to handle async errors in express
+- express-async-errors - to handle async errors in express
 
-* cross-env - Setting environment variables in the command line (for cross-platform) 
+- cross-env - Setting environment variables in the command line (for cross-platform)
 
-* colors - to print colors in the console
+- colors - to print colors in the console
 
-* ajv - to validate the requests
+- ajv - to validate the requests
 
-* validator - to validate the input
+- validator - to validate the input
 
 ## client-side
 
-* [jQuery](https://jquery.com)
+- [jQuery](https://jquery.com)
 
-* [axios](https://github.com/axios/axios)
+- [axios](https://github.com/axios/axios)
 
-* [awesome-notifications](https://f3oall.github.io/awesome-notifications)
+- [awesome-notifications](https://f3oall.github.io/awesome-notifications)
 
-* [sweet](https://www.npmjs.com/package/sweetalert)
+- [sweet](https://www.npmjs.com/package/sweetalert)

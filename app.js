@@ -2,21 +2,22 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-require('dotenv').config({ path: 'config.env' });
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const cors = require('cors');
 require('express-async-errors');
 require('colors');
+const setAndCheckConfig = require('./setup');
+setAndCheckConfig();
 const processingFeeds = require('./src/server/main');
 
+app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 app.set('views', './src/client/views');
 app.use(cookieParser());
-app.use(cors());
 
 /* Routes api */
 const usersRoutes = require('./src/api/routes/users');
@@ -40,6 +41,7 @@ const renders = {
 
 app.use(express.static('src/client/views', { index: false }));
 app.use('/images', express.static('src/client/images'));
+app.use('/assets', express.static('src/client/assets'));
 app.get('/login', checkLoginClient, (req, res) => res.sendFile(path.join(__dirname, 'src/client/views/login', 'index.html')));
 app.get('/verify', checkLoginClient, checkVerificationClient, renders.verify);
 app.get('/unsubscribe', checkLoginClient, checkVerificationClient, renders.unsubscribe);
@@ -52,26 +54,10 @@ app.use((error, req, res, next) => {
     });
 });
 
-if (!process.env.GMAIL_USER || !process.env.GMAIL_PASSWORD) {
-    console.log('Config Error:', 'Please set GMAIL_USER and GMAIL_PASSWORD environment variables'.red);
-    process.exit(1);
-}
-if (!process.env.JWT_SECRET) {
-    console.log('Config Error:', 'Please set JWT_SECRET environment variable'.red);
-    process.exit(1);
-}
-
-/* Set app url */
-process.env.APP_URL = process.env.WEB_SITE_ADDRESS || (process.env.HEROKU_APP_NAME ? `https://${process.env.HEROKU_APP_NAME}.herokuapp.com` : `http://localhost:${process.env.PORT || 80}`);
-
 /**
- * Run Back And base
- */
-function sleep (ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-};
+* Run Back And base
+*/
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
     console.log('connecting to mongo...');
     await mongoose.connect(process.env.MONGO_URI, {
@@ -79,6 +65,19 @@ function sleep (ms) {
         useUnifiedTopology: true
     });
     console.log('mongoDB connected!');
+
+    /**
+     * Listening server
+     */
+    const http = require('http');
+    const port = process.env.PORT;
+    const server = http.createServer(app);
+    server.listen(port);
+    console.log(`Server is running on port: ${port}. public url: ${process.env.APP_SITE_ADDRESS}`);
+
+    /**
+    * run background process
+    */
     do {
         const resp = await processingFeeds();
         const ms = 1000 * 60 * 1; // 1 minute
@@ -89,12 +88,3 @@ function sleep (ms) {
         }
     } while (true);
 })();
-
-/**
- * Listening server
- */
-const http = require('http');
-const port = process.env.PORT || 4000;
-const server = http.createServer(app);
-server.listen(port);
-console.log(`Server is running on port ${port} - ${process.env.APP_URL}`);
