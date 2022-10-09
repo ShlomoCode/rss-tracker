@@ -98,8 +98,8 @@ module.exports = {
             verifyEmailCode
         });
 
-        const infoSend = await sendMail.verify(verifyEmailCode, email, name);
-        console.log('Email sent: ' + infoSend.response);
+        await sendMail.verify(verifyEmailCode, email, name);
+        console.log(`info: email sent for user ${emailProcessed}`);
 
         await user.save();
 
@@ -145,7 +145,7 @@ module.exports = {
 
         const sessionDelete = await Session.findByIdAndDelete(sessionId);
         if (!sessionDelete) {
-            return res.status(409).json({
+            return res.clearCookie('jwt').res.status(409).json({
                 message: 'Session not found'
             });
         }

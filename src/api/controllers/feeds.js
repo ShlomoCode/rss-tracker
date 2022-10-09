@@ -82,7 +82,7 @@ module.exports = {
             feedTitle = decodeHtml(feedContent.title);
         } catch (error) {
             return res.status(400).json({
-                message: `${url} is not a valid feed`
+                message: 'Valid RSS feed not found'
             });
         }
 
@@ -90,16 +90,13 @@ module.exports = {
             return res.status(400).json({ message: 'This url is a comment feed' });
         }
 
-        const feed = new Feed({
+        const feedCreated = await Feed.create({
             _id: new mongoose.Types.ObjectId(),
             title: feedTitle,
             url
         });
 
-        const feedCreated = await feed.save();
-
         feedCreated.Subscribers = 0;
-
         res.status(200).json({
             message: 'Feed created successfully',
             feedCreated
