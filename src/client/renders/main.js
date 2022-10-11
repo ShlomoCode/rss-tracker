@@ -1,5 +1,6 @@
 const path = require('path');
 const Feed = require('../.././api/models/feed');
+const mongoose = require('mongoose');
 
 module.exports = async (req, res) => {
     const { id: userID, name, emailFront: email } = res.locals.user;
@@ -9,7 +10,7 @@ module.exports = async (req, res) => {
         afternoon: 'צהריים טובים',
         evening: 'לילה טוב'
     };
-    function getTime () {
+    function getTime() {
         if (hours >= 7 && hours < 12) {
             return 'morning';
         }
@@ -23,7 +24,7 @@ module.exports = async (req, res) => {
         return 'ברוך הבא';
     }
 
-    const subscribersCount = await Feed.count({ Subscribers: userID });
+    const subscribersCount = await Feed.count({ Subscribers: mongoose.Types.ObjectId(userID) })
     const variables = { time: timeMessages[getTime()], name, email, subscribersCount };
     res.render(path.join(__dirname, '../views/main', 'index.ejs'), variables);
 };
