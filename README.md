@@ -8,7 +8,7 @@
 
 # API
 
-הAPIs מיועדים לתקשורת בין הקליינט לסרבר, אך ניתן לממש קליינט עצמי.
+מאגר זה מכיל את קוד צד השרת בלבד. הקליינט בנוי בvuejs ונמצא במאגר נפרד.
 
 כל הAPIs דורשים אימות על ידי שליחת מזהה סשן בתוך jwt, בתור עוגיה בשם `jwt`, או כBearer ב-authorization header:
 
@@ -190,7 +190,7 @@ APIs תחת הנתיב `/api/feeds`.
 
 - ms - convert milliseconds to human readable format or time in string to miliseconds
 
-- ejs - template engine - site and emails
+- ejs - template engine - emails templates
 
 - javascript-time-ago - convert time to human readable format (for emails)
 
@@ -203,13 +203,3 @@ APIs תחת הנתיב `/api/feeds`.
 - ajv - to validate the requests
 
 - validator - to validate the input
-
-## client-side
-
-- [jQuery](https://jquery.com)
-
-- [axios](https://github.com/axios/axios)
-
-- [awesome-notifications](https://f3oall.github.io/awesome-notifications)
-
-- [sweet](https://www.npmjs.com/package/sweetalert)

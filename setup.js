@@ -53,8 +53,8 @@ const questions = [
     {
         type: 'number',
         name: 'PORT',
-        message: 'Port to listen. leave blank to default: 4000',
-        initial: 4000,
+        message: 'Port to listen. leave blank to default: 4200',
+        initial: 4200,
         min: 1,
         max: 65535
     },
@@ -155,6 +155,7 @@ if (require.main === module) {
 }
 
 module.exports = () => {
+    // set config to process.env and validate the config
     let config = {};
     if (fs.existsSync('config.json')) {
         config = JSON.parse(fs.readFileSync('config.json'));
@@ -165,4 +166,3 @@ module.exports = () => {
     };
     checkConfig();
 };
-// * set config to process.env and validate the config
