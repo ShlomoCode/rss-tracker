@@ -2,6 +2,9 @@ const nodemailer = require('nodemailer');
 const imageToBase64 = require('image-to-base64');
 const path = require('path');
 const ejs = require('ejs');
+const TimeAgo = require('javascript-time-ago');
+const he = require('javascript-time-ago/locale/he.json');
+TimeAgo.addDefaultLocale(he);
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -74,9 +77,6 @@ const sendMail = {
                     cidImage,
                     feedTitle,
                     timeAgo: ((time) => {
-                        const TimeAgo = require('javascript-time-ago');
-                        const he = require('javascript-time-ago/locale/he.json');
-                        TimeAgo.addDefaultLocale(he);
                         const timeAgo = new TimeAgo();
                         return timeAgo.format(new Date(time));
                     })(new Date(created)),
