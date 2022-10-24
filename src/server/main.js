@@ -48,7 +48,7 @@ async function main () {
             continue;
         }
 
-        const address = usersFiltered.map((user) => {
+        const addresses = usersFiltered.map((user) => {
             return user.emailFront;
         });
 
@@ -85,8 +85,13 @@ async function main () {
                     }
                 }
 
-                console.log(`New article found: ${item.title}; sending email to ${address.length} subscribers...`);
-                await sendMail.rss(item, feedTitle, feed.url, address);
+                console.log(`New article found: ${item.title}; sending email to ${addresses.length} subscribers...`);
+                await emailSends.rss({
+                    item,
+                    feedTitle,
+                    feedUrl: feed.url,
+                    addresses
+                });
             } else {
                 console.log('Outdated item. Skipped');
             }

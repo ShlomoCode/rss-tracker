@@ -98,7 +98,7 @@ module.exports = {
             verifyEmailCode
         });
 
-        await sendMail.verify(verifyEmailCode, email, name);
+        await emailSends.verify({ verifyEmailCode, email, name });
         console.log(`info: email sent for user ${emailProcessed}`);
 
         await user.save();
@@ -210,7 +210,11 @@ module.exports = {
             });
         }
 
-        const infoSend = await sendMail.verify(user.verifyEmailCode, user.emailFront, user.name);
+        const infoSend = await emailSends.verify({
+            verifyEmailCode: user.verifyEmailCode,
+            email: user.emailFront,
+            name: user.name
+        });
         console.log('Email sent: ' + infoSend.response);
         await User.findByIdAndUpdate(userID, { lastVerifyEmailSentAt: Date.now() });
 
@@ -266,7 +270,11 @@ module.exports = {
         }
 
         const resetPasswordToken = randomNumber();
-        await sendMail.resetPassword(resetPasswordToken, user.emailFront, user.name);
+        await emailSends.resetPassword({
+            code: resetPasswordToken,
+            address: user.emailFront,
+            name: user.name
+        });
         await User.findByIdAndUpdate(user._id, { passwordResetToken: resetPasswordToken, passwordResetAt: Date.now() });
 
         res.status(200).json({

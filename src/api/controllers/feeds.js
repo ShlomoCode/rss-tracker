@@ -55,10 +55,10 @@ module.exports = {
     createFeed: async (req, res) => {
         let { url } = req.body;
 
-        const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '\.') || '.';
-        const listPartial = process.env.ALLOWED_DOMAINS_NO_IMAGES?.replaceAll('.', '\.') || '.';
+        const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '.') || '.';
+        const listPartial = process.env.ALLOWED_DOMAINS_NO_IMAGES?.replaceAll('.', '.') || '.';
 
-        const regexWhiteList = new RegExp(`^https?:\/\/(www\.)?(${listFull}|${listPartial})`);
+        const regexWhiteList = new RegExp(`^https?://(www.)?(${listFull}|${listPartial})`);
 
         if (!regexWhiteList.test(url)) {
             return res.status(400).json({
