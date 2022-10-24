@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production node app.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "configure": "node setup.js",
-    "fix": "eslint **/*.js --fix",
+    "fix": "eslint . --fix --ext .js,.cjs,.mjs --ignore-path .gitignore",
     "test": "node test.js"
   },
   "author": "ShlomoCode",
