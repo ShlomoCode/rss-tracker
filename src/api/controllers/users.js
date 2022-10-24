@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const User = require('../models/user');
-const Session = require('../models/session');
+const User = require('@/models/user');
+const Session = require('@/models/session');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const zxcvbn = require('zxcvbn');
 const ms = require('ms');
 const { validate: emailValidator } = require('deep-email-validator');
-const sendMail = require('../../server/emails/send');
+const emailSends = require('@services/email');
 
 /**
  * @returns number random in 5 digit in string format

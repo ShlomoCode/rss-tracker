@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 require('express-async-errors');
 require('colors');
+
+require('module-alias/register');
 const setAndCheckConfig = require('./setup');
 setAndCheckConfig();
 const processingFeeds = require('./src/server/main');

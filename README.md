@@ -203,3 +203,5 @@ APIs תחת הנתיב `/api/feeds`.
 - ajv - to validate the requests
 
 - validator - to validate the input
+
+- module-alias - to use aliases in the paths require()

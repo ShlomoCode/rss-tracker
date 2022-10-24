@@ -1,5 +1,5 @@
-const User = require('../models/user');
-const Feed = require('../models/feed');
+const User = require('@/models/user');
+const Feed = require('@/models/feed');
 const mongoose = require('mongoose');
 
 module.exports = {

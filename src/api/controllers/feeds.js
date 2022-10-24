@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Feed = require('../models/feed');
-const parseRss = require('../../server/rss2json');
+const Feed = require('@/models/feed');
+const parseRss = require('@services/rss2json');
 const { decode: decodeHtml } = require('html-entities');
 
 module.exports = {
