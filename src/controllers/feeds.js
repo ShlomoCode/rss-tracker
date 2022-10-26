@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Feed = require('@/models/feed');
+const Feed = require('@models/feed');
 const parseRss = require('@services/rss2json');
 const { decode: decodeHtml } = require('html-entities');
 

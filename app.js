@@ -17,9 +17,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 /* Routes api */
-const usersRoutes = require('./src/api/routes/users');
-const feedsRoutes = require('./src/api/routes/feeds');
-const subscriptionsRoutes = require('./src/api/routes/subscriptions');
+const usersRoutes = require('@routes/users');
+const feedsRoutes = require('@routes/feeds');
+const subscriptionsRoutes = require('@routes/subscriptions');
 
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);

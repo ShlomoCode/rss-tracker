@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const checkLogin = require('../middlewares/checkLogin');
-const checkRequest = require('../middlewares/validations/users');
+const checkLogin = require('@middlewares/checkLogin');
+const checkRequest = require('@middlewares/schema/users');
 
 const {
     signup,
@@ -12,7 +12,7 @@ const {
     resetPassword,
     resetPasswordConfirm,
     changePassword
-} = require('../controllers/users');
+} = require('@controllers/users');
 
 router.post('/signup', checkRequest.signup, signup);
 router.post('/login', checkRequest.login, login);

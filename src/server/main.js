@@ -1,5 +1,5 @@
-const Feed = require('@/models/feed');
-const User = require('@/models/user');
+const Feed = require('@models/feed');
+const User = require('@models/user');
 const parseRss = require('@services/rss2json');
 const emailSends = require('@services/email');
 const { parser: parseHtml } = require('html-metadata-parser');

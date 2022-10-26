@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const checkLogin = require('../middlewares/checkLogin');
-const checkVerification = require('../middlewares/checkVerification');
-const checkRequest = require('../middlewares/validations/feeds');
+const checkLogin = require('@middlewares/checkLogin');
+const checkVerification = require('@middlewares/checkVerification');
+const checkRequest = require('@middlewares/schema/feeds');
 
 const {
     getAllFeeds,
     getFeed,
     createFeed
-} = require('../controllers/feeds');
+} = require('@controllers/feeds');
 
 // login and verification users only
 router.post('/', checkLogin, checkVerification, checkRequest.createFeed, createFeed);
