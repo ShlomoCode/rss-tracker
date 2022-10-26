@@ -13,6 +13,9 @@
   "author": "ShlomoCode",
   "license": "UNLICENSED",
   "dependencies": {
+    "@zxcvbn-ts/core": "^2.1.0",
+    "@zxcvbn-ts/language-common": "^2.0.1",
+    "@zxcvbn-ts/language-en": "^2.1.0",
     "ajv": "^8.11.0",
     "bcrypt": "^5.0.1",
     "colors": "^1.4.0",
@@ -34,8 +37,7 @@
     "nodemon": "^2.0.20",
     "prompts": "^2.4.2",
     "rss-to-json": "^2.1.0",
-    "validator": "^13.7.0",
-    "zxcvbn": "^4.4.2"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

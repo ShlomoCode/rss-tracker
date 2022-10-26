@@ -3,7 +3,7 @@ const User = require('@models/user');
 const Session = require('@models/session');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const zxcvbn = require('zxcvbn');
+const { zxcvbn } = require('@zxcvbn-ts/core');
 const ms = require('ms');
 const { validate: emailValidator } = require('deep-email-validator');
 const emailSends = require('@services/email');
@@ -68,12 +68,10 @@ async function signup (req, res) {
         }
     }
 
-    const weakness = zxcvbn(password);
-
-    if (weakness.score < 1) {
+    const { score: scorePass } = zxcvbn(password);
+    if (scorePass < 1) {
         return res.status(400).json({
-            message: 'Weak password',
-            weakness: weakness.feedback
+            message: 'Weak password'
         });
     }
 
@@ -304,12 +302,10 @@ async function resetPasswordConfirm (req, res) {
         });
     }
 
-    const weakness = zxcvbn(newPassword);
-
-    if (weakness.score < 1) {
+    const { score: scorePass } = zxcvbn(newPassword);
+    if (scorePass < 1) {
         return res.status(400).json({
-            message: 'Weak password',
-            weakness: weakness.feedback
+            message: 'Weak password'
         });
     }
 
@@ -339,11 +335,10 @@ async function changePassword (req, res) {
         });
     }
 
-    const weakness = zxcvbn(newPassword);
-    if (weakness.score < 1) {
+    const { score: scorePass } = zxcvbn(newPassword);
+    if (scorePass < 1) {
         return res.status(400).json({
-            message: 'Weak password',
-            weakness: weakness.feedback
+            message: 'Weak password'
         });
     }
 
