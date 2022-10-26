@@ -15,13 +15,13 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
-     *
-     * @param {Object} item האייטם הספציפי שנשלח
-     * @param {String} feedTitle שם הפיד
-     * @param {Array} addresses כתובות מייל שצריכות לקבל את הפיד
-     * @returns
-     */
-async function rss ({ item, feedTitle, feedUrl, addresses }) {
+ * @param {Object} data.item האייטם הספציפי שנשלח
+ * @param {String} data.feedTitle שם הפיד
+ * @param {String} data.feedUrl כתובת הפיד
+ * @param {String[]} data.addresses כתובות מייל שצריכות לקבל את הפיד
+ * @returns {Promise} - nodemailer sendmail promise
+ */
+async function sendArticle ({ item, feedTitle, feedUrl, toAddresses }) {
     let { description, link, title, thumbnail: thumbnailLink, content, category, author, created } = item;
 
     title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
@@ -46,7 +46,7 @@ async function rss ({ item, feedTitle, feedUrl, addresses }) {
 
     const mailOptions = {
         from: process.env.GMAIL_USER,
-        bcc: addresses,
+        bcc: toAddresses,
         subject: 'RSS חדש! 🎉 ⟫ ' + title + ` | ${feedTitle}`,
         html: await ejs.renderFile(path.join(__dirname, '../templates', 'rss.ejs'),
             {
@@ -91,28 +91,25 @@ async function rss ({ item, feedTitle, feedUrl, addresses }) {
             }]
             : []
     };
-    return transporter.sendMail(mailOptions)
-        .then((info) => {
-            console.log('Email sent: ' + info.response);
-        })
-        .catch(
-            console.error
-        );
+    return transporter.sendMail(mailOptions);
 }
+
 /**
-    * @param {Number} verifyCode
-    * @param {String} address
-    * @returns Promise
-    */
-async function verify ({ verifyCode, address, name }) {
+ * @param {String} data.code קוד האימות
+ * @param {String} data.address כתובת המייל
+ * @param {String} data.name שם היוזר
+ * @returns {Promise} - nodemailer sendmail promise
+ * @description שליחת מייל לאימות כתובת מייל
+ **/
+async function verifyEmail ({ code, address, name }) {
     const mailOptions = {
         from: process.env.GMAIL_USER,
         to: address,
-        subject: `קוד האימות שלך הוא: ${verifyCode}`,
+        subject: `קוד האימות שלך הוא: ${code}`,
         html: await ejs.renderFile(path.join(__dirname, '../templates', 'verification.ejs'),
             {
                 name,
-                code: verifyCode,
+                code,
                 email: address,
                 process: {
                     env: process.env
@@ -122,6 +119,13 @@ async function verify ({ verifyCode, address, name }) {
     return transporter.sendMail(mailOptions);
 }
 
+/**
+ * @param {String} data.code קוד האימות
+ * @param {String} data.address כתובת המייל
+ * @param {String} data.name שם היוזר
+ * @returns {Promise} - nodemailer sendmail promise
+ * @description שליחת מייל לאיפוס סיסמא
+ * */
 async function resetPassword ({ code, address, name }) {
     const mailOptions = {
         from: process.env.GMAIL_USER,
@@ -141,7 +145,7 @@ async function resetPassword ({ code, address, name }) {
 }
 
 module.exports = {
-    rss,
-    verify,
+    sendArticle,
+    verifyEmail,
     resetPassword
 };

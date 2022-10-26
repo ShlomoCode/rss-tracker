@@ -86,12 +86,17 @@ async function main () {
                 }
 
                 console.log(`New article found: ${item.title}; sending email to ${addresses.length} subscribers...`);
-                await emailSends.rss({
-                    item,
-                    feedTitle,
-                    feedUrl: feed.url,
-                    addresses
-                });
+                try {
+                    const response = await emailSends.sendArticle({
+                        item,
+                        feedTitle,
+                        feedUrl: feed.url,
+                        toAddresses: addresses
+                    });
+                    console.log('Email sent: ' + response.response);
+                } catch (error) {
+                    console.log(error);
+                }
             } else {
                 console.log('Outdated item. Skipped');
             }

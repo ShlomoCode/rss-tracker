@@ -210,7 +210,7 @@ module.exports = {
             });
         }
 
-        const infoSend = await emailSends.verify({
+        const infoSend = await emailSends.verifyEmail({
             verifyEmailCode: user.verifyEmailCode,
             email: user.emailFront,
             name: user.name
