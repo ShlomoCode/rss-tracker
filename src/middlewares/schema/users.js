@@ -24,7 +24,6 @@ module.exports = {
     },
     signup: (req, res, next) => {
         if (!Object.keys(req.body).length) return res.status(400).json({ message: 'There was no body found or no json format' });
-        console.log(req.body);
         const schema = {
             type: 'object',
             properties: {

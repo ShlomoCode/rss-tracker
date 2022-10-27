@@ -16,11 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-/* Routes api */
+const generalRoutes = require('./src/routes/general');
 const usersRoutes = require('@routes/users');
 const feedsRoutes = require('@routes/feeds');
 const subscriptionsRoutes = require('@routes/subscriptions');
 
+app.use('/api/general', generalRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
