@@ -10,7 +10,7 @@ const emailSends = require('@services/email');
 /**
  * @returns number random in 5 digit in string format
  */
-function randomNumber () {
+function randomCode () {
     const numberRandom = Math.floor((Math.random() * 5000), 0);
     return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString();
 }
@@ -82,7 +82,7 @@ async function signup (req, res) {
         });
     }
 
-    const verifyEmailCode = randomNumber();
+    const verifyEmailCode = randomCode();
     const userID = new mongoose.Types.ObjectId();
 
     const user = new User({
@@ -94,7 +94,10 @@ async function signup (req, res) {
         verifyEmailCode
     });
 
-    await emailSends.verify({ verifyEmailCode, email, name });
+    await emailSends.verifyEmail({
+        code: verifyEmailCode,
+        address: email
+    });
     console.log(`info: email sent for user ${emailProcessed}`);
 
     await user.save();
@@ -152,7 +155,7 @@ async function logout (req, res) {
     });
 };
 async function verifyEmail (req, res) {
-    const { verifyCode } = req.query;
+    const { code } = req.body;
     const { _id: userID } = res.locals.user;
 
     const user = await User.findById(userID);
@@ -162,7 +165,7 @@ async function verifyEmail (req, res) {
         });
     }
 
-    if (verifyCode !== user.verifyEmailCode) {
+    if (code !== user.verifyEmailCode) {
         return res.status(401).json({
             message: 'verify failed - Wrong verification code'
         });
@@ -174,7 +177,7 @@ async function verifyEmail (req, res) {
         });
     }
 
-    if (verifyCode === user.verifyEmailCode) {
+    if (code === user.verifyEmailCode) {
         await User.findByIdAndUpdate(userID, { verified: true });
     }
 
@@ -207,9 +210,8 @@ async function resendVerificationEmail (req, res) {
     }
 
     const infoSend = await emailSends.verifyEmail({
-        verifyEmailCode: user.verifyEmailCode,
-        email: user.emailFront,
-        name: user.name
+        code: user.verifyEmailCode,
+        address: user.emailFront
     });
     console.log('Email sent: ' + infoSend.response);
     await User.findByIdAndUpdate(userID, { lastVerifyEmailSentAt: Date.now() });
@@ -265,7 +267,7 @@ async function resetPassword (req, res) {
         });
     }
 
-    const resetPasswordToken = randomNumber();
+    const resetPasswordToken = randomCode();
     await emailSends.resetPassword({
         code: resetPasswordToken,
         address: user.emailFront,

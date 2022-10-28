@@ -48,27 +48,28 @@ module.exports = {
         next();
     },
     verifyEmail: (req, res, next) => {
+        if (!Object.keys(req.body).length) return res.status(400).json({ message: 'There was no body found or no json format' });
         const schema = {
             type: 'object',
             properties: {
-                verifyCode: {
+                code: {
                     type: 'string',
                     minLength: 5,
                     maxLength: 5
                 }
             },
-            required: ['verifyCode']
+            required: ['code']
         };
 
-        const valid = ajv.validate(schema, req.query);
+        const valid = ajv.validate(schema, req.body);
         if (!valid) {
             return res.status(400).json({
                 message: 'request is not valid',
-                errors: ajv.errorsText(valid.errors).replaceAll('data', 'params')
+                errors: ajv.errorsText(valid.errors).replaceAll('data', 'body')
             });
         }
 
-        if (!/[0-9]{5}/.test(req.query.verifyCode)) {
+        if (!/[0-9]{5}/.test(req.body.code)) {
             return res.status(400).json({
                 message: 'verify code is not valid - must be 5 digits'
             });

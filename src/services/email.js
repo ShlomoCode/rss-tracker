@@ -97,23 +97,18 @@ async function sendArticle ({ item, feedTitle, feedUrl, toAddresses }) {
 /**
  * @param {String} data.code קוד האימות
  * @param {String} data.address כתובת המייל
- * @param {String} data.name שם היוזר
  * @returns {Promise} - nodemailer sendmail promise
  * @description שליחת מייל לאימות כתובת מייל
  **/
-async function verifyEmail ({ code, address, name }) {
+async function verifyEmail ({ code, address }) {
     const mailOptions = {
         from: process.env.GMAIL_USER,
         to: address,
-        subject: `קוד האימות שלך הוא: ${code}`,
+        subject: `קוד האימות שלך להשלמת ההרשמה הוא: ${code}`,
         html: await ejs.renderFile(path.join(__dirname, '../templates', 'verification.ejs'),
             {
-                name,
                 code,
-                email: address,
-                process: {
-                    env: process.env
-                }
+                email: address
             })
     };
     return transporter.sendMail(mailOptions);

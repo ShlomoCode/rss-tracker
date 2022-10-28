@@ -64,7 +64,7 @@ APIs תחת הנתיב `/api/users`.
     POST /api/users/verify
   
 query: `{
-       "verifyCode": "5 digit code"
+       "code": "5 digit code"
     }`
 
 #### re-send verify email
