@@ -9,6 +9,7 @@ const checkLogin = async (req, res, next) => {
 
     const session = await Session.findById(sessionId);
     if (!session) {
+        res.header('action-required', 'login');
         return res.clearCookie('session').status(401).json({
             message: 'session not found. Please login again',
             clearCookie: true
@@ -17,6 +18,7 @@ const checkLogin = async (req, res, next) => {
 
     const user = await User.findById(session.userId);
     if (!user) {
+        res.header('action-required', 'login');
         return res.status(401).clearCookie('session').json({
             message: 'user not found',
             clearCookie: true
