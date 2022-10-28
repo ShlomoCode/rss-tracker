@@ -31,12 +31,6 @@ const questions = [
     },
     {
         type: 'text',
-        name: 'JWT_SECRET',
-        message: 'JWT secret - least 10 characters or leave blank to auto generate',
-        validate: value => (!value || value.length > 10) ? true : 'Please enter a secret with at least 10 characters or leave blank to auto generate'
-    },
-    {
-        type: 'text',
         name: 'MONGO_URI',
         message: 'MongoDB URI',
         validate: value => /^mongodb(\+srv)?:\/\//.test(value) ? true : 'Please enter a valid MongoDB URI (example: mongodb://localhost:27017/feeds)'
@@ -121,7 +115,6 @@ async function createConfigFile () {
     }
 
     const defaults = [
-        { name: 'JWT_SECRET', value: crypto.randomBytes(16).toString('hex') },
         { name: 'MAX_FEEDS_PER_USER', value: 10 },
         { name: 'PORT', value: 4000 },
         { name: 'APP_SITE_ADDRESS', value: 'http://localhost:' + responses.PORT }

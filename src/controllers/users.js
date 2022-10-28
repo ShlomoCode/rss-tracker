@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const User = require('@models/user');
 const Session = require('@models/session');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const { zxcvbn } = require('@zxcvbn-ts/core');
 const ms = require('ms');
 const { validate: emailValidator } = require('deep-email-validator');
@@ -125,29 +124,29 @@ async function login (req, res) {
         });
     }
 
-    const sessionId = new mongoose.Types.ObjectId();
-    await Session.create({
-        _id: sessionId,
+    const session = await Session.create({
+        _id: new mongoose.Types.ObjectId(),
         userId: user._id
     });
 
-    const token = jwt.sign({ sessionId }, process.env.JWT_SECRET);
-    res.status(200).cookie('jwt', token, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
+    res.status(200).cookie('session', session._id, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
         message: 'Auth successful',
-        jwt: token
+        sessionId: session._id
     });
 };
 async function logout (req, res) {
     const { sessionId } = res.locals;
 
-    const sessionDelete = await Session.findByIdAndDelete(sessionId);
-    if (!sessionDelete) {
-        return res.clearCookie('jwt').res.status(409).json({
+    const session = await Session.findById(sessionId);
+    if (!session) {
+        return res.clearCookie('session').status(409).json({
             message: 'Session not found'
         });
     }
 
-    res.status(200).clearCookie('jwt').json({
+    await Session.findByIdAndDelete(sessionId);
+
+    res.status(200).clearCookie('session').json({
         message: 'Logout successful',
         clearCookie: true
     });
@@ -347,7 +346,7 @@ async function changePassword (req, res) {
 
     const sessionsDeleted = await Session.deleteMany({ userId });
 
-    res.status(200).clearCookie('jwt').json({
+    res.status(200).clearCookie('session').json({
         message: 'Password changed. Please login again using the new password',
         sessionsDeletedCount: sessionsDeleted.deletedCount,
         clearCookie: true

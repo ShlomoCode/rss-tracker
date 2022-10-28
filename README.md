@@ -10,9 +10,9 @@
 
 מאגר זה מכיל את קוד צד השרת בלבד. הקליינט בנוי בvuejs ונמצא במאגר נפרד.
 
-כל הAPIs דורשים אימות על ידי שליחת מזהה סשן בתוך jwt, בתור עוגיה בשם `jwt`, או כBearer ב-authorization header:
+כל הAPIs דורשים אימות על ידי שליחת מזהה סשן בתור עוגיה בשם `session`, או כBearer ב-authorization header:
 
-```Authorization: Bearer <jwt-token>```
+```Authorization: Bearer <session-id>```
 
  את הטוקן ניתן לקבל בכתובת הlogin על ידי שליחת שם משתמש וסיסמה.
 
@@ -177,8 +177,6 @@ APIs תחת הנתיב `/api/feeds`.
 - zxcvbn - to check the strength of the password
 
 - bcrypt - to encrypt the password
-
-- jsonwebtoken - to create the token and validate it
 
 - html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 
