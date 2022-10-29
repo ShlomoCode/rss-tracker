@@ -16,7 +16,7 @@ const {
 
 router.post('/signup', checkRequest.signup, signup);
 router.post('/login', checkRequest.login, login);
-router.post('/log-out', checkLogin, logout);
+router.post('/logout', checkLogin, logout);
 router.post('/verify', checkLogin, checkRequest.verifyEmail, verifyEmail);
 router.post('/resendVerificationEmail', checkLogin, resendVerificationEmail);
 router.post('/reset-password', checkRequest.resetPassword, resetPassword);

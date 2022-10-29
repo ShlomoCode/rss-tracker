@@ -108,7 +108,8 @@ async function verifyEmail ({ code, address }) {
         html: await ejs.renderFile(path.join(__dirname, '../templates', 'verification.ejs'),
             {
                 code,
-                email: address
+                email: address,
+                verifyUrl: `${process.env.FRONTEND_URL}/verify?code=${code}`
             })
     };
     return transporter.sendMail(mailOptions);

@@ -53,7 +53,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const port = process.env.PORT;
     const server = http.createServer(app);
     server.listen(port);
-    console.log(`Server is running on port: ${port}. public url: ${process.env.APP_SITE_ADDRESS}`);
+    console.log(`Server is running on port: ${port}. public url: ${process.env.FRONTEND_URL}`);
 
     /**
     * run background process

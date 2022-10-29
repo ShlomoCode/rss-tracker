@@ -54,8 +54,8 @@ const questions = [
     },
     {
         type: 'text',
-        name: 'APP_SITE_ADDRESS',
-        message: 'Server URL - for links in emails. leave blank to default - localhost (for development)'
+        name: 'FRONTEND_URL',
+        message: 'FRONTEND URL - for links in emails. leave blank to default - localhost (for development)'
     }
 ];
 
@@ -71,10 +71,6 @@ async function checkConfig (config = process.env) {
         console.log(`Config error: missing key(s): ${missingVariables.join(', ')}`.red);
         console.log(`You can configure the missing variables by running: ${'npm run configure'.blue}`.grey);
         process.exit(1);
-    }
-
-    if (config.APP_SITE_ADDRESS.startsWith('http://localhost:') && !config.APP_SITE_ADDRESS.endsWith(config.PORT)) {
-        console.log(`warning: server listen in port ${config.PORT}, but APP_SITE_ADDRESS is ${config.APP_SITE_ADDRESS}.`.red);
     }
 }
 
@@ -117,7 +113,7 @@ async function createConfigFile () {
     const defaults = [
         { name: 'MAX_FEEDS_PER_USER', value: 10 },
         { name: 'PORT', value: 4000 },
-        { name: 'APP_SITE_ADDRESS', value: 'http://localhost:' + responses.PORT }
+        { name: 'FRONTEND_URL', value: 'http://localhost:' + responses.PORT }
     ];
 
     for (const defaultConfig of defaults) {

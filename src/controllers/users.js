@@ -134,24 +134,21 @@ async function login (req, res) {
 
     res.status(200).cookie('session', session._id, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
         message: 'Auth successful',
-        sessionId: session._id
+        sessionId: session._id,
+        user: {
+            name: user.name,
+            email: user.emailFront,
+            verified: user.verified
+        }
     });
 };
 async function logout (req, res) {
     const { sessionId } = res.locals;
 
-    const session = await Session.findById(sessionId);
-    if (!session) {
-        return res.clearCookie('session').status(409).json({
-            message: 'Session not found'
-        });
-    }
-
     await Session.findByIdAndDelete(sessionId);
 
     res.status(200).clearCookie('session').json({
-        message: 'Logout successful',
-        clearCookie: true
+        message: 'Logout successful'
     });
 };
 async function verifyEmail (req, res) {
@@ -350,8 +347,7 @@ async function changePassword (req, res) {
 
     res.status(200).clearCookie('session').json({
         message: 'Password changed. Please login again using the new password',
-        sessionsDeletedCount: sessionsDeleted.deletedCount,
-        clearCookie: true
+        sessionsDeletedCount: sessionsDeleted.deletedCount
     });
 };
 
