@@ -1,3 +1,4 @@
+## The project is at work. see [#refactor](https://github.com/ShlomoCode/rss-tracker-server/pull/2)
 # Rss Tracker - Server side
 
 פרויקט Node.js + mongodb למעקב אחרי פידי [RSS](https://he.wikipedia.org/wiki/RSS).
