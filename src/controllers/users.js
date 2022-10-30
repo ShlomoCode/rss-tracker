@@ -5,15 +5,8 @@ const bcrypt = require('bcrypt');
 const { zxcvbn } = require('@zxcvbn-ts/core');
 const ms = require('ms');
 const { validate: emailValidator } = require('deep-email-validator');
+const crypto = require('crypto');
 const emailSends = require('@services/email');
-
-/**
- * @returns number random in 5 digit in string format
- */
-function randomCode () {
-    const numberRandom = Math.floor((Math.random() * 5000), 0);
-    return numberRandom.toString().padStart(5, Math.floor(Math.random() * 10 + 1)).toString();
-}
 
 /**
  * נרמול כתובת מייל - הסרת נקודות מיותרות, מה שאחרי הפלוס, וכדומה
@@ -82,7 +75,7 @@ async function signup (req, res) {
         });
     }
 
-    const verifyEmailCode = randomCode();
+    const verifyEmailCode = crypto.randomInt(0, 99999);
     const userID = new mongoose.Types.ObjectId();
 
     const user = new User({
@@ -129,12 +122,13 @@ async function login (req, res) {
 
     const session = await Session.create({
         _id: new mongoose.Types.ObjectId(),
+        uuid: crypto.randomUUID(),
         userId: user._id
     });
 
-    res.status(200).cookie('session', session._id, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
+    res.status(200).cookie('session', session.uuid, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
         message: 'Auth successful',
-        sessionId: session._id,
+        sessionUuid: session.uuid,
         user: {
             name: user.name,
             email: user.emailFront,
@@ -220,34 +214,7 @@ async function resendVerificationEmail (req, res) {
 async function resetPassword (req, res) {
     const { email } = req.body;
 
-    /**
-         * normalize-email by regex
-         */
     const emailProcessed = normalizeEmail(email);
-
-    /**
-        * validate email
-        */
-    const validateEmail = await emailValidator({
-        email: emailProcessed,
-        validateRegex: true,
-        validateMx: true,
-        validateTypo: false,
-        validateDisposable: true,
-        validateSMTP: false
-    });
-
-    if (!validateEmail.valid) {
-        if (validateEmail.reason === 'disposable') {
-            return res.status(400).json({
-                message: 'disposable email not allowed'
-            });
-        } else {
-            return res.status(400).json({
-                message: 'email is not valid'
-            });
-        }
-    }
 
     const user = await User.findOne({ emailProcessed });
     if (!user) {
@@ -264,7 +231,7 @@ async function resetPassword (req, res) {
         });
     }
 
-    const resetPasswordToken = randomCode();
+    const resetPasswordToken = crypto.randomInt(0, 99999);
     await emailSends.resetPassword({
         code: resetPasswordToken,
         address: user.emailFront,

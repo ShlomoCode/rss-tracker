@@ -2,12 +2,12 @@ const User = require('@models/user');
 const Session = require('@models/session');
 
 const checkLogin = async (req, res, next) => {
-    let sessionId = req.cookies.session || req.headers.authorization;
-    if (!sessionId) return res.status(401).header('action-required', 'login').json({ message: 'session is required. please login' });
+    let sessionUuid = req.cookies.session || req.headers.authorization;
+    if (!sessionUuid) return res.status(401).header('action-required', 'login').json({ message: 'session is required. please login' });
 
-    sessionId = sessionId.replace('Bearer ', '');
+    sessionUuid = sessionUuid.replace('Bearer ', '');
 
-    const session = await Session.findById(sessionId);
+    const session = await Session.findOne({ uuid: sessionUuid });
     if (!session) {
         if (req.url !== '/logout') res.header('action-required', 'login');
         return res.clearCookie('session').status(401).json({
@@ -24,7 +24,7 @@ const checkLogin = async (req, res, next) => {
     }
 
     res.locals.user = user;
-    res.locals.sessionId = sessionId;
+    res.locals.sessionId = session._id;
     next();
 };
 
