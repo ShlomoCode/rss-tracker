@@ -163,8 +163,8 @@ async function verifyEmail (req, res) {
     }
 
     if (user.verified) {
-        return res.status(409).json({
-            message: 'verify failed - User already verified'
+        return res.status(200).json({
+            message: 'User already verified'
         });
     }
 
