@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const checkLogin = require('@middlewares/checkLogin');
 const checkVerification = require('@middlewares/checkVerification');
-const checkRequest = require('@middlewares/schema/feeds');
+const checkSchema = require('@middlewares/schema/feeds');
 
 const {
     getAllFeeds,
@@ -11,8 +11,8 @@ const {
 } = require('@controllers/feeds');
 
 // login and verification users only
-router.post('/', checkLogin, checkVerification, checkRequest.createFeed, createFeed);
+router.post('/', checkLogin, checkVerification, checkSchema.createFeed, createFeed);
 router.get('/', checkLogin, checkVerification, getAllFeeds);
-router.get('/:feedID', checkLogin, checkVerification, checkRequest.getFeed, getFeed);
+router.get('/:feedID', checkLogin, checkVerification, checkSchema.getFeed, getFeed);
 
 module.exports = router;

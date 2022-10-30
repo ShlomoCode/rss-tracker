@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const checkLogin = require('@middlewares/checkLogin');
-const checkRequest = require('@middlewares/schema/users');
+const checkSchema = require('@middlewares/schema/users');
 
 const {
     signup,
@@ -14,13 +14,13 @@ const {
     changePassword
 } = require('@controllers/users');
 
-router.post('/signup', checkRequest.signup, signup);
-router.post('/login', checkRequest.login, login);
+router.post('/signup', checkSchema.signup, signup);
+router.post('/login', checkSchema.login, login);
 router.post('/logout', checkLogin, logout);
-router.post('/verify', checkLogin, checkRequest.verifyEmail, verifyEmail);
+router.post('/verify', checkLogin, checkSchema.verifyEmail, verifyEmail);
 router.post('/resendVerificationEmail', checkLogin, resendVerificationEmail);
-router.post('/reset-password', checkRequest.resetPassword, resetPassword);
-router.post('/reset-password-confirm', checkRequest.resetPasswordConfirm, resetPasswordConfirm);
-router.post('/change-password', checkLogin, checkRequest.changePassword, changePassword);
+router.post('/reset-password', checkSchema.resetPassword, resetPassword);
+router.post('/reset-password-confirm', checkSchema.resetPasswordConfirm, resetPasswordConfirm);
+router.post('/change-password', checkLogin, checkSchema.changePassword, changePassword);
 
 module.exports = router;
