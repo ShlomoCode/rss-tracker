@@ -75,7 +75,7 @@ async function signup (req, res) {
         });
     }
 
-    const verifyEmailCode = crypto.randomInt(0, 99999);
+    const verifyEmailCode = crypto.randomInt(10000, 100000);
     const userID = new mongoose.Types.ObjectId();
 
     const user = new User({
@@ -231,7 +231,7 @@ async function resetPassword (req, res) {
         });
     }
 
-    const resetPasswordToken = crypto.randomInt(0, 99999);
+    const resetPasswordToken = crypto.randomInt(10000, 100000);
     await emailSends.resetPassword({
         code: resetPasswordToken,
         address: user.emailFront,
