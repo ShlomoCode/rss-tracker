@@ -13,7 +13,7 @@ async function main () {
     }
 
     const feeds = feedsRew.filter((feed) => {
-        if (feed.Subscribers.length === 0) {
+        if (feed.subscribers.length === 0) {
             return false;
         } else {
             return true;
@@ -29,7 +29,7 @@ async function main () {
 
     for (const feed of feeds) {
         const dateOfProcessing = new Date();
-        const users = await Promise.all(feed.Subscribers.map(async (userId) => {
+        const users = await Promise.all(feed.subscribers.map(async (userId) => {
             const user = await User.findById(userId);
             return user;
         }));
@@ -41,7 +41,7 @@ async function main () {
             console.log(`${feed.Title} has no subscribers`);
             try {
                 console.log('Update lestCheckedAt & continue...');
-                await Feed.findByIdAndUpdate(feed._id, { LastCheckedOn: dateOfProcessing });
+                await Feed.findByIdAndUpdate(feed._id, { lastCheckedAt: dateOfProcessing });
             } catch (error) {
                 console.log(error);
             }
@@ -64,10 +64,10 @@ async function main () {
         const { title: feedTitle, items } = feedContent;
 
         for (const item of items) {
-            const { LastCheckedOn } = feed;
+            const { lastCheckedAt } = feed;
 
             const pubDate = new Date(item.published);
-            const checkDate = new Date(LastCheckedOn);
+            const checkDate = new Date(lastCheckedAt);
 
             if (pubDate > checkDate) {
                 if (/\[מקודם\]/gm.test(item.description) || item.category.includes('דביק - פנים האתר') || item.category.includes('דביק - עמוד הבית') || (/^https:\/\/www\.jdn\.co\.il/.test(feed.url) && /&gt;&gt;<\/strong><\/a><\/p>/m.test(item.content))) {
@@ -102,7 +102,7 @@ async function main () {
             }
         }
 
-        await Feed.findByIdAndUpdate(feed._id, { LastCheckedOn: dateOfProcessing });
+        await Feed.findByIdAndUpdate(feed._id, { lastCheckedAt: dateOfProcessing });
     }
     console.log('Processing Completed.');
 }

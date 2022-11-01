@@ -1,10 +1,11 @@
 const User = require('@models/user');
 const Feed = require('@models/feed');
 const mongoose = require('mongoose');
+const { makePublicFeedFromMongoObject } = require('@utils/dataUtils');
 
 async function unsubscribeAll (req, res) {
-    const { _id: userID } = res.locals.user;
-    const userUnsubscribe = await User.findById(userID);
+    const { _id: userId } = res.locals.user;
+    const userUnsubscribe = await User.findById(userId);
     if (!userUnsubscribe) {
         return res.status(404).send({
             success: false,
@@ -12,7 +13,7 @@ async function unsubscribeAll (req, res) {
         });
     }
 
-    const feedsUnsubscribedCount = (await Feed.updateMany({ Subscribers: userID }, { $pull: { Subscribers: userID } })).modifiedCount;
+    const feedsUnsubscribedCount = (await Feed.updateMany({ subscribers: userId }, { $pull: { subscribers: userId } })).modifiedCount;
 
     res.status(200).json({
         message: `${feedsUnsubscribedCount} feeds were unsubscribed`,
@@ -21,61 +22,42 @@ async function unsubscribeAll (req, res) {
 }
 async function subscribeFeed (req, res) {
     const feedID = req.params.subscriptionId;
-    const { _id: userID } = res.locals.user;
+    const { _id: userId } = res.locals.user;
 
-    // אם המזהה פיד לא חוקי
     if (!mongoose.Types.ObjectId.isValid(feedID)) {
         return res.status(400).json({
             message: `${feedID} is not a valid feedID`
         });
     }
 
-    /**
-         * ודא שהמייל של המשתמש מאומת
-         */
-    const user = await User.findById(userID);
-    // אם היוזר לא נמצא
-    if (!user) {
-        return res.status(404).json({
-            message: `userID ${userID} Not Found`
-        });
-    }
-    // אם המייל לא מאומת
-    if (!user.verified) {
-        return res.status(403).json({
-            message: 'Email not verified'
-        });
-    }
-
-    // בדוק מגבלת פידים פר יוזר
-    const userSubscribedFeedsCount = await Feed.count({ Subscribers: userID });
+    const userSubscribedFeedsCount = await Feed.count({ subscribers: userId });
     if (userSubscribedFeedsCount >= (process.env.MAX_FEEDS_PER_USER)) {
         return res.status(429).json({
             message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.MAX_FEEDS_PER_USER})`
         });
     }
 
-    // ההרשמה בפועל
-    const feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { Subscribers: userID } });
+    const feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { subscribers: userId } });
     if (!feedSubscribe) {
         return res.status(404).json({
             message: 'Feed Not Found'
         });
     }
 
-    if (feedSubscribe.Subscribers.includes(userID)) {
+    if (feedSubscribe.subscribers.includes(userId)) {
         return res.status(409).json({
             message: 'You are already a subscriber'
         });
     }
 
     res.status(200).json({
-        message: 'Subscribe to feed done!'
+        message: 'Subscribe to feed done!',
+        feed: makePublicFeedFromMongoObject(feedSubscribe, userId)
     });
 }
 async function unsubscribeFeed (req, res) {
     const feedID = req.params.subscriptionId;
-    const { _id: userID } = res.locals.user;
+    const { _id: userId } = res.locals.user;
 
     if (!mongoose.Types.ObjectId.isValid(feedID)) {
         return res.status(400).json({
@@ -83,21 +65,22 @@ async function unsubscribeFeed (req, res) {
         });
     }
 
-    const feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { Subscribers: userID } });
+    const feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { subscribers: userId } });
     if (!feedUnSubscribe) {
         return res.status(404).json({
             message: 'Feed Not Found'
         });
     }
 
-    if (!feedUnSubscribe.Subscribers.includes(userID)) {
+    if (!feedUnSubscribe.subscribers.includes(userId)) {
         return res.status(409).json({
             message: 'You are not a subscriber'
         });
     }
 
     res.status(200).json({
-        message: 'Unsubscribe done successfully!'
+        message: 'Unsubscribe done successfully!',
+        feed: makePublicFeedFromMongoObject(feedUnSubscribe, userId)
     });
 }
 

@@ -2,31 +2,29 @@ const mongoose = require('mongoose');
 const Feed = require('@models/feed');
 const parseRss = require('@services/rss2json');
 const { decode: decodeHtml } = require('html-entities');
+const { makePublicFeedFromMongoObject } = require('@utils/dataUtils');
 
 async function getAllFeeds (req, res) {
-    const { _id: userID } = res.locals.user;
+    const { _id: userId } = res.locals.user;
 
-    const feedsRew = await Feed.find();
-    if (!feedsRew) {
+    const feeds = await Feed.find();
+    if (!feeds.length) {
         return res.status(404).json({
             message: 'Feeds not found'
         });
     }
 
-    const feeds = feedsRew.map((feed) => {
-        const feedObject = feed.toObject();
-        feedObject.subscriberSelf = feed.Subscribers.includes(userID);
-        feedObject.Subscribers = feed.Subscribers.length;
-        return feedObject;
+    const feedsFiltered = feeds.map((feed) => {
+        return makePublicFeedFromMongoObject(feed, userId);
     });
 
-    res.status(200).json({
-        feeds
+    return res.status(200).json({
+        feeds: feedsFiltered
     });
 }
 async function getFeed (req, res) {
     const feedID = req.params.feedID;
-    const { _id: userID } = res.locals.user;
+    const { _id: userId } = res.locals.user;
 
     if (!mongoose.Types.ObjectId.isValid(feedID)) {
         return res.status(400).json({
@@ -34,25 +32,20 @@ async function getFeed (req, res) {
         });
     }
 
-    const feedRew = await Feed.findById(feedID);
-    if (!feedRew) {
+    const feed = await Feed.findById(feedID);
+    if (!feed) {
         return res.status(404).json({
             message: 'Feed Not Found'
         });
     }
 
-    const feed = feedRew.toObject();
-    // האם המשתמש המחובר מנוי לפיד
-    feed.subscriberSelf = feed.Subscribers.includes(userID);
-    // המרה בפלט של רשימת המנויים לפיד למספר המנויים לפיד
-    feed.Subscribers = feed.Subscribers.length;
-
     res.status(200).json({
-        feed
+        feed: makePublicFeedFromMongoObject(feed, userId)
     });
 }
 async function createFeed (req, res) {
     let { url } = req.body;
+    const { _id: userId } = res.locals.user;
 
     const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '.') || '.';
     const listPartial = process.env.ALLOWED_DOMAINS_NO_IMAGES?.replaceAll('.', '.') || '.';
@@ -95,10 +88,9 @@ async function createFeed (req, res) {
         url
     });
 
-    feedCreated.Subscribers = 0;
     res.status(200).json({
         message: 'Feed created successfully',
-        feedCreated
+        feed: makePublicFeedFromMongoObject(feedCreated, userId)
     });
 }
 

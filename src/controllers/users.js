@@ -76,10 +76,10 @@ async function signup (req, res) {
     }
 
     const verifyEmailCode = crypto.randomInt(10000, 100000);
-    const userID = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
 
     const user = new User({
-        _id: userID,
+        _id: userId,
         password: hash,
         emailProcessed,
         emailFront: email,
@@ -147,12 +147,12 @@ async function logout (req, res) {
 };
 async function verifyEmail (req, res) {
     const { code } = req.body;
-    const { _id: userID } = res.locals.user;
+    const { _id: userId } = res.locals.user;
 
-    const user = await User.findById(userID);
+    const user = await User.findById(userId);
     if (!user) {
         return res.status(404).json({
-            message: `User ${userID} is not found`
+            message: `User ${userId} is not found`
         });
     }
 
@@ -169,7 +169,7 @@ async function verifyEmail (req, res) {
     }
 
     if (code === user.verifyEmailCode) {
-        await User.findByIdAndUpdate(userID, { verified: true });
+        await User.findByIdAndUpdate(userId, { verified: true });
     }
 
     res.status(200).json({
@@ -177,12 +177,12 @@ async function verifyEmail (req, res) {
     });
 };
 async function resendVerificationEmail (req, res) {
-    const { _id: userID } = res.locals.user;
+    const { _id: userId } = res.locals.user;
 
-    const user = await User.findById(userID);
+    const user = await User.findById(userId);
     if (!user) {
         return res.status(404).json({
-            message: `User ${userID} is not found`
+            message: `User ${userId} is not found`
         });
     }
 
@@ -205,7 +205,7 @@ async function resendVerificationEmail (req, res) {
         address: user.emailFront
     });
     console.log('Email sent: ' + infoSend.response);
-    await User.findByIdAndUpdate(userID, { lastVerifyEmailSentAt: Date.now() });
+    await User.findByIdAndUpdate(userId, { lastVerifyEmailSentAt: Date.now() });
 
     res.status(200).json({
         message: `verify email sent again to ${user.emailFront}`
