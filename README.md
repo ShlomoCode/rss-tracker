@@ -51,11 +51,11 @@ APIs תחת הנתיב `/api/users`.
         "password": "password"
     }`
 
-#### log-out
+#### log out
 
 התנתקות ומחיקת הסשן הפעיל מהדאטהבייס.
 
-    POST /api/users/log-out
+    POST /api/users/logout
 
 #### verify
 

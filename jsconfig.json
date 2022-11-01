@@ -7,9 +7,9 @@
             "@middlewares/*": ["./src/middlewares/*"],
             "@services/*": ["./src/services/*"],
             "@templates/*": ["./src/templates/*"],
-            "@utils/*": ["./src/utils"],
-            "@controllers/*": ["./src/controllers"],
-            "@routes/*": ["./src/routes"]
+            "@utils/*": ["./src/utils/*"],
+            "@controllers/*": ["./src/controllers/*"],
+            "@routes/*": ["./src/routes/*"]
         }
     }
 }
