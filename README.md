@@ -35,7 +35,6 @@ APIs תחת הנתיב `/api/users`.
     POST /api/users/signup
   
    body: `{
-        "name": "name",
         "email": "email",
         "password": "password"
     }`
@@ -47,7 +46,7 @@ APIs תחת הנתיב `/api/users`.
     POST /api/users/login
   
    body: `{
-        "username": "username",
+        "email": "email",
         "password": "password"
     }`
 

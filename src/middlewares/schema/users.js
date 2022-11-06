@@ -29,14 +29,9 @@ module.exports = {
             type: 'object',
             properties: {
                 email: { type: 'string' },
-                password: { type: 'string' },
-                name: {
-                    type: 'string',
-                    minLength: 2,
-                    maxLength: 15
-                }
+                password: { type: 'string' }
             },
-            required: ['email', 'password', 'name']
+            required: ['email', 'password']
         };
 
         const valid = ajv.validate(schema, req.body);

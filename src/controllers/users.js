@@ -29,7 +29,7 @@ function normalizeEmail (email) {
 };
 
 async function signup (req, res) {
-    const { email, password, name } = req.body;
+    const { email, password } = req.body;
 
     /**
          * normalize-email by regex
@@ -78,8 +78,7 @@ async function signup (req, res) {
     const user = new User({
         password: hash,
         emailProcessed,
-        emailFront: email,
-        name
+        emailFront: email
     });
 
     const verifyEmailToken = await Token.create({
@@ -129,7 +128,6 @@ async function login (req, res) {
         message: 'Auth successful',
         sessionUuid: session.uuid,
         user: {
-            name: user.name,
             email: user.emailFront,
             verified: user.verified
         }
@@ -243,7 +241,6 @@ async function forgotPassword (req, res) {
     await emailSends.forgotPassword({
         token: resetToken.token,
         address: user.emailFront,
-        name: user.name
     });
 
     await resetToken.save();
