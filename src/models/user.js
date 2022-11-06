@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+    _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
     emailProcessed: {
         type: String,
         required: true,
@@ -15,11 +15,7 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true },
     name: { type: String, match: /[0-9- א-תA-z]{2,15}/, maxLength: 15, required: true },
     verified: { type: Boolean, default: false },
-    verifyEmailCode: { type: String, required: true },
-    registrationDate: { type: Date, default: Date.now },
-    lastVerifyEmailSentAt: { type: Date },
-    passwordResetToken: { type: String },
-    passwordResetAt: { type: Date }
+    registrationDate: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('User', userSchema);

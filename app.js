@@ -9,7 +9,7 @@ require('colors');
 require('module-alias/register');
 const setAndCheckConfig = require('./setup');
 setAndCheckConfig();
-const processingFeeds = require('./src/server/main');
+const backendWorker = require('./src/server/worker');
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -20,13 +20,14 @@ const generalRoutes = require('./src/routes/general');
 const usersRoutes = require('@routes/users');
 const feedsRoutes = require('@routes/feeds');
 const subscriptionsRoutes = require('@routes/subscriptions');
+const articlesRoutes = require('@routes/articles');
 
 app.use('/api/general', generalRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
-app.get('/api/status', (req, res) => res.status(200).json({ message: 'OK' }));
-app.all('*', (req, res) => res.status(404).json({ message: 'Not found' }));
+app.use('/api/articles', articlesRoutes);
+app.all('*', (req, res) => res.status(404).json({ message: 'Route or method Not found' }));
 
 app.use((error, req, res, next) => {
     res.status(500).json({
@@ -34,37 +35,21 @@ app.use((error, req, res, next) => {
     });
 });
 
-/**
-* Run Back And base
-*/
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
-    console.log('connecting to mongo...');
+    console.log('connecting to Mongo...'.yellow);
     await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
-    console.log('mongoDB connected!');
+    console.log('🔌 MongoDB connected successfully'.green);
 
-    /**
-     * Listening server
-     */
     const http = require('http');
     const port = process.env.PORT;
     const server = http.createServer(app);
     server.listen(port);
-    console.log(`Server is running on port: ${port}. public url: ${process.env.FRONTEND_URL}`);
+    console.log(`🚀 Server is running on port: ${port}. public url: ${process.env.FRONTEND_URL.grey}`.blue);
 
-    /**
-    * run background process
-    */
     do {
-        const resp = await processingFeeds();
-        const ms = 1000 * 60 * 1; // 1 minute
-        if (resp === 'Wait!') {
-            console.log(`Waiting ${ms} milliseconds...`);
-            await sleep(ms);
-            console.log('Waiting completed!');
-        }
+        await backendWorker();
     } while (true);
 })();

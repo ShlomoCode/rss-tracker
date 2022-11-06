@@ -9,8 +9,7 @@ const {
     logout,
     verifyEmail,
     resendVerificationEmail,
-    resetPassword,
-    resetPasswordConfirm,
+    forgotPassword,
     changePassword
 } = require('@controllers/users');
 
@@ -19,8 +18,7 @@ router.post('/login', checkSchema.login, login);
 router.post('/logout', checkLogin, logout);
 router.post('/verify', checkLogin, checkSchema.verifyEmail, verifyEmail);
 router.post('/resendVerificationEmail', checkLogin, resendVerificationEmail);
-router.post('/reset-password', checkSchema.resetPassword, resetPassword);
-router.post('/reset-password-confirm', checkSchema.resetPasswordConfirm, resetPasswordConfirm);
-router.post('/change-password', checkLogin, checkSchema.changePassword, changePassword);
+router.post('/forgot-password', checkSchema.forgotPassword, forgotPassword);
+router.post('/change-password', checkSchema.changePassword, changePassword);
 
 module.exports = router;

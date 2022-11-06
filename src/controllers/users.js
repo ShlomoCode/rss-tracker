@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
 const User = require('@models/user');
 const Session = require('@models/session');
+const Token = require('@models/token');
 const bcrypt = require('bcrypt');
 const { zxcvbn } = require('@zxcvbn-ts/core');
 const ms = require('ms');
@@ -75,23 +75,23 @@ async function signup (req, res) {
         });
     }
 
-    const verifyEmailCode = crypto.randomInt(10000, 100000);
-    const userId = new mongoose.Types.ObjectId();
-
     const user = new User({
-        _id: userId,
         password: hash,
         emailProcessed,
         emailFront: email,
-        name,
-        verifyEmailCode
+        name
+    });
+
+    const verifyEmailToken = await Token.create({
+        userId: user._id,
+        type: 'verifyEmail',
+        token: crypto.randomInt(10000, 100000)
     });
 
     await emailSends.verifyEmail({
-        code: verifyEmailCode,
+        code: verifyEmailToken.token,
         address: email
     });
-    console.log(`info: email sent for user ${emailProcessed}`);
 
     await user.save();
 
@@ -121,7 +121,6 @@ async function login (req, res) {
     }
 
     const session = await Session.create({
-        _id: new mongoose.Types.ObjectId(),
         uuid: crypto.randomUUID(),
         userId: user._id
     });
@@ -156,62 +155,63 @@ async function verifyEmail (req, res) {
         });
     }
 
-    if (code !== user.verifyEmailCode) {
-        return res.status(401).json({
-            message: 'verify failed - Wrong verification code'
-        });
-    }
-
     if (user.verified) {
         return res.status(200).json({
             message: 'User already verified'
         });
     }
 
-    if (code === user.verifyEmailCode) {
-        await User.findByIdAndUpdate(userId, { verified: true });
+    const existsTokens = await Token.find({ userId: userId, type: 'verifyEmail', token: code });
+    if (!existsTokens.length) {
+        return res.status(401).json({
+            message: 'code not correct or expired'
+        });
     }
 
+    await User.findByIdAndUpdate(userId, { verified: true });
+
     res.status(200).json({
-        message: 'verify successful'
+        message: 'User verified successfully'
     });
 };
 async function resendVerificationEmail (req, res) {
-    const { _id: userId } = res.locals.user;
+    const { _id: userId, verified: isVerified, emailFront } = res.locals.user;
 
-    const user = await User.findById(userId);
-    if (!user) {
-        return res.status(404).json({
-            message: `User ${userId} is not found`
-        });
-    }
-
-    if (user.verified) {
+    if (isVerified) {
         return res.status(409).json({
-            message: 'verify failed - User already verified'
+            message: 'you already verified'
         });
     }
 
-    const limit = '1h';
-    if (user.lastVerifyEmailSentAt && (Date.now() - user.lastVerifyEmailSentAt) < ms(limit)) {
-        return res.status(429).json({
-            message: `verify failed - Too many requests. Try again in ${ms(ms(limit) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })}`,
-            tryAgainAfter: ms(ms(limit) - (Date.now() - user.lastVerifyEmailSentAt), { long: true })
-        });
+    const rateLimit = '1h';
+    const existsTokens = await Token.find({ userId: userId, type: 'verifyEmail' }).sort({ createdAt: -1 });
+    if (existsTokens.length > 1) {
+        const FreshTokens = existsTokens.filter(token => (Date.now() - token.createdAt) < ms(rateLimit));
+        if (FreshTokens.length) {
+            return res.status(429).json({
+                message: `Too many requests. Try again in ${ms(ms(rateLimit) - (Date.now() - existsTokens[0].createdAt), { long: true })}`
+            });
+        }
     }
 
-    const infoSend = await emailSends.verifyEmail({
-        code: user.verifyEmailCode,
-        address: user.emailFront
+    const verifyToken = new Token({
+        userId: userId,
+        type: 'verifyEmail',
+        token: crypto.randomInt(10000, 100000)
     });
-    console.log('Email sent: ' + infoSend.response);
-    await User.findByIdAndUpdate(userId, { lastVerifyEmailSentAt: Date.now() });
+
+    await emailSends.verifyEmail({
+        code: verifyToken.token,
+        address: emailFront
+    });
+
+    await verifyToken.save();
 
     res.status(200).json({
-        message: `verify email sent again to ${user.emailFront}`
+        message: `verify email sent again to ${emailFront}`
     });
 };
-async function resetPassword (req, res) {
+async function forgotPassword (req, res) {
     const { email } = req.body;
 
     const emailProcessed = normalizeEmail(email);
@@ -223,28 +223,37 @@ async function resetPassword (req, res) {
         });
     }
 
-    const limit = '1h';
-    if (user.passwordResetAt && (Date.now() - user.passwordResetAt) < ms(limit)) {
-        return res.status(429).json({
-            message: `reset password failed - Too many requests. Try again in ${ms(ms(limit) - (Date.now() - user.passwordResetAt), { long: true })}`,
-            tryAgainAfter: ms(ms(limit) - (Date.now() - user.passwordResetAt), { long: true })
-        });
+    const rateLimit = '1h';
+    const existsTokens = await Token.find({ userId: user._id, type: 'forgotPassword' }).sort({ createdAt: -1 });
+    if (existsTokens.length) {
+        const FreshTokens = existsTokens.filter(token => (Date.now() - token.createdAt) < ms(rateLimit));
+        if (FreshTokens.length) {
+            return res.status(429).json({
+                message: `Too many requests. Try again in ${ms(ms(rateLimit) - (Date.now() - existsTokens[0].createdAt), { long: true })}`
+            });
+        }
     }
 
-    const resetPasswordToken = crypto.randomInt(10000, 100000);
-    await emailSends.resetPassword({
-        code: resetPasswordToken,
+    const resetToken = new Token({
+        userId: user._id,
+        type: 'forgotPassword',
+        token: crypto.randomInt(10000, 100000)
+    });
+
+    await emailSends.forgotPassword({
+        token: resetToken.token,
         address: user.emailFront,
         name: user.name
     });
-    await User.findByIdAndUpdate(user._id, { passwordResetToken: resetPasswordToken, passwordResetAt: Date.now() });
+
+    await resetToken.save();
 
     res.status(200).json({
         message: 'reset password email sent successfully'
     });
 };
-async function resetPasswordConfirm (req, res) {
-    const { resetPasswordToken, email, newPassword } = req.body;
+async function changePassword (req, res) {
+    const { token, email, newPassword } = req.body;
 
     const emailProcessed = normalizeEmail(email);
 
@@ -255,15 +264,10 @@ async function resetPasswordConfirm (req, res) {
         });
     }
 
-    if (!/[0-9]{5}/.test(resetPasswordToken)) {
+    const tokenSaved = await Token.findOne({ userId: user._id, type: 'forgotPassword', token });
+    if (!tokenSaved) {
         return res.status(400).json({
-            message: 'reset password token is not valid - must be 5 digits'
-        });
-    }
-
-    if (user.passwordResetToken !== resetPasswordToken) {
-        return res.status(401).json({
-            message: 'reset password failed - Wrong reset password code'
+            message: 'Token is wrong or expired'
         });
     }
 
@@ -275,46 +279,15 @@ async function resetPasswordConfirm (req, res) {
     }
 
     const hash = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(user._id, {
+        password: hash
+    });
 
-    await User.findByIdAndUpdate(user._id, { password: hash, passwordResetToken: null, passwordResetAt: null });
+    await Token.findByIdAndDelete(tokenSaved._id);
+    await Session.deleteMany({ userId: user._id });
 
     res.status(200).json({
-        message: 'reset password successful'
-    });
-};
-async function changePassword (req, res) {
-    const { _id: userId } = res.locals.user;
-    const { oldPassword, newPassword } = req.body;
-
-    const user = await User.findById(userId);
-    if (!user) {
-        return res.status(404).json({
-            message: 'User not found'
-        });
-    }
-
-    const isMatchPassword = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatchPassword) {
-        return res.status(401).json({
-            message: 'change password failed - Wrong old password'
-        });
-    }
-
-    const { score: scorePass } = zxcvbn(newPassword);
-    if (scorePass < 1) {
-        return res.status(400).json({
-            message: 'Weak password'
-        });
-    }
-
-    const hash = await bcrypt.hash(newPassword, 10);
-    await User.findByIdAndUpdate(userId, { password: hash });
-
-    const sessionsDeleted = await Session.deleteMany({ userId });
-
-    res.status(200).clearCookie('session').json({
-        message: 'Password changed. Please login again using the new password',
-        sessionsDeletedCount: sessionsDeleted.deletedCount
+        message: 'change password successful'
     });
 };
 
@@ -324,7 +297,6 @@ module.exports = {
     logout,
     verifyEmail,
     resendVerificationEmail,
-    resetPassword,
-    resetPasswordConfirm,
+    forgotPassword,
     changePassword
 };

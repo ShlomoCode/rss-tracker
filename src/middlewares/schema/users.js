@@ -1,5 +1,6 @@
 const Ajv = require('ajv');
 const ajv = new Ajv({ allErrors: false });
+const validator = require('validator');
 
 module.exports = {
     login: (req, res, next) => {
@@ -69,14 +70,14 @@ module.exports = {
             });
         }
 
-        if (!/[0-9]{5}/.test(req.body.code)) {
+        if (!validator.isNumeric(req.body.code)) {
             return res.status(400).json({
-                message: 'verify code is not valid - must be 5 digits'
+                message: 'body/code is not valid: must be digits'
             });
         }
         next();
     },
-    resetPassword: (req, res, next) => {
+    forgotPassword: (req, res, next) => {
         if (!Object.keys(req.body).length) return res.status(400).json({ message: 'There was no body found or no json format' });
         const schema = {
             type: 'object',
@@ -95,12 +96,12 @@ module.exports = {
         }
         next();
     },
-    resetPasswordConfirm: (req, res, next) => {
+    changePassword: (req, res, next) => {
         if (!Object.keys(req.body).length) return res.status(400).json({ message: 'There was no body found or no json format' });
         const schema = {
             type: 'object',
             properties: {
-                resetPasswordToken: {
+                token: {
                     type: 'string',
                     minLength: 5,
                     maxLength: 5
@@ -108,27 +109,7 @@ module.exports = {
                 email: { type: 'string' },
                 newPassword: { type: 'string' }
             },
-            required: ['resetPasswordToken', 'email', 'newPassword']
-        };
-
-        const valid = ajv.validate(schema, req.body);
-        if (!valid) {
-            return res.status(400).json({
-                message: 'request is not valid',
-                errors: ajv.errorsText(valid.errors).replaceAll('data', 'body')
-            });
-        }
-        next();
-    },
-    changePassword: (req, res, next) => {
-        if (!Object.keys(req.body).length) return res.status(400).json({ message: 'There was no body found or no json format' });
-        const schema = {
-            type: 'object',
-            properties: {
-                oldPassword: { type: 'string' },
-                newPassword: { type: 'string' }
-            },
-            required: ['oldPassword', 'newPassword']
+            required: ['token', 'email', 'newPassword']
         };
 
         const valid = ajv.validate(schema, req.body);

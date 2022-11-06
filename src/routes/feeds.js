@@ -13,6 +13,6 @@ const {
 // login and verification users only
 router.post('/', checkLogin, checkVerification, checkSchema.createFeed, createFeed);
 router.get('/', checkLogin, checkVerification, getAllFeeds);
-router.get('/:feedID', checkLogin, checkVerification, checkSchema.getFeed, getFeed);
+router.get('/:feedId', checkLogin, checkVerification, checkSchema.getFeed, getFeed);
 
 module.exports = router;

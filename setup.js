@@ -1,6 +1,5 @@
 const fs = require('fs');
 const prompts = require('prompts');
-const crypto = require('crypto');
 const { validate: emailValidate } = require('deep-email-validator');
 require('colors');
 
@@ -56,6 +55,53 @@ const questions = [
         type: 'text',
         name: 'FRONTEND_URL',
         message: 'FRONTEND URL - for links in emails. leave blank to default - localhost (for development)'
+    },
+    {
+        type: 'multiselect',
+        name: 'ALLOWED_DOMAINS',
+        message: 'Allowed domains for create feed. leave blank to allow all domains',
+        choices: [
+            {
+                value: 'hm-news.co.il',
+                selected: true
+            },
+            {
+                value: 'www.jdn.co.il',
+                selected: true
+            },
+            {
+                value: 'www.93fm.co.il',
+                selected: true
+            },
+            {
+                value: 'www.bahazit.co.il',
+                selected: true
+            },
+            {
+                value: 'www.geektime.co.il',
+                selected: true
+            },
+            {
+                value: 'internet-israel.com',
+                selected: true
+            }
+        ],
+        hint: 'Use space to select. Press Enter to submit'
+    },
+    {
+        type: 'multiselect',
+        name: 'DOMAINS_ALLOWED_ATTACHED_IMAGES',
+        message: 'Domains allowed to attach images. leave blank to allow all domains',
+        choices: [
+            {
+                value: 'hm-news.co.il',
+                selected: true
+            },
+            {
+                value: 'www.jdn.co.il',
+                selected: true
+            }
+        ]
     }
 ];
 

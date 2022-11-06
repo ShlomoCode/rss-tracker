@@ -1,7 +1,7 @@
 const User = require('@models/user');
 const Feed = require('@models/feed');
 const mongoose = require('mongoose');
-const { makePublicFeedFromMongoObject } = require('@utils/dataUtils');
+const { exposeFeed } = require('@/utils/exposes');
 
 async function unsubscribeAll (req, res) {
     const { _id: userId } = res.locals.user;
@@ -21,12 +21,12 @@ async function unsubscribeAll (req, res) {
     });
 }
 async function subscribeFeed (req, res) {
-    const feedID = req.params.subscriptionId;
+    const feedId = req.params.subscriptionId;
     const { _id: userId } = res.locals.user;
 
-    if (!mongoose.Types.ObjectId.isValid(feedID)) {
+    if (!mongoose.Types.ObjectId.isValid(feedId)) {
         return res.status(400).json({
-            message: `${feedID} is not a valid feedID`
+            message: `${feedId} is not a valid feedId`
         });
     }
 
@@ -37,7 +37,7 @@ async function subscribeFeed (req, res) {
         });
     }
 
-    const feedSubscribe = await Feed.findByIdAndUpdate(feedID, { $addToSet: { subscribers: userId } });
+    const feedSubscribe = await Feed.findByIdAndUpdate(feedId, { $addToSet: { subscribers: userId } });
     if (!feedSubscribe) {
         return res.status(404).json({
             message: 'Feed Not Found'
@@ -52,20 +52,20 @@ async function subscribeFeed (req, res) {
 
     res.status(200).json({
         message: 'Subscribe to feed done!',
-        feed: makePublicFeedFromMongoObject(feedSubscribe, userId)
+        feed: exposeFeed(feedSubscribe, userId)
     });
 }
 async function unsubscribeFeed (req, res) {
-    const feedID = req.params.subscriptionId;
+    const feedId = req.params.subscriptionId;
     const { _id: userId } = res.locals.user;
 
-    if (!mongoose.Types.ObjectId.isValid(feedID)) {
+    if (!mongoose.Types.ObjectId.isValid(feedId)) {
         return res.status(400).json({
-            message: `${feedID} is not a valid feedID`
+            message: `${feedId} is not a valid feedId`
         });
     }
 
-    const feedUnSubscribe = await Feed.findByIdAndUpdate(feedID, { $pull: { subscribers: userId } });
+    const feedUnSubscribe = await Feed.findByIdAndUpdate(feedId, { $pull: { subscribers: userId } });
     if (!feedUnSubscribe) {
         return res.status(404).json({
             message: 'Feed Not Found'
@@ -80,7 +80,7 @@ async function unsubscribeFeed (req, res) {
 
     res.status(200).json({
         message: 'Unsubscribe done successfully!',
-        feed: makePublicFeedFromMongoObject(feedUnSubscribe, userId)
+        feed: exposeFeed(feedUnSubscribe, userId)
     });
 }
 

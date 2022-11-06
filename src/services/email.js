@@ -18,27 +18,21 @@ const transporter = nodemailer.createTransport({
  * @param {Object} data.item האייטם הספציפי שנשלח
  * @param {String} data.feedTitle שם הפיד
  * @param {String} data.feedUrl כתובת הפיד
- * @param {String[]} data.addresses כתובות מייל שצריכות לקבל את הפיד
+ * @param {String[]} data.addresses כתובות מייל שצריכות לקבל את המאמר
  * @returns {Promise} - nodemailer sendmail promise
  */
-async function sendArticle ({ item, feedTitle, feedUrl, toAddresses }) {
-    let { description, link, title, thumbnail: thumbnailLink, content, category, author, created } = item;
+async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
+    const { description, link, title, thumbnail: thumbnailLink, content, category, author, created } = article;
 
-    title = title.replace(/([א-ת] )(צפו)/, '$1• $2');
+    const domainsAllowedImagesAttached = (process.env.DOMAINS_ALLOWED_ATTACHED_IMAGES || []);
+    const isAllowedImages = domainsAllowedImagesAttached.includes(new URL(article.link).host);
 
-    const listFull = process.env.ALLOWED_DOMAINS_WITH_IMAGES?.replaceAll('.', '.') || '.';
-    const regexWhiteList = new RegExp(`^https?://(www.)?(${listFull})`);
-
-    let isAllowedImages;
-    let thumbnail;
-    if (!regexWhiteList.test(link) || !thumbnailLink) {
-        isAllowedImages = false;
-    } else {
-        isAllowedImages = true;
+    let thumbnailBase64;
+    if (isAllowedImages && thumbnailLink) {
         try {
-            thumbnail = await imageToBase64(thumbnailLink);
+            thumbnailBase64 = await imageToBase64(thumbnailLink);
         } catch (error) {
-            isAllowedImages = false;
+            thumbnailBase64 = null;
         }
     }
 
@@ -47,8 +41,8 @@ async function sendArticle ({ item, feedTitle, feedUrl, toAddresses }) {
     const mailOptions = {
         from: process.env.GMAIL_USER,
         bcc: toAddresses,
-        subject: 'RSS חדש! 🎉 ⟫ ' + title + ` | ${feedTitle}`,
-        html: await ejs.renderFile(path.join(__dirname, '../templates', 'rss.ejs'),
+        subject: `${feedTitle} ⟫ ${title}`,
+        html: await ejs.renderFile(path.join(__dirname, '../templates', 'article.ejs'),
             {
                 isAllowedImages,
                 thumbnailLink,
@@ -85,13 +79,15 @@ async function sendArticle ({ item, feedTitle, feedUrl, toAddresses }) {
             }),
         attachments: isAllowedImages
             ? [{
-                path: `data:image/jpg;base64,${thumbnail}`,
+                path: `data:image/jpg;base64,${thumbnailBase64}`,
                 filename: title,
                 cid: cidImage
             }]
             : []
     };
-    return transporter.sendMail(mailOptions);
+    return transporter.sendMail(mailOptions).then((info) => {
+        console.log('📧 Email sent: ' + info.response);
+    });
 }
 
 /**
@@ -116,25 +112,20 @@ async function verifyEmail ({ code, address }) {
 }
 
 /**
- * @param {String} data.code קוד האימות
+ * @param {String} data.token קוד האימות
  * @param {String} data.address כתובת המייל
- * @param {String} data.name שם היוזר
  * @returns {Promise} - nodemailer sendmail promise
  * @description שליחת מייל לאיפוס סיסמא
  * */
-async function resetPassword ({ code, address, name }) {
+async function forgotPassword ({ token, address }) {
     const mailOptions = {
         from: process.env.GMAIL_USER,
         to: address,
-        subject: `קוד האימות שלך לאיפוס הסיסמה הוא: ${code}`,
-        html: await ejs.renderFile(path.join(__dirname, '../templates', 'reset-password.ejs'),
+        subject: `קוד האימות שלך לאיפוס הסיסמה הוא: ${token}`,
+        html: await ejs.renderFile(path.join(__dirname, '../templates', 'forgot-password.ejs'),
             {
-                name,
-                code: code,
-                email: address,
-                process: {
-                    env: process.env
-                }
+                token,
+                email: address
             })
     };
     return transporter.sendMail(mailOptions);
@@ -143,5 +134,5 @@ async function resetPassword ({ code, address, name }) {
 module.exports = {
     sendArticle,
     verifyEmail,
-    resetPassword
+    forgotPassword
 };
