@@ -11,7 +11,7 @@ const {
 } = require('@controllers/subscriptions');
 
 router.post('/unsubscribe-all', checkLogin, checkVerification, unsubscribeAll);
-router.post('/:subscriptionId', checkLogin, checkVerification, checkSchema, subscribeFeed);
-router.delete('/:subscriptionId', checkLogin, checkVerification, checkSchema, unsubscribeFeed);
+router.post('/:feedId', checkLogin, checkVerification, checkSchema, subscribeFeed);
+router.delete('/:feedID', checkLogin, checkVerification, checkSchema, unsubscribeFeed);
 
 module.exports = router;

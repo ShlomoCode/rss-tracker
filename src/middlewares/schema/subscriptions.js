@@ -5,13 +5,13 @@ module.exports = (req, res, next) => {
     const schema = {
         type: 'object',
         properties: {
-            subscriptionId: {
+            feedId: {
                 type: 'string',
                 minLength: 24,
                 maxLength: 24
             }
         },
-        required: ['subscriptionId']
+        required: ['feedId']
     };
 
     const valid = ajv.validate(schema, req.params);

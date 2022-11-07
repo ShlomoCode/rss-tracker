@@ -1,27 +1,18 @@
-const User = require('@models/user');
 const Feed = require('@models/feed');
 const mongoose = require('mongoose');
 const { exposeFeed } = require('@/utils/exposes');
 
 async function unsubscribeAll (req, res) {
     const { _id: userId } = res.locals.user;
-    const userUnsubscribe = await User.findById(userId);
-    if (!userUnsubscribe) {
-        return res.status(404).send({
-            success: false,
-            message: 'User not found'
-        });
-    }
 
     const feedsUnsubscribedCount = (await Feed.updateMany({ subscribers: userId }, { $pull: { subscribers: userId } })).modifiedCount;
 
     res.status(200).json({
-        message: `${feedsUnsubscribedCount} feeds were unsubscribed`,
-        feedsUnsubscribedCount
+        message: `${feedsUnsubscribedCount} feeds were unsubscribed`
     });
 }
 async function subscribeFeed (req, res) {
-    const feedId = req.params.subscriptionId;
+    const feedId = req.params.feedId;
     const { _id: userId } = res.locals.user;
 
     if (!mongoose.Types.ObjectId.isValid(feedId)) {
@@ -31,7 +22,7 @@ async function subscribeFeed (req, res) {
     }
 
     const userSubscribedFeedsCount = await Feed.count({ subscribers: userId });
-    if (userSubscribedFeedsCount >= (process.env.MAX_FEEDS_PER_USER)) {
+    if (userSubscribedFeedsCount > (process.env.MAX_FEEDS_PER_USER)) {
         return res.status(429).json({
             message: `You have reached the maximum number of feeds for you account (limit currently set to ${process.env.MAX_FEEDS_PER_USER})`
         });
@@ -56,7 +47,7 @@ async function subscribeFeed (req, res) {
     });
 }
 async function unsubscribeFeed (req, res) {
-    const feedId = req.params.subscriptionId;
+    const feedId = req.params.feedId;
     const { _id: userId } = res.locals.user;
 
     if (!mongoose.Types.ObjectId.isValid(feedId)) {
