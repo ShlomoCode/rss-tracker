@@ -1,81 +1,136 @@
 # Rss Tracker - Server side
 
-פרויקט Node.js + mongodb למעקב אחרי פידי [RSS](https://he.wikipedia.org/wiki/RSS).
+פרויקט למעקב אחרי תכנים מאתרים שתומכים בטכנולוגיית [RSS](https://he.wikipedia.org/wiki/RSS), לדוגמה בלוגים ואתרי חדשות.</br>
+מאפשר לקבל כל אייטם חדש ישירות למייל, או לצפות בתוכן בממשק אינטרנטי.</br>
+מתאים גם לפריסה עצמית בקלות על מחשב או על שרת.
 
-כולל הרשמה, התחברות ואימות מייל.
+**טכנולוגיות**:</br>
+צד שרת: Node.js + MongoDB</br>
+צד לקוח: Vue.js + Vuetify
 
-מתאים לפריסה לוקאלית על המחשב, או על שרת.
+# API Documentation
 
-# API
+>מאגר זה מכיל את קוד צד השרת בלבד. הקליינט בנוי כ[SPA](https://en.wikipedia.org/wiki/Single-page_application) בVue.js ונמצא ב[repo נפרד](https://github.com/ShlomoCode/rss-tracker-client).
 
-מאגר זה מכיל את קוד צד השרת בלבד. הקליינט בנוי בvuejs ונמצא במאגר נפרד.
+**מקרא**:
 
-כל הAPIs דורשים אימות על ידי שליחת מזהה סשן בתור עוגיה בשם `session`, או כBearer ב-authorization header:
+באם תחת הAPI הרלוונטי מופיע `Active session required: yes`, קריאה לAPI זה דורשת צירוף מזהה סשן פעיל.</br>
+ניתן לשלוח את הסשן בתוך cookie בשם `session` או בתוך הכותרת `Authorization` בצורה `<Bearer <session`.
 
-```Authorization: Bearer <session-id>```
+<details>
 
- את הטוקן ניתן לקבל בכתובת הlogin על ידי שליחת שם משתמש וסיסמה.
+> את הסשן ניתן לקבל בכתובת הlogin על ידי שליחת שם משתמש וסיסמה.
+> באם ההתחברות תקינה, הסשן יחזור כcookie בשם `session` עם הגדרת `httpOnly` ותפוגה של 30 ימים, וכן בתשובת הJSON.</br>
+> יש לשים לב שייתכן שסשן יפוג קודם, לדוגמה במקרה של שינוי סיסמה.
+> ניתן לבטל את הטוקן באופן יזום ע"י שליחת בקשה לכתובת הlogout בצירוף הסשן כעוגיה/header, כנ"ל.
+
+</details>
 
 כל הפרמטרים הם חובה, אלא אם כן צוין אחרת.
 
-להלן תיעוד בסיסי של הנתיבים שקיימים כרגע והפרמטרים שהם דורשים:
+להלן תיעוד בסיסי של הנתיבים שקיימים כרגע והפרמטרים שהם דורשים, מחולק לפי פונקציונליות; יש לחוץ על שם המקטע כדי להרחיב/לכווץ את הפירוט.
 
 <details>
 <summary>users</summary>
 
 ## users
 
-APIs תחת הנתיב `/api/users`.
-מכילים פעולות הקשורות למשתמשים.
+APIs תחת הנתיב `/api/users`. מכילים פעולות הקשורות למשתמשים.
 
 #### signup
 
-הרשמה.
+הרשמת משתמש חדש.
 
+```
     POST /api/users/signup
-  
-   body: `{
-        "email": "email",
-        "password": "password"
-    }`
+```
+
+**body:**
+
+- email
+- password
+
+**Active session required**: no
 
 #### login
 
-התחברות.
+התחברות למשתמש קיים.
 
+```
     POST /api/users/login
-  
-   body: `{
-        "email": "email",
-        "password": "password"
-    }`
+```
+
+**body**:
+
+- email
+- password
+
+**Active session required**: no
 
 #### log out
 
 התנתקות ומחיקת הסשן הפעיל מהדאטהבייס.
 
+```
     POST /api/users/logout
+```
+
+**Active session required**: yes
+
+#### send verify email
+
+בקשת שליחת מייל אימות למייל המשתמש המחובר כעת.
+
+```
+    POST /api/users/send-verification-email
+```
+
+none parameters.
+
+**Active session required**: yes
 
 #### verify
 
 אימות מייל עבור המשתמש המחובר כעת.
 
+```
     POST /api/users/verify
-  
-query: `{
-       "code": "5 digit code"
-    }`
+```
 
-#### re-send verify email
+**body**:
 
-שליחת מייל אימות מחדש למייל המשתמש המחובר כעת.
-מוגבל לפעמים אחת ביום.
+- code [5 digits]
 
-    POST /api/users/resendVerificationEmail
+**Active session required**: yes
 
-body: `{
-        "email": "email"
-    }`
+### forgot password
+
+בקשת שליחת מייל לאיפוס סיסמה.
+
+```
+    POST /api/users/forgot-password
+```
+
+**body**:
+
+- email
+
+**Active session required**: no
+
+### change password
+
+שינוי סיסמה באמצעות קוד אימות.
+
+```
+    POST /api/users/change-password
+```
+
+**body**:
+    - email
+    - newPassword
+    - token [5 digits]
+
+**Active session required**: no
 
 </details>
 
@@ -84,31 +139,45 @@ body: `{
 
 ## feeds
 
-APIs תחת הנתיב `/api/feeds`.
-מכילים פעולות הקשורות לערוצי העדכונים (RSS).
-בקבלת מידע על פיד, מושמטים פרטים על משתמשים אחרים שנרשמו לפיד.
+APIs תחת הנתיב `/api/feeds`. מכילים פעולות הקשורות לערוצי העדכונים (RSS). בקבלת מידע על פיד, מושמטים פרטים על משתמשים אחרים שנרשמו לפיד.
 
 #### get all feeds
 
-מחזיר את כל הפידים במערכת.
+קבלת כל הפידים הקיימים במערכת.
 
+```
     GET /api/feeds
+```
+
+**Active session required**: yes
 
 #### get specific feed
 
-מחזיר מידע על פיד ספציפי.
+מחזיר פיד ספציפי.
 
+```
     GET /api/feeds/:id
+```
+
+**params**:
+
+- id [feed id - mongo id]
+
+**Active session required**: yes
 
 #### create new feed
 
 יצירת פיד חדש.
+באם הוגדרה רשימה לבנה - כפוף להיצאות הםיד תחת דומיין מורשה.
 
+```
     POST /api/feeds
-    
-    query: `{
-        "url": "url"
-    }`
+```
+
+**body**:
+    - url [feed url. prefix - etc. '/feed' is required]
+
+**Active session required**: yes
 
 </details>
 
@@ -117,35 +186,85 @@ APIs תחת הנתיב `/api/feeds`.
 
 ## subscriptions
 
-ניהול הרשמות לפידים.
+ניהול הרשמות לפידים (קבלה למייל של כל תוכן חדש בפיד המנוי).
 
 #### subscribe to feed
 
-    POST /api/subscriptions/:subscriptionId
+הרשמה לקבלת עדכונים למייל עבור פיד מסוים.
+
+```
+    POST /api/subscriptions/:feedId
+```
+
+**params**:
+    - feedId [mongo id]
+
+**Active session required**: yes
 
 #### unsubscribe from feed
 
-    DELETE /api/subscriptions/:subscriptionId
+ביטול הרשמה לקבלת עדכונים למייל עבור פיד מסוים.
+
+```
+    DELETE /api/subscriptions/:feedId
+```
+
+**params**:
+    - feedId [mongo id]
+
+**Active session required**: yes
 
 #### unsubscribe from all feeds
 
-    POST /api/subscriptions/unsubscribe-all
+ביטול כל המנויים הקיימים עבור המשתמש המחובר.
+כרגע לא ממומש בקליינט.
 
+```
+    POST /api/subscriptions/unsubscribe-all
+```
+
+none parameters.
+
+**Active session required**: yes
+
+</details>
+
+<details>
+<summary>general</summary>
+
+## general
+
+APIs תחת הנתיב `/api/general`. עבור פעולות כלליות
+
+#### get statistics
+
+קבלת סטטיסטיקות כלליות עבור המערכת.
+
+```
+    GET /api/general/statistics
+```
+
+none parameters.
+
+**Active session required**: no
 </details>
 
 # self-hosted
 
-הגרסה הציבורים מכילה הגבלות שונות, הן בכמות העדכונים שניתן להירשם (בגלל מגבלה של גוגל על כמות שליחת המיילים), והן ברשימה לבנה של אתרים שאליהם ניתן להירשם (ע"מ שהאתר יהיה פתוח בסינונים השונים).
-הפתרון לכך הוא אירוח עצמי של הפרויקט;
+הגרסה הציבורים מכילה הגבלות שונות, הן בכמות העדכונים שניתן להירשם, והן ברשימה לבנה של אתרים שאליהם ניתן להירשם. הפתרון לכך הוא אירוח עצמי של הפרויקט;
 
-## פריסה לוקאלית
+דרישות:
+
+- nodejs
+- mongodb URI - לוקאלי או מרוחק (ניתן לפתוח מסד בחינם ב<https://mongodb.com>)
+- משתמש Google עם "סיסמה לאפליקציה" עבור Gmail.
 
 חובה להריץ את כל הפקודות לפי הסדר.</br>
 פקודת `npm run configure` מפעילה סקריפט אינטראקטיבי ליצירת קובץ `config.json`.</br>
 משתני סביבה **ידרסו** את ההגדרות שבקובץ ה-json.
 
 - 🧰 Clone the code:
-  - ```git clone https://github.com/ShlomoCode/rss-tracker-server```
+  - `git clone https://github.com/ShlomoCode/rss-tracker-server`
 - 📦 Install dependencies:
   - `npm install`
 - ⚙️ Configure the app:
@@ -153,11 +272,11 @@ APIs תחת הנתיב `/api/feeds`.
 - 🏃 Run the server:
   - `npm start`
 
-אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת <http://localhost:4000>.
+אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`.
 
-# Libraries used in this project
+# Libraries used in this project (server side)
 
-## server-side
+<details>
 
 - morgan - logger
 
@@ -173,7 +292,7 @@ APIs תחת הנתיב `/api/feeds`.
 
 - nodemailer - send emails
 
-- zxcvbn - to check the strength of the password
+- zxcvbn-ts - to check the strength of the password
 
 - bcrypt - to encrypt the password
 
@@ -185,7 +304,7 @@ APIs תחת הנתיב `/api/feeds`.
 
 - prompts - to get the user input in the configuration process (setup.js file)
 
-- ms - convert milliseconds to human readable format or time in string to miliseconds
+- ms - convert milliseconds to human readable format or time in string to milliseconds
 
 - ejs - template engine - emails templates
 
@@ -202,3 +321,9 @@ APIs תחת הנתיב `/api/feeds`.
 - validator - to validate the input
 
 - module-alias - to use aliases in the paths require()
+
+- sanitize-html - to sanitize the html
+
+- cheerio - apply changes to the html before send to client
+
+<details>
