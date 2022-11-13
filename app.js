@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 require('express-async-errors');
 require('colors');
+const fs = require('fs');
+const path = require('path');
 
 require('module-alias/register');
 const setAndCheckConfig = require('./setup');
@@ -27,7 +29,14 @@ app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
 app.use('/api/articles', articlesRoutes);
-app.all('*', (req, res) => res.status(404).json({ message: 'Route or method Not found' }));
+app.all('/api/*', (req, res) => res.status(404).json({ message: 'Route or method Not found' }));
+if (fs.existsSync(path.join(__dirname, 'public'))) {
+    app.use(express.static('public'));
+    app.all('*', (req, res) => res.sendFile('index.html', { root: 'public' }));
+} else {
+    console.log('No public folder found, serving only API routes'.red);
+    app.all('*', (req, res) => res.status(404).send(process.env.NODE_ENV === 'production' ? 'Not Found' : 'Static files Not found, please run "npm run build" in client directory and copy the "dist" folder content to the "public" folder in the this server directory'));
+}
 
 app.use((error, req, res, next) => {
     res.status(500).json({

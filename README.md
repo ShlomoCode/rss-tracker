@@ -263,6 +263,8 @@ none parameters.
 פקודת `npm run configure` מפעילה סקריפט אינטראקטיבי ליצירת קובץ `config.json`.</br>
 משתני סביבה **ידרסו** את ההגדרות שבקובץ ה-json.
 
+שימו לב! בנוסף יש להוריד את קבצי הקליינט - https://github.com/ShlomoCode/rss-tracker-client, להריץ את הפקודה `npm run build` ולהעלות את תוכן התיקייה `dist` לתוך התקיה `public` בתקיית הסרבר, או להגיש עצמאית את הקבצים באמצעות nginx, apache או כל שרת קבצים אחר.
+
 - 🧰 Clone the code:
   - `git clone https://github.com/ShlomoCode/rss-tracker-server`
 - 📦 Install dependencies:
@@ -271,8 +273,6 @@ none parameters.
   - `npm run configure`
 - 🏃 Run the server:
   - `npm start`
-
-אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`.
 
 # Libraries used in this project (server side)
 
