@@ -4,7 +4,7 @@
   "description": "מערכת למעקב אחרי פידי RSS ושליחת עדכונים במייל",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node app.js",
+    "start": "node app.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "configure": "node setup.js",
     "lint": "eslint . --fix --ext .js,.cjs,.mjs --ignore-path .gitignore",
