@@ -13,7 +13,7 @@ const setAndCheckConfig = require('./setup');
 setAndCheckConfig();
 const backendWorker = require('./src/server/worker');
 
-process.env.PROD = process.env.NODE_ENV === 'production';
+process.env.PROD = process.env.NODE_ENV !== 'development';
 if (process.env.PROD) {
     app.use(morgan('combined'));
 } else {
