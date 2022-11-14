@@ -5,7 +5,7 @@ require('colors');
 
 async function emailValidator (email) {
     const validateEmail = await emailValidate({
-        email: email,
+        email,
         validateRegex: true,
         validateMx: true,
         validateTypo: false,

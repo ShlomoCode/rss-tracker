@@ -159,7 +159,7 @@ async function verifyEmail (req, res) {
         });
     }
 
-    const existsTokens = await Token.find({ userId: userId, type: 'verifyEmail', token: code });
+    const existsTokens = await Token.find({ userId, type: 'verifyEmail', token: code });
     if (!existsTokens.length) {
         return res.status(401).json({
             message: 'code not correct or expired'
@@ -182,7 +182,7 @@ async function resendVerificationEmail (req, res) {
     }
 
     const rateLimit = '1h';
-    const existsTokens = await Token.find({ userId: userId, type: 'verifyEmail' }).sort({ createdAt: -1 });
+    const existsTokens = await Token.find({ userId, type: 'verifyEmail' }).sort({ createdAt: -1 });
     if (existsTokens.length > 1) {
         const FreshTokens = existsTokens.filter(token => (Date.now() - token.createdAt) < ms(rateLimit));
         if (FreshTokens.length) {
@@ -193,7 +193,7 @@ async function resendVerificationEmail (req, res) {
     }
 
     const verifyToken = new Token({
-        userId: userId,
+        userId,
         type: 'verifyEmail',
         token: crypto.randomInt(10000, 100000)
     });
@@ -240,7 +240,7 @@ async function forgotPassword (req, res) {
 
     await emailSends.forgotPassword({
         token: resetToken.token,
-        address: user.emailFront,
+        address: user.emailFront
     });
 
     await resetToken.save();
