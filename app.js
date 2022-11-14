@@ -13,7 +13,13 @@ const setAndCheckConfig = require('./setup');
 setAndCheckConfig();
 const backendWorker = require('./src/server/worker');
 
-app.use(morgan('dev'));
+process.env.PROD = process.env.NODE_ENV === 'production';
+if (process.env.PROD) {
+    app.use(morgan('combined'));
+} else {
+    app.use(morgan('dev'));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -35,17 +41,17 @@ if (fs.existsSync(path.join(__dirname, 'public'))) {
     app.all('*', (req, res) => res.sendFile('index.html', { root: 'public' }));
 } else {
     console.log('No public folder found, serving only API routes'.red);
-    app.all('*', (req, res) => res.status(404).send(process.env.NODE_ENV === 'production' ? 'Not Found' : 'Static files Not found, please run "npm run build" in client directory and copy the "dist" folder content to the "public" folder in the this server directory'));
+    app.all('*', (req, res) => res.status(404).send(process.env.PROD ? 'Not Found' : 'Static files Not found, please run "npm run build" in client directory and copy the "dist" folder content to the "public" folder in the this server directory'));
 }
 
 app.use((error, req, res, next) => {
     res.status(500).json({
-        message: process.env.NODE_ENV !== 'production' ? error.message : 'Internal server error'
+        message: process.env.PROD ? 'Internal server error' : error.message
     });
 });
 
 (async () => {
-    console.log('connecting to Mongo...'.yellow);
+    console.log('Connecting to MongoDB...'.yellow);
     await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
