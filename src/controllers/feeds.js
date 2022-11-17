@@ -19,16 +19,16 @@ async function getAllFeeds (req, res) {
     });
 }
 async function getFeed (req, res) {
-    const feedID = req.params.feedID;
+    const feedId = req.params.feedId;
     const { _id: userId } = res.locals.user;
 
-    if (!mongoose.Types.ObjectId.isValid(feedID)) {
+    if (!mongoose.Types.ObjectId.isValid(feedId)) {
         return res.status(400).json({
-            message: `${feedID} is not a valid feedID`
+            message: `${feedId} is not a valid feedId`
         });
     }
 
-    const feed = await Feed.findById(feedID);
+    const feed = await Feed.findById(feedId);
     if (!feed) {
         return res.status(404).json({
             message: 'Feed Not Found'

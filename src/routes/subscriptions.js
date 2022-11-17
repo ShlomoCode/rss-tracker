@@ -12,6 +12,6 @@ const {
 
 router.post('/unsubscribe-all', checkLogin, checkVerification, unsubscribeAll);
 router.post('/:feedId', checkLogin, checkVerification, checkSchema, subscribeFeed);
-router.delete('/:feedID', checkLogin, checkVerification, checkSchema, unsubscribeFeed);
+router.delete('/:feedId', checkLogin, checkVerification, checkSchema, unsubscribeFeed);
 
 module.exports = router;
