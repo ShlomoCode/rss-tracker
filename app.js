@@ -7,6 +7,7 @@ require('express-async-errors');
 require('colors');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 
 require('module-alias/register');
 const setAndCheckConfig = require('./setup');
@@ -20,6 +21,7 @@ if (process.env.PROD) {
     app.use(morgan('dev'));
 }
 
+app.use(cors(process.env.FRONTEND_URL));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
