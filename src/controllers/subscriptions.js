@@ -33,7 +33,7 @@ async function subscribeFeed (req, res) {
     }
 
     res.status(200).json({
-        message: 'Subscribe to feed done!',
+        message: 'Subscribe to feed successful',
         feed: exposeFeed(feedSubscribe, userId)
     });
 }
@@ -61,7 +61,7 @@ async function unsubscribeFeed (req, res) {
     }
 
     res.status(200).json({
-        message: 'Unsubscribe done successfully!',
+        message: 'Unsubscribe to feed successful',
         feed: exposeFeed(feedUnSubscribe, userId)
     });
 }

@@ -9,11 +9,11 @@ function exposeFeed (feed, userId) {
         id: publicFeed._id,
         _id: undefined,
         subscribers: publicFeed.subscribers.length,
-        subscriberSelf: publicFeed.subscribers.toString().includes(userId)
+        isSubscribe: publicFeed.subscribers.toString().includes(userId)
     };
 }
 
-function exposeArticle (article, { onlyDescription } = {}) {
+function exposeArticle (article, userId, { onlyDescription } = {}) {
     const publicArticle = article?.toObject ? article.toObject() : article;
     article.title = article.title.replace(/([א-ת] )(צפו)/, '$1• $2');
     if (onlyDescription) {
@@ -28,6 +28,8 @@ function exposeArticle (article, { onlyDescription } = {}) {
         const descriptionReal = $description.root().find('p:first');
         return {
             ...publicArticle,
+            readBy: publicArticle.readBy?.length || 0,
+            readByMe: publicArticle.readBy?.toString().includes(userId) ?? false,
             id: publicArticle._id,
             _id: undefined,
             description: descriptionReal.html()
@@ -52,6 +54,8 @@ function exposeArticle (article, { onlyDescription } = {}) {
             ...publicArticle,
             _id: undefined,
             id: publicArticle._id,
+            readBy: publicArticle.readBy?.length || 0,
+            readByMe: publicArticle.readBy?.toString().includes(userId) ?? false,
             content: $content.html(),
             description: descriptionReal.html()
         };

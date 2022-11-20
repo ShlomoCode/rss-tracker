@@ -8,11 +8,6 @@ async function getAllFeeds (req, res) {
     const { _id: userId } = res.locals.user;
 
     const feeds = await Feed.find();
-    if (!feeds.length) {
-        return res.status(404).json({
-            message: 'Feeds not found'
-        });
-    }
 
     return res.status(200).json({
         feeds: feeds.map((feed) => exposeFeed(feed, userId))

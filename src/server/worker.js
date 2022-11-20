@@ -53,8 +53,7 @@ async function main () {
             if (articleExists && articleRelatedToFeed) continue;
             if (!articleRelatedToFeed) {
                 if (articleExists) {
-                    articleExists.feeds.push(feed._id);
-                    await articleExists.save();
+                    await Article.updateOne({ _id: articleExists._id }, { $push: { feeds: feed._id } });
                 } else {
                     if (!article.thumbnail) {
                         try {

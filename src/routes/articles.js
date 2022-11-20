@@ -8,15 +8,21 @@ const {
     getArticleById,
     getArticlesByFeedId,
     getArticlesByTagName,
-    getRelatedArticles
+    getRelatedArticles,
+    getTagsList,
+    getUnreadArticles,
+    markArticleAsRead
 } = require('@controllers/articles');
 
 router.use(checkLogin);
 router.use(checkVerification);
 
-router.get('/by-feed-id', checkSchema.getArticlesByFeedId, getArticlesByFeedId);
-router.get('/:by-tag-name', checkSchema.getArticlesByTagName, getArticlesByTagName);
-router.get('/related-articles', checkSchema.getRelatedArticles, getRelatedArticles);
-router.get('/:articleId', checkSchema.getArticleById, getArticleById);
+router.get('/getArticlesByFeedId', checkSchema.getArticlesByFeedId, getArticlesByFeedId);
+router.get('/getArticlesByTagName', checkSchema.getArticlesByTagName, getArticlesByTagName);
+router.get('/getRelatedArticles', checkSchema.getRelatedArticles, getRelatedArticles);
+router.get('/getTagsList', getTagsList);
+router.get('/getUnreadArticles', checkSchema.getUnreadArticles, getUnreadArticles);
+router.post('/markArticleAsRead', checkSchema.markArticleAsRead, markArticleAsRead);
+router.get('/getArticleById/:articleId', checkSchema.getArticleById, getArticleById);
 
 module.exports = router;

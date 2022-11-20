@@ -11,9 +11,8 @@ const {
 
 router.use(checkLogin);
 router.use(checkVerification);
-router.use(checkSchema);
 
-router.post('/:feedId', subscribeFeed);
-router.delete('/:feedId', unsubscribeFeed);
+router.post('/:feedId', checkSchema, subscribeFeed);
+router.delete('/:feedId', checkSchema, unsubscribeFeed);
 
 module.exports = router;
