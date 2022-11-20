@@ -2,15 +2,6 @@ const Feed = require('@models/feed');
 const mongoose = require('mongoose');
 const { exposeFeed } = require('@/utils/exposes');
 
-async function unsubscribeAll (req, res) {
-    const { _id: userId } = res.locals.user;
-
-    const feedsUnsubscribedCount = (await Feed.updateMany({ subscribers: userId }, { $pull: { subscribers: userId } })).modifiedCount;
-
-    res.status(200).json({
-        message: `${feedsUnsubscribedCount} feeds were unsubscribed`
-    });
-}
 async function subscribeFeed (req, res) {
     const feedId = req.params.feedId;
     const { _id: userId } = res.locals.user;
@@ -77,6 +68,5 @@ async function unsubscribeFeed (req, res) {
 
 module.exports = {
     subscribeFeed,
-    unsubscribeFeed,
-    unsubscribeAll
+    unsubscribeFeed
 };

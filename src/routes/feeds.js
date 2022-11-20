@@ -10,9 +10,11 @@ const {
     createFeed
 } = require('@controllers/feeds');
 
-// login and verification users only
-router.post('/', checkLogin, checkVerification, checkSchema.createFeed, createFeed);
-router.get('/', checkLogin, checkVerification, getAllFeeds);
-router.get('/:feedId', checkLogin, checkVerification, checkSchema.getFeed, getFeed);
+router.use(checkLogin);
+router.use(checkVerification);
+
+router.post('/', checkSchema.createFeed, createFeed);
+router.get('/', getAllFeeds);
+router.get('/:feedId', checkSchema.getFeed, getFeed);
 
 module.exports = router;

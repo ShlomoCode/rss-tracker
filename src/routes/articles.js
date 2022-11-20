@@ -11,9 +11,12 @@ const {
     getRelatedArticles
 } = require('@controllers/articles');
 
-router.get('/by-feed-id/:feedId', checkLogin, checkVerification, checkSchema.getArticlesByFeedId, getArticlesByFeedId);
-router.get('/:by-tag-name', checkLogin, checkVerification, checkSchema.getArticlesByTagName, getArticlesByTagName);
-router.get('/related-articles', checkLogin, checkVerification, checkSchema.getRelatedArticles, getRelatedArticles);
-router.get('/:articleId', checkLogin, checkVerification, checkSchema.getArticleById, getArticleById);
+router.use(checkLogin);
+router.use(checkVerification);
+
+router.get('/by-feed-id', checkSchema.getArticlesByFeedId, getArticlesByFeedId);
+router.get('/:by-tag-name', checkSchema.getArticlesByTagName, getArticlesByTagName);
+router.get('/related-articles', checkSchema.getRelatedArticles, getRelatedArticles);
+router.get('/:articleId', checkSchema.getArticleById, getArticleById);
 
 module.exports = router;

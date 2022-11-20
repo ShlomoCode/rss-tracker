@@ -6,12 +6,14 @@ const checkSchema = require('@middlewares/schema/subscriptions');
 
 const {
     unsubscribeFeed,
-    subscribeFeed,
-    unsubscribeAll
+    subscribeFeed
 } = require('@controllers/subscriptions');
 
-router.post('/unsubscribe-all', checkLogin, checkVerification, unsubscribeAll);
-router.post('/:feedId', checkLogin, checkVerification, checkSchema, subscribeFeed);
-router.delete('/:feedId', checkLogin, checkVerification, checkSchema, unsubscribeFeed);
+router.use(checkLogin);
+router.use(checkVerification);
+router.use(checkSchema);
+
+router.post('/:feedId', subscribeFeed);
+router.delete('/:feedId', unsubscribeFeed);
 
 module.exports = router;
