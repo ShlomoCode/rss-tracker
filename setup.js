@@ -31,8 +31,15 @@ const questions = [
     {
         type: 'text',
         name: 'MONGO_URI',
-        message: 'MongoDB URI',
+        message: 'MongoDB connection string',
         validate: value => /^mongodb(\+srv)?:\/\//.test(value) ? true : 'Please enter a valid MongoDB URI (example: mongodb://localhost:27017/feeds)'
+    },
+    {
+        type: 'text',
+        name: 'MONGO_DB_NAME',
+        message: 'MongoDB database name',
+        initial: 'rss-tracker',
+        validate: value => value.length ? true : 'Please enter a database name'
     },
     {
         type: 'number',

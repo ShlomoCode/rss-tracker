@@ -53,10 +53,11 @@ app.use((error, req, res, next) => {
 });
 
 (async () => {
-    console.log('Connecting to MongoDB...'.yellow);
+    console.log(`Connecting to MongoDB ${`(db: "${process.env.MONGO_DB_NAME}")`.grey}`.yellow);
     await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        dbName: process.env.MONGO_DB_NAME
     });
     console.log('🔌 MongoDB connected successfully'.green);
 
