@@ -51,8 +51,11 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
     const domainsAllowedImagesAttached = process.env.DOMAINS_ALLOWED_ATTACHED_IMAGES || [];
     const isDomainAllowedForImages = domainsAllowedImagesAttached.includes(new URL(article.link).host);
 
+    const usersAllowAttachmentsInEmail = toAddresses.filter(recipient => recipient.allowAttachmentsInEmail);
+    const usersNotAllowAttachmentsInEmail = toAddresses.filter(recipient => !recipient.allowAttachmentsInEmail);
+
     let thumbnailBase64;
-    if (isDomainAllowedForImages && thumbnail) {
+    if (isDomainAllowedForImages && thumbnail && usersAllowAttachmentsInEmail.length) {
         try {
             thumbnailBase64 = await imageToBase64(thumbnail);
         } catch (error) {
@@ -78,7 +81,7 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
 
     const mailOptions = {
         from: process.env.GMAIL_USER,
-        bcc: toAddresses.filter(recipient => recipient.allowAttachmentsInEmail).map(recipient => recipient.address),
+        bcc: usersAllowAttachmentsInEmail.map(recipient => recipient.address),
         subject: `${feedTitle} ⟫ ${title}`,
         html: await ejs.renderFile(path.join(__dirname, '../templates', 'article.ejs'), ejsData),
         attachments: []
@@ -93,9 +96,6 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
 
     const promises = [];
 
-    const usersAllowAttachmentsInEmail = toAddresses.filter(recipient => recipient.allowAttachmentsInEmail);
-    const usersNotAllowAttachmentsInEmail = toAddresses.filter(recipient => !recipient.allowAttachmentsInEmail);
-
     if (usersAllowAttachmentsInEmail.length && isDomainAllowedForImages) {
         promises.push(transporter.sendMail(mailOptions));
     }
@@ -103,11 +103,9 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
     if (usersNotAllowAttachmentsInEmail.length) {
         ejsData.imageUrl = thumbnail;
         promises.push(transporter.sendMail({
-            mailOptions: {
-                ...mailOptions,
-                bcc: usersNotAllowAttachmentsInEmail.map(recipient => recipient.address),
-                attachments: []
-            }
+            ...mailOptions,
+            bcc: usersNotAllowAttachmentsInEmail.map(recipient => recipient.address),
+            attachments: []
         })
         );
     }
