@@ -7,8 +7,7 @@
     "start": "node app.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "configure": "node setup.js",
-    "lint": "eslint . --fix --ext .js,.cjs,.mjs --ignore-path .gitignore",
-    "test": "node test.js"
+    "lint": "eslint . --fix --ext .js,.cjs,.mjs --ignore-path .gitignore"
   },
   "author": "ShlomoCode",
   "license": "UNLICENSED",
