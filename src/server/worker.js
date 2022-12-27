@@ -13,9 +13,12 @@ async function main () {
     const feeds = await Feed.find({ subscribers: { $exists: true, $not: { $size: 0 } } });
     if (!feeds.length) return sleep(ms('1m'));
     for (const feed of feeds) {
-        const users = await User({
-            _id: { $in: feed.subscribers }
+        const users = await User.find({
+            _id: { $in: feed.subscribers },
+            enableEmailNotifications: true
         });
+
+        if (!users.length) continue;
 
         let feedContent;
         try {
