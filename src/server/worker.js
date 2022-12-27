@@ -26,7 +26,7 @@ async function main () {
         }
 
         const { items } = feedContent;
-        const articles = items.filter((article) => {
+        const articles = items.reverse().filter((article) => {
             const published = new Date(article.published);
             const now = new Date();
             const diff = now - published;
