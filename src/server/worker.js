@@ -33,7 +33,7 @@ async function main () {
             const published = new Date(article.published);
             const now = new Date();
             const diff = now - published;
-            if (diff > ms('14 days')) {
+            if (diff > ms('30 days')) {
                 return false;
             }
             if (/\[מקודם\]/gm.test(article.description) ||

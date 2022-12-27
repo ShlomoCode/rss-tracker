@@ -18,7 +18,7 @@ const articleSchema = mongoose.Schema({
     creator: { type: String },
     published: { type: Date, required: true },
     created: { type: Date, default: Date.now },
-    expires: { type: Date, default: Date.now, expires: ms('14 days') / 1000 },
+    expires: { type: Date, default: Date.now, expires: ms('30 days') / 1000 },
     readBy: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'User',
