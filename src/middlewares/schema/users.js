@@ -115,5 +115,26 @@ module.exports = {
             });
         }
         next();
+    },
+    updateSettings: (req, res, next) => {
+        if (!Object.keys(req.body).length) return res.status(400).json({ message: 'There was no body found or no json format' });
+        const schema = {
+            type: 'object',
+            properties: {
+                enableEmailNotifications: { type: 'boolean' },
+                allowAttachmentsInEmail: { type: 'boolean' }
+            },
+            required: ['enableEmailNotifications', 'allowAttachmentsInEmail'],
+            maxProperties: 1
+        };
+
+        const valid = ajv.validate(schema, req.body);
+        if (!valid) {
+            return res.status(400).json({
+                message: 'request is not valid',
+                errors: ajv.errorsText(valid.errors).replaceAll('data', 'body')
+            });
+        }
+        next();
     }
 };

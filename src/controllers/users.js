@@ -15,6 +15,7 @@ const emailSends = require('@services/email');
  * @returns
  */
 function normalizeEmail (email) {
+    email = email.toLowerCase();
     if (/g(oogle)?mail\.com|hotmail\.com|outlook\.com/.test(email)) {
         const emailRew = email.replace('googlemail', 'gmail');
         const emailParts = emailRew.split('@');
@@ -98,6 +99,7 @@ async function signup (req, res) {
         message: 'User created and verification email sent'
     });
 };
+
 async function login (req, res) {
     const { email, password } = req.body;
 
@@ -133,6 +135,7 @@ async function login (req, res) {
         }
     });
 };
+
 async function logout (req, res) {
     const { sessionId } = res.locals;
 
@@ -142,6 +145,7 @@ async function logout (req, res) {
         message: 'Logout successful'
     });
 };
+
 async function verifyEmail (req, res) {
     const { code } = req.body;
     const { _id: userId } = res.locals.user;
@@ -172,6 +176,7 @@ async function verifyEmail (req, res) {
         message: 'User verified successfully'
     });
 };
+
 async function resendVerificationEmail (req, res) {
     const { _id: userId, verified: isVerified, emailFront } = res.locals.user;
 
@@ -209,6 +214,7 @@ async function resendVerificationEmail (req, res) {
         message: `verify email sent again to ${emailFront}`
     });
 };
+
 async function forgotPassword (req, res) {
     const { email } = req.body;
 
@@ -249,6 +255,7 @@ async function forgotPassword (req, res) {
         message: 'reset password email sent successfully'
     });
 };
+
 async function changePassword (req, res) {
     const { token, email, newPassword } = req.body;
 
@@ -288,6 +295,28 @@ async function changePassword (req, res) {
     });
 };
 
+async function getSettings (req, res) {
+    const { user } = res.locals;
+    return res.status(200).json({
+        enableEmailNotifications: user.enableEmailNotifications,
+        allowAttachmentsInEmail: user.allowAttachmentsInEmail
+    });
+};
+
+async function updateSettings (req, res) {
+    const { _id: userId } = res.locals.user;
+    const { enableEmailNotifications, allowAttachmentsInEmail } = req.body;
+
+    await User.findByIdAndUpdate(userId, {
+        enableEmailNotifications,
+        allowAttachmentsInEmail
+    });
+
+    return res.status(200).json({
+        message: 'settings updated successfully'
+    });
+};
+
 module.exports = {
     signup,
     login,
@@ -295,5 +324,7 @@ module.exports = {
     verifyEmail,
     resendVerificationEmail,
     forgotPassword,
-    changePassword
+    changePassword,
+    getSettings,
+    updateSettings
 };

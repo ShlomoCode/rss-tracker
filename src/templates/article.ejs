@@ -210,14 +210,14 @@
                                                         cellspacing="0" role="presentation"
                                                         style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
                                                         <tr>
-                                                            <% if (isAllowedImages || thumbnailLink) { %>
+                                                            <% if (imageUrl) { %>
                                                                 <td
                                                                     style="width:100%;padding-right:0px;padding-left:0px;">
                                                                     <div align="center" style="line-height:10px"><a
                                                                             href="<%= url %>" target="_blank"
                                                                             style="outline:none" tabindex="-1"><img
                                                                                 class="fullMobileWidth big"
-                                                                                src="<%= isAllowedImages ? `cid:${cidImage}` : thumbnailLink %>"
+                                                                                src="<%= imageUrl %>"
                                                                                 style="display: block; height: auto; border: 0; width: 664px; max-width: 100%;"
                                                                                 width="664"></a></div>
                                                                 </td>
@@ -266,7 +266,7 @@
                                                                     <span class="tinyMce-placeholder">מייל זה נשלח אליכם
                                                                         כיוון שנרשמתם לקבלת עדכונים למייל על מה שמתפרסם
                                                                         ב"<a href="<%= feedUrl %>" style="color: #393d47; text-decoration:none;"><%= feedTitle %></a>".<br>
-                                                                            <a href="<%= process.env.FRONTEND_URL %>/subscriptions"
+                                                                            <a href="<%= manageSubscriptionsUrl %>"
                                                                                 target="_blank"
                                                                                 style="text-decoration: none; color: #c5171a;"
                                                                                 rel="noopener">למעבר לניהול ההרשמות לחץ

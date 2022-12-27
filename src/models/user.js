@@ -14,7 +14,9 @@ const userSchema = mongoose.Schema({
     },
     password: { type: String, required: true },
     verified: { type: Boolean, default: false },
-    registrationDate: { type: Date, default: Date.now }
+    registrationDate: { type: Date, default: Date.now },
+    enableEmailNotifications: { type: Boolean, default: true },
+    allowAttachmentsInEmail: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model('User', userSchema);

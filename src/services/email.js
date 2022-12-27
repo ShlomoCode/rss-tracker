@@ -34,7 +34,7 @@ const transporter = nodemailer.createTransport({
  * @param {Object} data.item האייטם הספציפי שנשלח
  * @param {String} data.feedTitle שם הפיד
  * @param {String} data.feedUrl כתובת הפיד
- * @param {String[]} data.addresses כתובות מייל שצריכות לקבל את המאמר
+ * @param {Object[]} data.toAddresses כתובות מייל שצריכות לקבל את המאמר
  * @returns {Promise} - nodemailer sendmail promise
  */
 async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
@@ -42,19 +42,19 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
         description,
         link,
         title,
-        thumbnail: thumbnailLink,
+        thumbnail,
         content,
         author,
         created
     } = article;
 
     const domainsAllowedImagesAttached = process.env.DOMAINS_ALLOWED_ATTACHED_IMAGES || [];
-    const isAllowedImages = domainsAllowedImagesAttached.includes(new URL(article.link).host);
+    const isDomainAllowedForImages = domainsAllowedImagesAttached.includes(new URL(article.link).host);
 
     let thumbnailBase64;
-    if (isAllowedImages && thumbnailLink) {
+    if (isDomainAllowedForImages && thumbnail) {
         try {
-            thumbnailBase64 = await imageToBase64(thumbnailLink);
+            thumbnailBase64 = await imageToBase64(thumbnail);
         } catch (error) {
             thumbnailBase64 = null;
         }
@@ -62,43 +62,56 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
 
     const cidImage = Math.random().toString(36).substring(2, 7);
 
+    const ejsData = {
+        description,
+        title,
+        url: link,
+        author,
+        feedUrl: feedUrl.replace(/feed\/?/, ''),
+        time: generateDateTimeString(new Date(created)),
+        content,
+        imageUrl: thumbnailBase64 ? `cid:${cidImage}` : thumbnail,
+        feedTitle,
+        timeAgo: new TimeAgo().format(new Date(created)),
+        manageSubscriptionsUrl: `${process.env.FRONTEND_URL}/subscriptions}`
+    };
+
     const mailOptions = {
         from: process.env.GMAIL_USER,
-        bcc: toAddresses,
+        bcc: toAddresses.filter(recipient => recipient.allowAttachmentsInEmail).map(recipient => recipient.address),
         subject: `${feedTitle} ⟫ ${title}`,
-        html: await ejs.renderFile(
-            path.join(__dirname, '../templates', 'article.ejs'),
-            {
-                isAllowedImages,
-                thumbnailLink,
-                description,
-                title,
-                url: link,
-                author,
-                feedUrl: feedUrl.replace(/feed\/?/, ''),
-                time: generateDateTimeString(new Date(created)),
-                content,
-                cidImage,
-                feedTitle,
-                timeAgo: new TimeAgo().format(new Date(created)),
-                process: {
-                    env: process.env
-                }
-            }
-        ),
-        attachments: isAllowedImages
-            ? [
-                {
-                    path: `data:image/jpg;base64,${thumbnailBase64}`,
-                    filename: title,
-                    cid: cidImage
-                }
-            ]
-            : []
+        html: await ejs.renderFile(path.join(__dirname, '../templates', 'article.ejs'), ejsData),
+        attachments: []
     };
-    return transporter.sendMail(mailOptions).then((info) => {
-        console.log('📧 Email sent: ' + info.response);
-    });
+    if (isDomainAllowedForImages) {
+        mailOptions.attachments = [{
+            path: `data:image/jpg;base64,${thumbnailBase64}`,
+            filename: title,
+            cid: cidImage
+        }];
+    };
+
+    const promises = [];
+
+    const usersAllowAttachmentsInEmail = toAddresses.filter(recipient => recipient.allowAttachmentsInEmail);
+    const usersNotAllowAttachmentsInEmail = toAddresses.filter(recipient => !recipient.allowAttachmentsInEmail);
+
+    if (usersAllowAttachmentsInEmail.length && isDomainAllowedForImages) {
+        promises.push(transporter.sendMail(mailOptions));
+    }
+
+    if (usersNotAllowAttachmentsInEmail.length) {
+        ejsData.imageUrl = thumbnail;
+        promises.push(transporter.sendMail({
+            mailOptions: {
+                ...mailOptions,
+                bcc: usersNotAllowAttachmentsInEmail.map(recipient => recipient.address),
+                attachments: []
+            }
+        })
+        );
+    }
+    return Promise.all(promises);
 }
 
 /**

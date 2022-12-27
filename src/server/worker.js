@@ -12,14 +12,10 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function main () {
     const feeds = await Feed.find({ subscribers: { $exists: true, $not: { $size: 0 } } });
     if (!feeds.length) return sleep(ms('1m'));
-
     for (const feed of feeds) {
-        const users = await Promise.all(feed.subscribers.map(async (userId) => {
-            const user = await User.findById(userId);
-            return user;
-        }));
-
-        const addresses = users.map(user => user.emailFront);
+        const users = await User({
+            _id: { $in: feed.subscribers }
+        });
 
         let feedContent;
         try {
@@ -85,7 +81,12 @@ async function main () {
                         article: exposeArticle(article),
                         feedTitle: feed.title,
                         feedUrl: feed.url,
-                        toAddresses: addresses
+                        toAddresses: users.map(user => {
+                            return {
+                                address: user.emailFront,
+                                allowAttachmentsInEmail: user.allowAttachmentsInEmail
+                            };
+                        })
                     });
                 } catch (error) {
                     console.log(`Error in sending email: ${error}`);
