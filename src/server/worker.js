@@ -10,15 +10,13 @@ const ms = require('ms');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function main () {
-    const feeds = await Feed.find({ subscribers: { $exists: true, $not: { $size: 0 } } });
+    const feeds = await Feed.find({ });
     if (!feeds.length) return sleep(ms('1m'));
     for (const feed of feeds) {
-        const users = await User.find({
+        const usersForEmail = await User.find({
             _id: { $in: feed.subscribers },
             enableEmailNotifications: true
         });
-
-        if (!users.length) continue;
 
         let feedContent;
         try {
@@ -79,20 +77,22 @@ async function main () {
                         continue;
                     }
                 }
-                try {
-                    await emailSends.sendArticle({
-                        article: exposeArticle(article),
-                        feedTitle: feed.title,
-                        feedUrl: feed.url,
-                        toAddresses: users.map(user => {
-                            return {
-                                address: user.emailFront,
-                                allowAttachmentsInEmail: user.allowAttachmentsInEmail
-                            };
-                        })
-                    });
-                } catch (error) {
-                    console.log(`Error in sending email: ${error}`);
+                if (usersForEmail.length) {
+                    try {
+                        await emailSends.sendArticle({
+                            article: exposeArticle(article),
+                            feedTitle: feed.title,
+                            feedUrl: feed.url,
+                            toAddresses: usersForEmail.map(user => {
+                                return {
+                                    address: user.emailFront,
+                                    allowAttachmentsInEmail: user.allowAttachmentsInEmail
+                                };
+                            })
+                        });
+                    } catch (error) {
+                        console.log(`Error in sending email: ${error}`);
+                    }
                 }
             }
         }
