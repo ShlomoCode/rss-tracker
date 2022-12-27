@@ -47,7 +47,7 @@ async function main () {
         if (!articles.length) continue;
 
         for (const article of articles) {
-            const articleExists = await Article.findOne({ url: article.link, feed: feed._id });
+            const articleExists = await Article.findOne({ url: article.link });
             const articleRelatedToFeed = articleExists ? articleExists.feeds.includes(feed._id) : false;
             if (articleExists && articleRelatedToFeed) continue;
             if (!articleRelatedToFeed) {
