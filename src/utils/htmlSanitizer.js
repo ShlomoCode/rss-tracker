@@ -30,7 +30,9 @@ const allowedTags = [
     'sub',
     'sup',
     'ul',
-    'iframe'
+    'iframe',
+    'figcaption',
+    'figure'
 ];
 
 const allowedAttributes = {
