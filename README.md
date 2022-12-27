@@ -138,6 +138,32 @@ none parameters.
 <details>
 <summary>feeds</summary>
 
+## articles
+
+APIs תחת הנתיב `/api/articles`. מכילים פעולות הקשורות למאמרים (פריטים בתוך פיד).
+
+#### get articles unread
+
+החזרת רשימת מאמרים שלא נקראו עדיין על ידי המשתמש המחובר מתוך הפידים שהוא מנוי אליהם.
+
+```
+    GET /api/articles/unread
+```
+
+**Active session required**: yes
+
+#### get single article
+
+החזרת מאמר ספציפי.
+
+המאמר הופך ל"נקרא" לאחר קבלה שלו במתודה זו.
+
+```
+    GET /api/articles/:articleId
+```
+
+**Active session required**: yes
+
 ## feeds
 
 APIs תחת הנתיב `/api/feeds`. מכילים פעולות הקשורות לערוצי העדכונים (RSS). בקבלת מידע על פיד, מושמטים פרטים על משתמשים אחרים שנרשמו לפיד.
