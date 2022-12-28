@@ -92,4 +92,4 @@
 
 - cheerio - apply changes to the html before send to client
 
-<details>
+</details>
