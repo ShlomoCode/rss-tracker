@@ -2,14 +2,20 @@
 # Rss Tracker - Server side
 
 פרויקט למעקב אחרי תכנים מאתרים שתומכים בטכנולוגיית [RSS](https://he.wikipedia.org/wiki/RSS), לדוגמה בלוגים ואתרי חדשות.</br>
-מאפשר לקבל כל אייטם חדש ישירות למייל, או לצפות בתוכן בממשק אינטרנטי.</br>
+מאפשר לקבל כל אייטם חדש ישירות למייל, או לצפות בתוכן בממשק אינטרנטי מעוצב ורספונסיבי בצורה מלאה.</br>
 מתאים גם לפריסה עצמית בקלות על מחשב או על שרת.
 
 **טכנולוגיות**:</br>
 צד שרת: Node.js + MongoDB</br>
 צד לקוח: Vue.js + Vuetify
 
-# self-hosted
+# Screenshots
+<img src="https://user-images.githubusercontent.com/78599753/209749571-3cb9b2c8-3f05-4bd8-af29-7d35c852f068.png" width="45%"></img>
+<img src="https://user-images.githubusercontent.com/78599753/209747399-87f6902f-9818-4043-902b-45770c64e899.png" width="45%"></img>
+<img src="https://user-images.githubusercontent.com/78599753/209749823-22679ebf-08e8-4656-b7a8-753cb4e8bda8.png" width="45%"></img>
+<img src="https://user-images.githubusercontent.com/78599753/209749095-17e3fdf8-b9d0-4bae-85b0-a47a491283bb.png" width="45%"></img> 
+
+# Self-hosted
 
 הגרסה הציבורית מכילה הגבלות שונות, הן בכמות העדכונים שניתן להירשם, והן ברשימה לבנה של אתרים שאליהם ניתן להירשם. הפתרון לכך הוא אירוח עצמי של הפרויקט;
 
