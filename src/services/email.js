@@ -76,7 +76,7 @@ async function sendArticle ({ article, feedTitle, feedUrl, toAddresses }) {
         imageUrl: thumbnailBase64 ? `cid:${cidImage}` : thumbnail,
         feedTitle,
         timeAgo: new TimeAgo().format(new Date(created)),
-        manageSubscriptionsUrl: `${process.env.FRONTEND_URL}/subscriptions}`
+        manageSubscriptionsUrl: `${process.env.FRONTEND_URL}/subscriptions`
     };
 
     const mailOptions = {
