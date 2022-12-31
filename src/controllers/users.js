@@ -126,7 +126,7 @@ async function login (req, res) {
         userId: user._id
     });
 
-    res.status(200).cookie('session', session.uuid, { path: '/', secure: true, httpOnly: true, maxAge: ms('30d') }).json({
+    res.status(200).cookie('session', session.uuid, { path: '/', secure: false, httpOnly: true, maxAge: ms('30d') }).json({
         message: 'Auth successful',
         sessionUuid: session.uuid,
         user: {
