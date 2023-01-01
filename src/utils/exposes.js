@@ -19,7 +19,7 @@ function exposeArticle (article, userId, { onlyDescription } = {}) {
     if (onlyDescription) {
         delete publicArticle.content;
         const sensitizedDescription = sanitizeHtmlLib(publicArticle.description, {
-            allowedTags: ['p', 'a'],
+            allowedTags: ['p'],
             allowedAttributes: {
                 a: ['href']
             }
@@ -43,7 +43,7 @@ function exposeArticle (article, userId, { onlyDescription } = {}) {
         $content.root().find('.advads-marketing-content-in-the-content-of-the-article').remove();
 
         const sensitizedDescription = sanitizeHtmlLib(publicArticle.description, {
-            allowedTags: ['p', 'a'],
+            allowedTags: ['p'],
             allowedAttributes: {
                 a: ['href']
             }
