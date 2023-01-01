@@ -1,153 +1,37 @@
 ## The project is at work. see [#refactor](https://github.com/ShlomoCode/rss-tracker-server/pull/2)
 # Rss Tracker - Server side
 
-פרויקט Node.js + mongodb למעקב אחרי פידי [RSS](https://he.wikipedia.org/wiki/RSS).
+פרויקט למעקב אחרי תכנים מאתרים שתומכים בטכנולוגיית [RSS](https://he.wikipedia.org/wiki/RSS), לדוגמה בלוגים ואתרי חדשות.</br>
+מאפשר לקבל כל אייטם חדש ישירות למייל, או לצפות בתוכן בממשק אינטרנטי מעוצב ורספונסיבי בצורה מלאה.</br>
 
-כולל הרשמה, התחברות ואימות מייל.
+**טכנולוגיות**:</br>
+צד שרת: Node.js + MongoDB</br>
+צד לקוח: Vue.js + Vuetify
 
-מתאים לפריסה לוקאלית על המחשב, או על שרת.
+# Screenshots
+<img src="https://user-images.githubusercontent.com/78599753/209749571-3cb9b2c8-3f05-4bd8-af29-7d35c852f068.png" width="45%"></img>
+<img src="https://user-images.githubusercontent.com/78599753/209747399-87f6902f-9818-4043-902b-45770c64e899.png" width="45%"></img>
+<img src="https://user-images.githubusercontent.com/78599753/209749823-22679ebf-08e8-4656-b7a8-753cb4e8bda8.png" width="45%"></img>
+<img src="https://user-images.githubusercontent.com/78599753/209749095-17e3fdf8-b9d0-4bae-85b0-a47a491283bb.png" width="45%"></img> 
 
-# API
+# Self-hosted
 
-הAPIs מיועדים לתקשורת בין הקליינט לסרבר, אך ניתן לממש קליינט עצמי.
+הגרסה הציבורית מכילה הגבלות שונות, הן בכמות הפידים שניתן להירשם אליהם, והן ברשימה לבנה של אתרים שאליהם ניתן להירשם. הפתרון לכך הוא אירוח עצמי של הפרויקט;
 
-כל הAPIs דורשים אימות על ידי שליחת מזהה סשן בתוך jwt, בתור עוגיה בשם `jwt`, או כBearer ב-authorization header:
+דרישות:
 
-```Authorization: Bearer <jwt-token>```
-
- את הטוקן ניתן לקבל בכתובת הlogin על ידי שליחת שם משתמש וסיסמה.
-
-כל הפרמטרים הם חובה, אלא אם כן צוין אחרת.
-
-להלן תיעוד בסיסי של הנתיבים שקיימים כרגע והפרמטרים שהם דורשים:
-
-<details>
-<summary>users</summary>
-
-## users
-
-APIs תחת הנתיב `/api/users`.
-מכילים פעולות הקשורות למשתמשים.
-
-#### signup
-
-הרשמה.
-
-    POST /api/users/signup
-  
-   body: `{
-        "name": "name",
-        "email": "email",
-        "password": "password"
-    }`
-
-#### login
-
-התחברות.
-
-    POST /api/users/login
-  
-   body: `{
-        "username": "username",
-        "password": "password"
-    }`
-
-#### log-out
-
-התנתקות ומחיקת הסשן הפעיל מהדאטהבייס.
-
-    POST /api/users/log-out
-
-#### verify
-
-אימות מייל עבור המשתמש המחובר כעת.
-
-    POST /api/users/verify
-  
-query: `{
-       "verifyCode": "5 digit code"
-    }`
-
-#### re-send verify email
-
-שליחת מייל אימות מחדש למייל המשתמש המחובר כעת.
-מוגבל לפעמים אחת ביום.
-
-    POST /api/users/resendVerificationEmail
-
-body: `{
-        "email": "email"
-    }`
-
-</details>
-
-<details>
-<summary>feeds</summary>
-
-## feeds
-
-APIs תחת הנתיב `/api/feeds`.
-מכילים פעולות הקשורות לערוצי העדכונים (RSS).
-בקבלת מידע על פיד, מושמטים פרטים על משתמשים אחרים שנרשמו לפיד.
-
-#### get all feeds
-
-מחזיר את כל הפידים במערכת.
-
-    GET /api/feeds
-
-#### get specific feed
-
-מחזיר מידע על פיד ספציפי.
-
-    GET /api/feeds/:id
-
-#### create new feed
-
-יצירת פיד חדש.
-
-    POST /api/feeds
-    
-    query: `{
-        "url": "url"
-    }`
-
-</details>
-
-<details>
-<summary>subscriptions</summary>
-
-## subscriptions
-
-ניהול הרשמות לפידים.
-
-#### subscribe to feed
-
-    POST /api/subscriptions/:subscriptionId
-
-#### unsubscribe from feed
-
-    DELETE /api/subscriptions/:subscriptionId
-
-#### unsubscribe from all feeds
-
-    POST /api/subscriptions/unsubscribe-all
-
-</details>
-
-# self-hosted
-
-הגרסה הציבורים מכילה הגבלות שונות, הן בכמות העדכונים שניתן להירשם (בגלל מגבלה של גוגל על כמות שליחת המיילים), והן ברשימה לבנה של אתרים שאליהם ניתן להירשם (ע"מ שהאתר יהיה פתוח בסינונים השונים).
-הפתרון לכך הוא אירוח עצמי של הפרויקט;
-
-## פריסה לוקאלית
+- nodejs
+- mongodb URI - לוקאלי או מרוחק (ניתן לפתוח מסד בחינם ב<https://mongodb.com>)
+- משתמש Google עם "סיסמה לאפליקציה" עבור Gmail.
 
 חובה להריץ את כל הפקודות לפי הסדר.</br>
 פקודת `npm run configure` מפעילה סקריפט אינטראקטיבי ליצירת קובץ `config.json`.</br>
 משתני סביבה **ידרסו** את ההגדרות שבקובץ ה-json.
 
+שימו לב! בנוסף יש להוריד את קבצי הקליינט - https://github.com/ShlomoCode/rss-tracker-client, להריץ את הפקודה `npm run build` ולהעלות את תוכן התיקייה `dist` לתוך התקיה `public` בתקיית הסרבר, או להגיש עצמאית את הקבצים באמצעות nginx, apache או כל שרת קבצים אחר.
+
 - 🧰 Clone the code:
-  - ```git clone https://github.com/ShlomoCode/rss-tracker-server```
+  - `git clone https://github.com/ShlomoCode/rss-tracker-server`
 - 📦 Install dependencies:
   - `npm install`
 - ⚙️ Configure the app:
@@ -155,11 +39,9 @@ APIs תחת הנתיב `/api/feeds`.
 - 🏃 Run the server:
   - `npm start`
 
-אחרי הגדרת הקונפיג, יש לנווט בשורת הפקודה לתקיה, ולהריץ `npm start`. כברירת מחדל ממשק האתר יהיה זמין בכתובת <http://localhost:4000>.
+# Libraries used in this project (server side)
 
-# Libraries used in this project
-
-## server-side
+<details>
 
 - morgan - logger
 
@@ -175,11 +57,9 @@ APIs תחת הנתיב `/api/feeds`.
 
 - nodemailer - send emails
 
-- zxcvbn - to check the strength of the password
+- zxcvbn-ts - to check the strength of the password
 
 - bcrypt - to encrypt the password
-
-- jsonwebtoken - to create the token and validate it
 
 - html-entities - לטיפול באתרים ששולחים בפיד את התוים המיוחדים (מירכאות לדוגמה) בפורמט [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 
@@ -189,9 +69,9 @@ APIs תחת הנתיב `/api/feeds`.
 
 - prompts - to get the user input in the configuration process (setup.js file)
 
-- ms - convert milliseconds to human readable format or time in string to miliseconds
+- ms - convert milliseconds to human readable format or time in string to milliseconds
 
-- ejs - template engine - site and emails
+- ejs - template engine - emails templates
 
 - javascript-time-ago - convert time to human readable format (for emails)
 
@@ -205,12 +85,10 @@ APIs תחת הנתיב `/api/feeds`.
 
 - validator - to validate the input
 
-## client-side
+- module-alias - to use aliases in the paths require()
 
-- [jQuery](https://jquery.com)
+- sanitize-html - to sanitize the html
 
-- [axios](https://github.com/axios/axios)
+- cheerio - apply changes to the html before send to client
 
-- [awesome-notifications](https://f3oall.github.io/awesome-notifications)
-
-- [sweet](https://www.npmjs.com/package/sweetalert)
+</details>

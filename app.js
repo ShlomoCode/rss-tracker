@@ -3,86 +3,72 @@ const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const path = require('path');
 require('express-async-errors');
 require('colors');
+const fs = require('fs');
+const path = require('path');
+const cors = require('cors');
+
+require('module-alias/register');
 const setAndCheckConfig = require('./setup');
 setAndCheckConfig();
-const processingFeeds = require('./src/server/main');
+const backendWorker = require('./src/server/worker');
 
-app.use(morgan('dev'));
+process.env.PROD = process.env.NODE_ENV !== 'development';
+if (process.env.PROD) {
+    app.use(morgan('combined'));
+} else {
+    app.use(morgan('dev'));
+}
+
+app.use(cors(process.env.FRONTEND_URL));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.set('view engine', 'ejs');
-app.set('views', './src/client/views');
 app.use(cookieParser());
 
-/* Routes api */
-const usersRoutes = require('./src/api/routes/users');
-const feedsRoutes = require('./src/api/routes/feeds');
-const subscriptionsRoutes = require('./src/api/routes/subscriptions');
+const generalRoutes = require('./src/routes/general');
+const usersRoutes = require('@routes/users');
+const feedsRoutes = require('@routes/feeds');
+const subscriptionsRoutes = require('@routes/subscriptions');
+const articlesRoutes = require('@routes/articles');
 
+app.use('/api/general', generalRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/feeds', feedsRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
-app.get('/api/status', (req, res) => res.status(200).json({ message: 'OK' }));
-app.all('/api/*', (req, res) => res.status(404).json({ message: 'Not found' }));
-
-/* client */
-const checkLoginClient = require('./src/client/middlewares/checkLogin');
-const checkVerificationClient = require('./src/client/middlewares/checkVerification');
-const renders = {
-    main: require('./src/client/renders/main'),
-    verify: require('./src/client/renders/verify'),
-    unsubscribe: require('./src/client/renders/unsubscribe')
-};
-
-app.use(express.static('src/client/views', { index: false }));
-app.use('/images', express.static('src/client/images'));
-app.use('/assets', express.static('src/client/assets'));
-app.get('/login', checkLoginClient, (req, res) => res.sendFile(path.join(__dirname, 'src/client/views/login', 'index.html')));
-app.get('/verify', checkLoginClient, checkVerificationClient, renders.verify);
-app.get('/unsubscribe', checkLoginClient, checkVerificationClient, renders.unsubscribe);
-app.get('/', checkLoginClient, checkVerificationClient, renders.main);
-app.all('*', (req, res) => res.status(404).sendFile(path.join(__dirname, 'src/client/views', '404.html')));
+app.use('/api/articles', articlesRoutes);
+app.all('/api/*', (req, res) => res.status(404).json({ message: 'Route or method Not found' }));
+if (fs.existsSync(path.join(__dirname, 'public'))) {
+    app.use(express.static('public'));
+    app.all('*', (req, res) => res.sendFile('index.html', { root: 'public' }));
+} else {
+    console.log('No public folder found, serving only API routes'.red);
+    app.all('*', (req, res) => res.status(404).send(process.env.PROD ? 'Not Found' : 'Static files Not found, please run "npm run build" in client directory and copy the "dist" folder content to the "public" folder in the this server directory'));
+}
 
 app.use((error, req, res, next) => {
     res.status(500).json({
-        message: process.env.NODE_ENV !== 'production' ? error.message : 'Internal server error'
+        message: process.env.PROD ? 'Internal server error' : error.message
     });
 });
 
-/**
-* Run Back And base
-*/
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
-    console.log('connecting to mongo...');
+    console.log(`Connecting to MongoDB ${`(db: "${process.env.MONGO_DB_NAME}")`.grey}`.yellow);
+    mongoose.set('strictQuery', false);
     await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        dbName: process.env.MONGO_DB_NAME
     });
-    console.log('mongoDB connected!');
+    console.log('🔌 MongoDB connected successfully'.green);
 
-    /**
-     * Listening server
-     */
     const http = require('http');
     const port = process.env.PORT;
     const server = http.createServer(app);
     server.listen(port);
-    console.log(`Server is running on port: ${port}. public url: ${process.env.APP_SITE_ADDRESS}`);
+    console.log(`🚀 Server is running on port: ${port}. public url: ${process.env.FRONTEND_URL.grey}`.blue);
 
-    /**
-    * run background process
-    */
     do {
-        const resp = await processingFeeds();
-        const ms = 1000 * 60 * 1; // 1 minute
-        if (resp === 'Wait!') {
-            console.log(`Waiting ${ms} milliseconds...`);
-            await sleep(ms);
-            console.log('Waiting completed!');
-        }
+        await backendWorker();
     } while (true);
 })();

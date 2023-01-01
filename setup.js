@@ -1,12 +1,11 @@
 const fs = require('fs');
 const prompts = require('prompts');
-const crypto = require('crypto');
 const { validate: emailValidate } = require('deep-email-validator');
 require('colors');
 
 async function emailValidator (email) {
     const validateEmail = await emailValidate({
-        email: email,
+        email,
         validateRegex: true,
         validateMx: true,
         validateTypo: false,
@@ -31,15 +30,16 @@ const questions = [
     },
     {
         type: 'text',
-        name: 'JWT_SECRET',
-        message: 'JWT secret - least 10 characters or leave blank to auto generate',
-        validate: value => (!value || value.length > 10) ? true : 'Please enter a secret with at least 10 characters or leave blank to auto generate'
+        name: 'MONGO_URI',
+        message: 'MongoDB connection string',
+        validate: value => /^mongodb(\+srv)?:\/\//.test(value) ? true : 'Please enter a valid MongoDB URI (example: mongodb://localhost:27017/feeds)'
     },
     {
         type: 'text',
-        name: 'MONGO_URI',
-        message: 'MongoDB URI',
-        validate: value => /^mongodb(\+srv)?:\/\//.test(value) ? true : 'Please enter a valid MongoDB URI (example: mongodb://localhost:27017/feeds)'
+        name: 'MONGO_DB_NAME',
+        message: 'MongoDB database name',
+        initial: 'rss-tracker',
+        validate: value => value.length ? true : 'Please enter a database name'
     },
     {
         type: 'number',
@@ -53,15 +53,62 @@ const questions = [
     {
         type: 'number',
         name: 'PORT',
-        message: 'Port to listen. leave blank to default: 4000',
-        initial: 4000,
+        message: 'Port to listen. leave blank to default: 4200',
+        initial: 4200,
         min: 1,
         max: 65535
     },
     {
         type: 'text',
-        name: 'APP_SITE_ADDRESS',
-        message: 'Server URL - for links in emails. leave blank to default - localhost (for development)'
+        name: 'FRONTEND_URL',
+        message: 'FRONTEND URL - for links in emails. leave blank to default - localhost (for development)'
+    },
+    {
+        type: 'multiselect',
+        name: 'ALLOWED_DOMAINS',
+        message: 'Allowed domains for create feed. leave blank to allow all domains',
+        choices: [
+            {
+                value: 'hm-news.co.il',
+                selected: true
+            },
+            {
+                value: 'www.jdn.co.il',
+                selected: true
+            },
+            {
+                value: 'www.93fm.co.il',
+                selected: true
+            },
+            {
+                value: 'www.bahazit.co.il',
+                selected: true
+            },
+            {
+                value: 'www.geektime.co.il',
+                selected: true
+            },
+            {
+                value: 'internet-israel.com',
+                selected: true
+            }
+        ],
+        hint: 'Use space to select. Press Enter to submit'
+    },
+    {
+        type: 'multiselect',
+        name: 'DOMAINS_ALLOWED_ATTACHED_IMAGES',
+        message: 'Domains allowed to attach images. leave blank to allow all domains',
+        choices: [
+            {
+                value: 'hm-news.co.il',
+                selected: true
+            },
+            {
+                value: 'www.jdn.co.il',
+                selected: true
+            }
+        ]
     }
 ];
 
@@ -77,10 +124,6 @@ async function checkConfig (config = process.env) {
         console.log(`Config error: missing key(s): ${missingVariables.join(', ')}`.red);
         console.log(`You can configure the missing variables by running: ${'npm run configure'.blue}`.grey);
         process.exit(1);
-    }
-
-    if (config.APP_SITE_ADDRESS.startsWith('http://localhost:') && !config.APP_SITE_ADDRESS.endsWith(config.PORT)) {
-        console.log(`warning: server listen in port ${config.PORT}, but APP_SITE_ADDRESS is ${config.APP_SITE_ADDRESS}.`.red);
     }
 }
 
@@ -121,10 +164,9 @@ async function createConfigFile () {
     }
 
     const defaults = [
-        { name: 'JWT_SECRET', value: crypto.randomBytes(16).toString('hex') },
         { name: 'MAX_FEEDS_PER_USER', value: 10 },
         { name: 'PORT', value: 4000 },
-        { name: 'APP_SITE_ADDRESS', value: 'http://localhost:' + responses.PORT }
+        { name: 'FRONTEND_URL', value: 'http://localhost:' + responses.PORT }
     ];
 
     for (const defaultConfig of defaults) {
@@ -155,6 +197,7 @@ if (require.main === module) {
 }
 
 module.exports = () => {
+    // set config to process.env and validate the config
     let config = {};
     if (fs.existsSync('config.json')) {
         config = JSON.parse(fs.readFileSync('config.json'));
@@ -165,4 +208,3 @@ module.exports = () => {
     };
     checkConfig();
 };
-// * set config to process.env and validate the config
